@@ -7,7 +7,6 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 import Vi from 'date-and-time/locale/vi';
 
-
 const Forms = ({route,navigation}) => {
   const { language } = route.params
   const [date, setDate] = useState(new Date());
