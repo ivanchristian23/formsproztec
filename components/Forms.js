@@ -7,7 +7,8 @@ import DateTimePicker from '@react-native-community/datetimepicker';
 import {Picker} from '@react-native-picker/picker';
 
 
-const Forms = () => {
+const Forms = ({route,navigation}) => {
+  const { language } = route.params
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [firstName, setFirstName] = useState('');
@@ -30,8 +31,6 @@ const handleDateChange = (event, selectedDate) => {
 const goBack = ()=>{
     setShow(true)
 }
-
-  
 
   const handleSubmit = () => {
     // Handle form submission here
