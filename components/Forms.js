@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
-import { View, Text, Image, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity,KeyboardAvoidingView,Platform, ScrollView } from 'react-native';
-import {doc, setDoc} from "firebase/firestore";
-import { db } from './config'
-import {getDocs,addDoc, collection} from "firebase/firestore";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import {Picker} from '@react-native-picker/picker';
-import Vi from 'date-and-time/locale/vi';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Dimensions,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+} from "react-native";
+import { getDocs, addDoc, collection } from "firebase/firestore";
+import { db } from "./config";
+import { Picker } from "@react-native-picker/picker";
 
-const Forms = ({route,navigation}) => {
-  const { language } = route.params
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
+
+const Forms = ({ route, navigation }) => {
+  const { language } = route.params;
   const [date, setDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -16,12 +27,13 @@ const Forms = ({route,navigation}) => {
   const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("");
   const [show, setShow] = useState(true);
+  const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShowPicker(Platform.OS === "ios");
     setDate(currentDate);
   };
+
   const goBack = () => {
     setShow(true);
   };
@@ -29,33 +41,39 @@ const Forms = ({route,navigation}) => {
   const readAll = async () => {
     const docs = await getDocs(collection(db, "users"));
     docs.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
+      console.log(doc.id, " => ", doc.data());
     });
-    }
-    
+  };
+
   const add = async () => {
     const docRef = await addDoc(collection(db, "users"), {
-    date: date,
-    firstName: firstName,
-    lastName:lastName,
-    email:email,
-    phone:phone,
-    gender:gender,
+      date: date,
+      firstName: firstName,
+      lastName: lastName,
+      email: email,
+      phone: phone,
+      gender: gender,
     });
     console.log("Document written with ID: ", docRef.id);
-
-    }
+  };
 
   const handleSubmit = () => {
-    // Handle form submission here
     add();
     setEmail("");
     setFirstName("");
     setLastName("");
     setPhone("");
+    setGender(""); // Reset gender to default
     setShow(false);
-    // console.log('Organization Name:', organization);
+  };
+
+  const handleGenderChange = (itemValue) => {
+    setGender(itemValue);
+    if (itemValue === "") {
+      setPlaceholderColor("#888"); // Grey color for placeholder
+    } else {
+      setPlaceholderColor("black"); // Default color for selected text
+    }
   };
 
   return show ? (
@@ -66,7 +84,7 @@ const Forms = ({route,navigation}) => {
     >
       <View>
         <ImageBackground
-          source={require("../assets/fanar4.jpg")}
+          source={require("../assets/fanar.jpg")}
           style={styles.background}
         >
           <View style={styles.textboxes}>
@@ -95,7 +113,7 @@ const Forms = ({route,navigation}) => {
             <TextInput
               style={styles.input}
               value={email}
-              autoCapitalize={false}
+              autoCapitalize="none"
               onChangeText={setEmail}
               placeholder="Enter Email"
               keyboardType="email-address"
@@ -108,16 +126,18 @@ const Forms = ({route,navigation}) => {
               placeholder="Enter Phone"
               keyboardType="phone-pad"
             />
-            {/* <Picker
-                    selectedValue={gender}
-                    style={styles.input}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setGender(itemValue)
-                    }>
-                    <Picker.Item label="Select Gender" value="" />
-                    <Picker.Item label="Male" value="male" />
-                    <Picker.Item label="Female" value="female" />
-                </Picker> */}
+            <Text style={styles.label}>Gender:</Text>
+            <View style={styles.gender}>
+              <Picker
+                selectedValue={gender}
+                onValueChange={handleGenderChange}
+                style={{ color: placeholderColor }}
+              >
+                <Picker.Item label="Select Gender" value="" />
+                <Picker.Item label="Male" value="male" />
+                <Picker.Item label="Female" value="female" />
+              </Picker>
+            </View>
             <View style={styles.buttonContainer}>
               <TouchableOpacity onPress={handleSubmit} style={styles.button}>
                 <Text style={styles.buttonText}>Submit</Text>
@@ -130,9 +150,7 @@ const Forms = ({route,navigation}) => {
   ) : (
     <View>
       <Text style={styles.thankYou}>Thank you for your response</Text>
-      <Button title="Go back" onPress={goBack}>
-        {" "}
-      </Button>
+      <Button title="Go back" onPress={goBack} />
     </View>
   );
 };
@@ -145,7 +163,9 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     color: "black",
-    backgroundColor: "white", // Add a background color for text input
+    backgroundColor: "white",
+    paddingLeft: screenWidth*0.036,
+    fontSize: 16,
   },
   thankYou: {
     fontSize: 20,
@@ -159,7 +179,7 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   button: {
-    backgroundColor: '#007AFF',
+    backgroundColor: "#007AFF",
     paddingVertical: 10,
     borderRadius: 5,
   },
@@ -193,7 +213,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 5,
-    color: "white", // Add a color for text
+    color: "white",
   },
   input: {
     borderWidth: 1,
@@ -201,7 +221,20 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
-    backgroundColor: "white", // Add a background color for text input
+    backgroundColor: "white",
+    paddingLeft: screenWidth*0.036,
+    fontSize: 16,
+    color: '#888',
+  },
+  gender: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: "white",
+    height: screenHeight * 0.043,
+    justifyContent: "center",
   },
 });
 
