@@ -4,15 +4,16 @@ import {doc, setDoc} from "firebase/firestore";
 import { db } from './config'
 import {getDocs,addDoc, collection} from "firebase/firestore";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {Picker} from '@react-native-picker/picker';
-import Vi from 'date-and-time/locale/vi';
+import { Dimensions } from 'react-native';
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
 
 const Forms = ({route,navigation}) => {
   const { language } = route.params
-  useEffect(() => {
-    console.log(language);
-    i18next.changeLanguage(language);
-  }, [language]);
+  // useEffect(() => {
+  //   console.log(language);
+  //   i18next.changeLanguage(language);
+  // }, [language]);
   const [date, setDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -30,36 +31,33 @@ const Forms = ({route,navigation}) => {
     setShow(true);
   };
 
-  const readAll = async () => {
-    const docs = await getDocs(collection(db, "users"));
-    docs.forEach((doc) => {
-    // doc.data() is never undefined for query doc snapshots
-    console.log(doc.id, " => ", doc.data());
-    });
+  const handleSubmit = async  () => {
+    const csvData = [
+      ["Date", "First Name", "Last Name", "Email", "Phone"],
+      [date.toDateString(), firstName, lastName, email, phone]
+    ];
+
+    const csvString = csvData.map(row => row.join(",")).join("\n");
+
+    const filePath = `${RNFS.DocumentDirectoryPath}/formData.csv`;
+
+    try {
+      const fileExists = await RNFS.exists(filePath);
+      if (fileExists) {
+        await RNFS.appendFile(filePath, `\n${csvString.split("\n")[1]}`, 'utf8');
+      } else {
+        await RNFS.writeFile(filePath, csvString, 'utf8');
+      }
+      console.log('CSV file created/updated at:', filePath);
+    } catch (error) {
+      console.error('Error writing CSV file:', error);
     }
     
-  const add = async () => {
-    const docRef = await addDoc(collection(db, "users"), {
-    date: date,
-    firstName: firstName,
-    lastName:lastName,
-    email:email,
-    phone:phone,
-    gender:gender,
-    });
-    console.log("Document written with ID: ", docRef.id);
-
-    }
-
-  const handleSubmit = () => {
-    // Handle form submission here
-    add();
     setEmail("");
     setFirstName("");
     setLastName("");
     setPhone("");
     setShow(false);
-    // console.log('Organization Name:', organization);
   };
 
   return show ? (
