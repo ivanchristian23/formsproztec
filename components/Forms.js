@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity,KeyboardAvoidingView,Platform, ScrollView } from 'react-native';
+import { View, Text, Image, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity,KeyboardAvoidingView,Platform, ScrollView } from 'react-native';
 import {doc, setDoc} from "firebase/firestore";
 import { db } from './config'
 import {getDocs,addDoc, collection} from "firebase/firestore";
@@ -68,7 +68,8 @@ const goBack = ()=>{
      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={100}>
     <View >
      <Text style={styles.header}>Welcome to Fanar</Text>
-    <ImageBackground source={require('../assets/fanar.jpg')} style={styles.background}>
+
+    <ImageBackground source={require('../assets/fanar4.jpg')} style={styles.background}>
       <View>
         <Text style={styles.label}>Date:</Text>
         <TouchableOpacity onPress={toggleDatepicker}>
