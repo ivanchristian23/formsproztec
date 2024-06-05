@@ -55,7 +55,6 @@ const Forms = ({ route, navigation }) => {
       email: email,
       phone: phone,
       gender: gender,
-      nationality: nationality, // Add nationality to the document
     });
     console.log("Document written with ID: ", docRef.id);
   };
@@ -67,7 +66,6 @@ const Forms = ({ route, navigation }) => {
     setLastName("");
     setPhone("");
     setGender(""); // Reset gender to default
-    setNationality(""); // Reset nationality to default
     setShow(false);
   };
 
@@ -99,51 +97,130 @@ const Forms = ({ route, navigation }) => {
       phone: "Phone:",
       submit: "Submit",
       thankYou: "Thank you for your response",
-      goBack: "Go back",
-      gender: "Gender:",
-      nationality: "Nationality:"
+      goBack: "Go back"
     },
-    // Add other languages here...
+    spanish: {
+      welcome: "Bienvenido a Fanar",
+      date: "Fecha:",
+      firstName: "Nombre:",
+      lastName: "Apellido:",
+      email: "Correo Electrónico:",
+      phone: "Teléfono:",
+      submit: "Enviar",
+      thankYou: "Gracias por su respuesta",
+      goBack: "Regresar"
+    },
+    french: {
+      welcome: "Bienvenue à Fanar",
+      date: "Date:",
+      firstName: "Prénom:",
+      lastName: "Nom de famille:",
+      email: "Email:",
+      phone: "Téléphone:",
+      submit: "Soumettre",
+      thankYou: "Merci pour votre réponse",
+      goBack: "Retourner"
+    },
+    german: {
+      welcome: "Willkommen bei Fanar",
+      date: "Datum:",
+      firstName: "Vorname:",
+      lastName: "Nachname:",
+      email: "Email:",
+      phone: "Telefon:",
+      submit: "Einreichen",
+      thankYou: "Vielen Dank für Ihre Antwort",
+      goBack: "Zurück"
+    },
+    chinese: {
+      welcome: "欢迎来到Fanar",
+      date: "日期:",
+      firstName: "名字:",
+      lastName: "姓氏:",
+      email: "电子邮件:",
+      phone: "电话:",
+      submit: "提交",
+      thankYou: "感谢您的回复",
+      goBack: "返回"
+    },
+    portuguese: {
+      welcome: "Bem-vindo ao Fanar",
+      date: "Data:",
+      firstName: "Nome:",
+      lastName: "Sobrenome:",
+      email: "Email:",
+      phone: "Telefone:",
+      submit: "Enviar",
+      thankYou: "Obrigado pela sua resposta",
+      goBack: "Voltar"
+    },
+    russian: {
+      welcome: "Добро пожаловать в Fanar",
+      date: "Дата:",
+      firstName: "Имя:",
+      lastName: "Фамилия:",
+      email: "Эл. почта:",
+      phone: "Телефон:",
+      submit: "Отправить",
+      thankYou: "Спасибо за ваш ответ",
+      goBack: "Вернуться"
+    },
+    japanese: {
+      welcome: "ファナールへようこそ",
+      date: "日付:",
+      firstName: "名:",
+      lastName: "姓:",
+      email: "メール:",
+      phone: "電話:",
+      submit: "送信",
+      thankYou: "ご回答いただきありがとうございます",
+      goBack: "戻る"
+    },
+    italian: {
+      welcome: "Benvenuto a Fanar",
+      date: "Data:",
+      firstName: "Nome:",
+      lastName: "Cognome:",
+      email: "Email:",
+      phone: "Telefono:",
+      submit: "Invia",
+      thankYou: "Grazie per la tua risposta",
+      goBack: "Torna indietro"
+    }
   };
 
   const currentLabels = labels[language] || labels.english;
 
   // List of nationalities
   const nationalities = [
-    "Select Nationality",
-    "Afghan", "Albanian", "Algerian", "American", "Andorran", "Angolan", "Anguillan",
-    "Citizen of Antigua and Barbuda", "Argentine", "Armenian", "Australian", "Austrian",
-    "Azerbaijani", "Bahamian", "Bahraini", "Bangladeshi", "Barbadian", "Belarusian", "Belgian",
-    "Belizean", "Beninese", "Bermudian", "Bhutanese", "Bolivian", "Citizen of Bosnia and Herzegovina",
-    "Botswanan", "Brazilian", "British", "British Virgin Islander", "Bruneian", "Bulgarian",
-    "Burkinan", "Burmese", "Burundian", "Cambodian", "Cameroonian", "Canadian", "Cape Verdean",
-    "Cayman Islander", "Central African", "Chadian", "Chilean", "Chinese", "Colombian", "Comoran",
-    "Congolese (Congo)", "Congolese (DRC)", "Cook Islander", "Costa Rican", "Croatian", "Cuban",
-    "Cymraes", "Cymro", "Cypriot", "Czech", "Danish", "Djiboutian", "Dominican",
-    "Citizen of the Dominican Republic", "Dutch", "East Timorese", "Ecuadorean", "Egyptian", "Emirati",
-    "English", "Equatorial Guinean", "Eritrean", "Estonian", "Ethiopian", "Faroese", "Fijian",
+    "Select Nationality", "Afghan", "Albanian", "Algerian", "American", "Andorran",
+    "Angolan", "Antiguans", "Argentinean", "Armenian", "Australian", "Austrian", "Azerbaijani",
+    "Bahamian", "Bahraini", "Bangladeshi", "Barbadian", "Barbudans", "Batswana", "Belarusian",
+    "Belgian", "Belizean", "Beninese", "Bhutanese", "Bolivian", "Bosnian", "Brazilian",
+    "British", "Bruneian", "Bulgarian", "Burkinabe", "Burmese", "Burundian", "Cambodian",
+    "Cameroonian", "Canadian", "Cape Verdean", "Central African", "Chadian", "Chilean",
+    "Chinese", "Colombian", "Comoran", "Congolese", "Costa Rican", "Croatian", "Cuban",
+    "Cypriot", "Czech", "Danish", "Djibouti", "Dominican", "Dutch", "East Timorese", "Ecuadorean",
+    "Egyptian", "Emirian", "Equatorial Guinean", "Eritrean", "Estonian", "Ethiopian", "Fijian",
     "Filipino", "Finnish", "French", "Gabonese", "Gambian", "Georgian", "German", "Ghanaian",
-    "Gibraltarian", "Greek", "Greenlandic", "Grenadian", "Guamanian", "Guatemalan",
-    "Citizen of Guinea-Bissau", "Guinean", "Guyanese", "Haitian", "Honduran", "Hong Konger",
-    "Hungarian", "Icelandic", "Indian", "Indonesian", "Iranian", "Iraqi", "Irish", "Israeli",
-    "Italian", "Ivorian", "Jamaican", "Japanese", "Jordanian", "Kazakh", "Kenyan", "Kittitian",
-    "Citizen of Kiribati", "Kosovan", "Kuwaiti", "Kyrgyz", "Lao", "Latvian", "Lebanese", "Liberian",
-    "Libyan", "Liechtenstein citizen", "Lithuanian", "Luxembourger", "Macanese", "Macedonian",
-    "Malagasy", "Malawian", "Malaysian", "Maldivian", "Malian", "Maltese", "Marshallese",
-    "Martiniquais", "Mauritanian", "Mauritian", "Mexican", "Micronesian", "Moldovan", "Monegasque",
-    "Mongolian", "Montenegrin", "Montserratian", "Moroccan", "Mosotho", "Mozambican", "Namibian",
-    "Nauruan", "Nepalese", "New Zealander", "Nicaraguan", "Nigerian", "Nigerien", "Niuean",
-    "North Korean", "Northern Irish", "Norwegian", "Omani", "Pakistani", "Palauan", "Palestinian",
-    "Panamanian", "Papua New Guinean", "Paraguayan", "Peruvian", "Pitcairn Islander", "Polish",
-    "Portuguese", "Prydeinig", "Puerto Rican", "Qatari", "Romanian", "Russian", "Rwandan",
-    "Salvadorean", "Sammarinese", "Samoan", "Sao Tomean", "Saudi Arabian", "Scottish", "Senegalese",
-    "Serbian", "Citizen of Seychelles", "Sierra Leonean", "Singaporean", "Slovak", "Slovenian",
-    "Solomon Islander", "Somali", "South African", "South Korean", "South Sudanese", "Spanish",
-    "Sri Lankan", "St Helenian", "St Lucian", "Stateless", "Sudanese", "Surinamese", "Swazi",
-    "Swedish", "Swiss", "Syrian", "Taiwanese", "Tajik", "Tanzanian", "Thai", "Togolese", "Tongan",
-    "Trinidadian", "Tristanian", "Tunisian", "Turkish", "Turkmen", "Turks and Caicos Islander",
-    "Tuvaluan", "Ugandan", "Ukrainian", "Uruguayan", "Uzbek", "Vatican citizen", "Citizen of Vanuatu",
-    "Venezuelan", "Vietnamese", "Vincentian", "Wallisian", "Welsh", "Yemeni", "Zambian", "Zimbabwean"
+    "Greek", "Grenadian", "Guatemalan", "Guinea-Bissauan", "Guinean", "Guyanese", "Haitian",
+    "Herzegovinian", "Honduran", "Hungarian", "Icelander", "Indian", "Indonesian", "Iranian",
+    "Iraqi", "Irish", "Israeli", "Italian", "Ivorian", "Jamaican", "Japanese", "Jordanian",
+    "Kazakhstani", "Kenyan", "Kittian and Nevisian", "Kuwaiti", "Kyrgyz", "Laotian", "Latvian",
+    "Lebanese", "Liberian", "Libyan", "Liechtensteiner", "Lithuanian", "Luxembourger", "Macedonian",
+    "Malagasy", "Malawian", "Malaysian", "Maldivan", "Malian", "Maltese", "Marshallese",
+    "Mauritanian", "Mauritian", "Mexican", "Micronesian", "Moldovan", "Monacan", "Mongolian",
+    "Moroccan", "Mosotho", "Motswana", "Mozambican", "Namibian", "Nauruan", "Nepalese",
+    "New Zealander", "Nicaraguan", "Nigerian", "Nigerien", "North Korean", "Northern Irish",
+    "Norwegian", "Omani", "Pakistani", "Palauan", "Panamanian", "Papua New Guinean",
+    "Paraguayan", "Peruvian", "Polish", "Portuguese", "Qatari", "Romanian", "Russian", "Rwandan",
+    "Saint Lucian", "Salvadoran", "Samoan", "San Marinese", "Sao Tomean", "Saudi", "Scottish",
+    "Senegalese", "Serbian", "Seychellois", "Sierra Leonean", "Singaporean", "Slovakian",
+    "Slovenian", "Solomon Islander", "Somali", "South African", "South Korean", "Spanish",
+    "Sri Lankan", "Sudanese", "Surinamer", "Swazi", "Swedish", "Swiss", "Syrian", "Taiwanese",
+    "Tajik", "Tanzanian", "Thai", "Togolese", "Tongan", "Trinidadian or Tobagonian", "Tunisian",
+    "Turkish", "Tuvaluan", "Ugandan", "Ukrainian", "Uruguayan", "Uzbekistani", "Venezuelan",
+    "Vietnamese", "Welsh", "Yemenite", "Zambian", "Zimbabwean"
   ];
 
   return show ? (
@@ -158,8 +235,8 @@ const Forms = ({ route, navigation }) => {
           style={styles.background}
         >
           <View style={styles.textboxes}>
-            <Text style={styles.label}>{currentLabels.date}</Text>
-            <TextInput
+          <Text style={styles.label}>{currentLabels.date}</Text>
+          <TextInput
               placeholder={currentLabels.date}
               value={date.toDateString()} // Format the date to display properly
               editable={false}
@@ -196,7 +273,7 @@ const Forms = ({ route, navigation }) => {
               placeholder={currentLabels.phone}
               keyboardType="phone-pad"
             />
-            <Text style={styles.label}>{currentLabels.gender}</Text>
+            <Text style={styles.label}>Gender:</Text>
             <View style={styles.gender}>
               <Picker
                 selectedValue={gender}
@@ -221,20 +298,20 @@ const Forms = ({ route, navigation }) => {
               </Picker>
             </View>
             <View style={styles.buttonContainer}>
-              <Button title={currentLabels.submit} onPress={handleSubmit} style={styles.button} />
-            </View>
+                <Button title={currentLabels.submit} onPress={handleSubmit} style={styles.button} />
+              </View>
           </View>
           <View style={styles.logoContainer}>
-            <Image source={require('../assets/logo.jpg')} style={styles.logo} />
-            <Image source={require('../assets/fanar logo_0.png')} style={styles.logo} />
+              <Image source={require('../assets/logo.jpg')} style={styles.logo} />
+              <Image source={require('../assets/fanar logo_0.png')} style={styles.logo} />
           </View>
         </ImageBackground>
       </View>
     </KeyboardAvoidingView>
   ) : (
     <View>
-      <Text style={styles.thankYou}>{currentLabels.thankYou}</Text>
-      <Button title={currentLabels.goBack} onPress={goBack} />
+      <Text style={styles.thankYou}>Thank you for your response</Text>
+      <Button title="Go back" onPress={goBack} />
     </View>
   );
 };
@@ -248,7 +325,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     color: "black",
     backgroundColor: "white",
-    paddingLeft: screenWidth * 0.036,
+    paddingLeft: screenWidth*0.036,
     fontSize: 16,
   },
   thankYou: {
@@ -306,7 +383,7 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     backgroundColor: "white",
-    paddingLeft: screenWidth * 0.036,
+    paddingLeft: screenWidth*0.036,
     fontSize: 16,
     color: '#888',
   },
@@ -322,6 +399,7 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     flexDirection: 'row',
+
     justifyContent: 'space-between',
     marginTop: 20,
     paddingHorizontal: 10,
