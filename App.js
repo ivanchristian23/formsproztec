@@ -3,12 +3,19 @@ import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 import Shopping from './components/Shopping';
 import Content from './components/Content';
 import Forms from './components/Forms';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Home from './components/Home';
 
 export default function App() {
+  const Stack = createNativeStackNavigator()
   return (
-    <SafeAreaView>
-        <Forms></Forms>
-    </SafeAreaView>
+    <NavigationContainer>
+      <Stack.Navigator initialRouteName="Home">
+        <Stack.Screen name='Home' component={Home} options={{ title: 'Overview' }} />
+        <Stack.Screen name='Forms' component={Forms} />
+      </Stack.Navigator>
+    </NavigationContainer>
   );
 }
 
