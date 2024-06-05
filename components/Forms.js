@@ -10,11 +10,13 @@ import {
   TouchableOpacity,
   KeyboardAvoidingView,
   Platform,
-  Image
+  Image,
+  ScrollView
 } from "react-native";
 import { getDocs, addDoc, collection } from "firebase/firestore";
 import { db } from "./config";
 import { Picker } from "@react-native-picker/picker";
+import Success from './Success'; // Import Success component
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -30,6 +32,7 @@ const Forms = ({ route, navigation }) => {
   const [nationality, setNationality] = useState(""); // New state for nationality
   const [show, setShow] = useState(true);
   const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
+  const [isModalVisible, setModalVisible] = useState(false); // State variable for success modal
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
@@ -67,6 +70,7 @@ const Forms = ({ route, navigation }) => {
     setPhone("");
     setGender(""); // Reset gender to default
     setShow(false);
+    setModalVisible(true); // Show success modal
   };
 
   const handleGenderChange = (itemValue) => {
@@ -223,7 +227,8 @@ const Forms = ({ route, navigation }) => {
     "Vietnamese", "Welsh", "Yemenite", "Zambian", "Zimbabwean"
   ];
 
-  return show ? (
+  return (
+    <ScrollView>
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -283,6 +288,7 @@ const Forms = ({ route, navigation }) => {
                 <Picker.Item label="Select Gender" value="" />
                 <Picker.Item label="Male" value="male" />
                 <Picker.Item label="Female" value="female" />
+                <Picker.Item label="Others" value="others" />
               </Picker>
             </View>
             <Text style={styles.label}>{currentLabels.nationality}</Text>
@@ -298,8 +304,8 @@ const Forms = ({ route, navigation }) => {
               </Picker>
             </View>
             <View style={styles.buttonContainer}>
-                <Button title={currentLabels.submit} onPress={handleSubmit} style={styles.button} />
-              </View>
+              <Button title={currentLabels.submit} onPress={handleSubmit} style={styles.button} />
+            </View>
           </View>
           <View style={styles.logoContainer}>
               <Image source={require('../assets/logo.jpg')} style={styles.logo} />
@@ -307,13 +313,10 @@ const Forms = ({ route, navigation }) => {
           </View>
         </ImageBackground>
       </View>
+      <Success visible={isModalVisible} onClose={() => setModalVisible(false)} />
     </KeyboardAvoidingView>
-  ) : (
-    <View>
-      <Text style={styles.thankYou}>Thank you for your response</Text>
-      <Button title="Go back" onPress={goBack} />
-    </View>
-  );
+    </ScrollView>
+  )
 };
 
 const styles = StyleSheet.create({
