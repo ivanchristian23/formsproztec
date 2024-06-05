@@ -1,14 +1,17 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity,KeyboardAvoidingView,Platform, ScrollView } from 'react-native';
 // import {doc, setDoc} from "firebase/firestore";
 // import { db } from './config'
 // import {getDocs,addDoc, collection} from "firebase/firestore";
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {Picker} from '@react-native-picker/picker';
-
-
+import { useTranslation } from 'react-i18next';
+import i18next, {languageResources} from '../sevices/i18next';
 const Forms = ({route,navigation}) => {
   const { language } = route.params
+  useEffect(() => {
+    console.log(language);
+    i18next.changeLanguage(language);
+  }, [language]);
   const [date, setDate] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
   const [firstName, setFirstName] = useState('');
@@ -17,7 +20,6 @@ const Forms = ({route,navigation}) => {
   const [phone, setPhone] = useState('');
   const [gender, setGender] = useState('');
   const [show, setShow] = useState(true)
-
 
   const toggleDatepicker = () => {
     setShowPicker(!showPicker);
@@ -42,73 +44,55 @@ const goBack = ()=>{
     setShow(false)
     // console.log('Organization Name:', organization);
   };
-
+  const {t} = useTranslation();
   return (
     show?
      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={100}>
     <View >
-     <Text style={styles.header}>Welcome to Fanar</Text>
+     <Text style={styles.header}>{t("welcome")}</Text>
 
     <ImageBackground source={require('../assets/fanar4.jpg')} style={styles.background}>
       <View>
-        <Text style={styles.label}>Date:</Text>
+        <Text style={styles.label}>{t("date")}</Text>
         <TouchableOpacity onPress={toggleDatepicker}>
                     <TextInput
-                        placeholder='Date'
                         value={date.toDateString()} // Format the date to display properly
                         editable={false}
                         style={styles.input}
                     />
                 </TouchableOpacity>
-                {showPicker &&
-                    <DateTimePicker
-                        mode='date'
-                        display='calendar'
-                        value={date}
-                        onChange={handleDateChange}
-                    />
-                }  
-        <Text style={styles.label}>First Name:</Text>
+
+        <Text style={styles.label}>{t("firstName")}</Text>
         <TextInput
           style={styles.input}
           value={firstName}
           onChangeText={setFirstName}
-          placeholder="Enter First Name"
+          placeholder={t("firstName")}
         />
-        <Text style={styles.label}>Last Name:</Text>
+        <Text style={styles.label}>{t("lastName")}</Text>
         <TextInput
           style={styles.input}
           value={lastName}
           onChangeText={setLastName}
-          placeholder="Enter Last Name"
+          placeholder={t("lastName")}
         />
-        <Text style={styles.label}>Email:</Text>
+        <Text style={styles.label}>{t("email")}</Text>
         <TextInput
           style={styles.input}
           value={email}
           autoCapitalize={false}
           onChangeText={setEmail}
-          placeholder="Enter Email"
+          placeholder={t("email")}
           keyboardType="email-address"
         />
-        <Text style={styles.label}>Phone:</Text>
+        <Text style={styles.label}>{t("phone")}</Text>
         <TextInput
           style={styles.input}
           value={phone}
           onChangeText={setPhone}
-          placeholder="Enter Phone"
+          placeholder={t("phone")}
           keyboardType="phone-pad"
         />
-        {/* <Picker
-                    selectedValue={gender}
-                    style={styles.input}
-                    onValueChange={(itemValue, itemIndex) =>
-                        setGender(itemValue)
-                    }>
-                    <Picker.Item label="Select Gender" value="" />
-                    <Picker.Item label="Male" value="male" />
-                    <Picker.Item label="Female" value="female" />
-                </Picker> */}
     <View style={styles.buttonContainer}>
           <Button title="Submit" onPress={handleSubmit} style={styles.button} />
         </View>

@@ -19,11 +19,12 @@ const Home = ({navigation}) => {
       <RNPickerSelect
         onValueChange={(value) => setLanguage(value)}
         items={[
-          { label: 'English', value: 'english' },
+          { label: 'English', value: 'en' },
           { label: 'Spanish', value: 'spanish' },
           { label: 'French', value: 'french' },
           { label: 'German', value: 'german' },
           { label: 'Chinese', value: 'chinese' },
+          { label: 'Japanese', value: 'jp' },
         ]}
         style={pickerSelectStyles}
         placeholder={{ label: 'Select a language...', value: null }}
