@@ -12,9 +12,10 @@ import {
   Platform,
   Image
 } from "react-native";
-import { getDocs, addDoc, collection } from "firebase/firestore";
-import { db } from "./config";
 import { Picker } from "@react-native-picker/picker";
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -30,16 +31,17 @@ const Forms = ({ route, navigation }) => {
   const [show, setShow] = useState(true);
   const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
 
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setDate(currentDate);
+
+  const requestPermissions = async () => {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission to access storage was denied');
+      return false;
+    }
+    return true;
   };
 
-  const goBack = () => {
-    setShow(true);
-  };
-
-  const handleSubmit = async  () => {
+  const handleSubmit = async () => {
     const csvData = [
       ["Date", "First Name", "Last Name", "Email", "Phone"],
       [date.toDateString(), firstName, lastName, email, phone]
@@ -47,28 +49,56 @@ const Forms = ({ route, navigation }) => {
 
     const csvString = csvData.map(row => row.join(",")).join("\n");
 
-    const filePath = `${RNFS.DocumentDirectoryPath}/formData.csv`;
+    const hasPermission = await requestPermissions();
+    if (!hasPermission) return;
+
+    const filePath = `${FileSystem.documentDirectory}formData.csv`;
 
     try {
-      const fileExists = await RNFS.exists(filePath);
-      if (fileExists) {
-        await RNFS.appendFile(filePath, `\n${csvString.split("\n")[1]}`, 'utf8');
+      // Write to the file
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+      if (fileExists.exists) {
+        await FileSystem.writeAsStringAsync(filePath, `\n${csvString.split("\n")[1]}`, { encoding: FileSystem.EncodingType.UTF8, append: true });
       } else {
-        await RNFS.writeFile(filePath, csvString, 'utf8');
+        await FileSystem.writeAsStringAsync(filePath, csvString, { encoding: FileSystem.EncodingType.UTF8 });
       }
       console.log('CSV file created/updated at:', filePath);
+
+      // Check if the file is written successfully
+      const fileWritten = await FileSystem.getInfoAsync(filePath);
+      if (!fileWritten.exists) {
+        throw new Error('File not written successfully');
+      }
+
+      // Move the file to the Downloads folder
+      const downloadsDir = FileSystem.documentDirectory + 'Download/';
+      await FileSystem.makeDirectoryAsync(downloadsDir, { intermediates: true });
+      const newFilePath = downloadsDir + 'formData.csv';
+      await FileSystem.moveAsync({
+        from: filePath,
+        to: newFilePath,
+      });
+
+      console.log('CSV file moved to Downloads folder:', newFilePath);
+
+      // Share the file after it is written
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(newFilePath);
+      } else {
+        Alert.alert("Sharing is not available on this device");
+      }
     } catch (error) {
       console.error('Error writing CSV file:', error);
+      Alert.alert('Error writing CSV file:', error.message);
     }
-    
+
     setEmail("");
     setFirstName("");
     setLastName("");
     setPhone("");
-    setGender(""); // Reset gender to default
     setShow(false);
   };
-
+  
   const handleGenderChange = (itemValue) => {
     setGender(itemValue);
     if (itemValue === "") {
@@ -182,7 +212,7 @@ const Forms = ({ route, navigation }) => {
 
   const currentLabels = labels[language] || labels.english;
 
-  return show ? (
+  return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS == "ios" ? "padding" : "height"}
@@ -255,12 +285,7 @@ const Forms = ({ route, navigation }) => {
         </ImageBackground>
       </View>
     </KeyboardAvoidingView>
-  ) : (
-    <View>
-      <Text style={styles.thankYou}>Thank you for your response</Text>
-      <Button title="Go back" onPress={goBack} />
-    </View>
-  );
+  )
 };
 
 const styles = StyleSheet.create({
