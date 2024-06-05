@@ -1,35 +1,37 @@
-import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity, KeyboardAvoidingView, Platform, Image } from 'react-native';
-import { doc, setDoc } from "firebase/firestore";
-import { db } from './config';
+import React, { useState } from "react";
+import {
+  View,
+  Text,
+  TextInput,
+  Button,
+  Dimensions,
+  StyleSheet,
+  ImageBackground,
+  TouchableOpacity,
+  KeyboardAvoidingView,
+  Platform,
+  Image
+} from "react-native";
 import { getDocs, addDoc, collection } from "firebase/firestore";
-import DateTimePicker from '@react-native-community/datetimepicker';
-import { Dimensions } from 'react-native';
+import { db } from "./config";
+import { Picker } from "@react-native-picker/picker";
+
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const Forms = ({route,navigation}) => {
-  const { language } = route.params
-  // useEffect(() => {
-  //   console.log(language);
-  //   i18next.changeLanguage(language);
-  // }, [language]);
+const Forms = ({ route, navigation }) => {
+  const { language } = route.params;
   const [date, setDate] = useState(new Date());
-  const [showPicker, setShowPicker] = useState(false);
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [email, setEmail] = useState('');
-  const [phone, setPhone] = useState('');
-  const [gender, setGender] = useState('');
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [gender, setGender] = useState("");
   const [show, setShow] = useState(true);
-
-  const toggleDatepicker = () => {
-    setShowPicker(!showPicker);
-  };
+  const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
 
   const handleDateChange = (event, selectedDate) => {
     const currentDate = selectedDate || date;
-    setShowPicker(Platform.OS === 'ios');
     setDate(currentDate);
   };
 
@@ -63,7 +65,17 @@ const Forms = ({route,navigation}) => {
     setFirstName("");
     setLastName("");
     setPhone("");
+    setGender(""); // Reset gender to default
     setShow(false);
+  };
+
+  const handleGenderChange = (itemValue) => {
+    setGender(itemValue);
+    if (itemValue === "") {
+      setPlaceholderColor("#888"); // Grey color for placeholder
+    } else {
+      setPlaceholderColor("black"); // Default color for selected text
+    }
   };
 
   const labels = {
@@ -170,85 +182,104 @@ const Forms = ({route,navigation}) => {
 
   const currentLabels = labels[language] || labels.english;
 
-  return (
-    show ?
-      <KeyboardAvoidingView style={styles.container} behavior={Platform.OS == "ios" ? "padding" : "height"} keyboardVerticalOffset={100}>
-        <View>
-      
-          <ImageBackground source={require('../assets/fanar.jpg')} style={styles.background}>
-            <View>
-              <Text style={styles.label}>{currentLabels.date}</Text>
-              <TouchableOpacity onPress={toggleDatepicker}>
-                <TextInput
-                  placeholder={currentLabels.date}
-                  value={date.toDateString()}
-                  editable={false}
-                  style={styles.input}
-                />
-              </TouchableOpacity>
-              {showPicker &&
-                <DateTimePicker
-                  mode='date'
-                  display='calendar'
-                  value={date}
-                  onChange={handleDateChange}
-                />
-              }
-              <Text style={styles.label}>{currentLabels.firstName}</Text>
-              <TextInput
-                style={styles.input}
-                value={firstName}
-                onChangeText={setFirstName}
-                placeholder={currentLabels.firstName}
-              />
-              <Text style={styles.label}>{currentLabels.lastName}</Text>
-              <TextInput
-                style={styles.input}
-                value={lastName}
-                onChangeText={setLastName}
-                placeholder={currentLabels.lastName}
-              />
-              <Text style={styles.label}>{currentLabels.email}</Text>
-              <TextInput
-                style={styles.input}
-                value={email}
-                autoCapitalize="none"
-                onChangeText={setEmail}
-                placeholder={currentLabels.email}
-                keyboardType="email-address"
-              />
-              <Text style={styles.label}>{currentLabels.phone}</Text>
-              <TextInput
-                style={styles.input}
-                value={phone}
-                onChangeText={setPhone}
-                placeholder={currentLabels.phone}
-                keyboardType="phone-pad"
-              />
-              <View style={styles.buttonContainer}>
+  return show ? (
+    <KeyboardAvoidingView
+      style={styles.container}
+      behavior={Platform.OS == "ios" ? "padding" : "height"}
+      keyboardVerticalOffset={100}
+    >
+      <View>
+        <ImageBackground
+          source={require("../assets/fanar.jpg")}
+          style={styles.background}
+        >
+          <View style={styles.textboxes}>
+          <Text style={styles.label}>{currentLabels.date}</Text>
+          <TextInput
+              placeholder={currentLabels.date}
+              value={date.toDateString()} // Format the date to display properly
+              editable={false}
+              style={styles.date}
+            />
+            <Text style={styles.label}>{currentLabels.firstName}</Text>
+            <TextInput
+              style={styles.input}
+              value={firstName}
+              onChangeText={setFirstName}
+              placeholder={currentLabels.firstName}
+            />
+            <Text style={styles.label}>{currentLabels.lastName}</Text>
+            <TextInput
+              style={styles.input}
+              value={lastName}
+              onChangeText={setLastName}
+              placeholder={currentLabels.lastName}
+            />
+            <Text style={styles.label}>{currentLabels.email}</Text>
+            <TextInput
+              style={styles.input}
+              value={email}
+              autoCapitalize="none"
+              onChangeText={setEmail}
+              placeholder={currentLabels.email}
+              keyboardType="email-address"
+            />
+            <Text style={styles.label}>{currentLabels.phone}</Text>
+            <TextInput
+              style={styles.input}
+              value={phone}
+              onChangeText={setPhone}
+              placeholder={currentLabels.phone}
+              keyboardType="phone-pad"
+            />
+            <Text style={styles.label}>Gender:</Text>
+            <View style={styles.gender}>
+              <Picker
+                selectedValue={gender}
+                onValueChange={handleGenderChange}
+                style={{ color: placeholderColor }}
+              >
+                <Picker.Item label="Select Gender" value="" />
+                <Picker.Item label="Male" value="male" />
+                <Picker.Item label="Female" value="female" />
+              </Picker>
+            </View>
+            <View style={styles.buttonContainer}>
                 <Button title={currentLabels.submit} onPress={handleSubmit} style={styles.button} />
               </View>
-            </View>
-            <View style={styles.logoContainer}>
+          </View>
+          <View style={styles.logoContainer}>
               <Image source={require('../assets/logo.jpg')} style={styles.logo} />
               <Image source={require('../assets/fanar logo_0.png')} style={styles.logo} />
-            </View>
-          </ImageBackground>
-        </View>
-      </KeyboardAvoidingView> :
-      <View>
-        <Text style={styles.thankYou}>{currentLabels.thankYou}</Text>
-        <Button title={currentLabels.goBack} onPress={goBack} />
+          </View>
+        </ImageBackground>
       </View>
+    </KeyboardAvoidingView>
+  ) : (
+    <View>
+      <Text style={styles.thankYou}>Thank you for your response</Text>
+      <Button title="Go back" onPress={goBack} />
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  date: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    color: "black",
+    backgroundColor: "white",
+    paddingLeft: screenWidth*0.036,
+    fontSize: 16,
+  },
   thankYou: {
     fontSize: 20,
-    textAlign: 'center',
+    textAlign: "center",
     marginTop: 20,
-    color: 'black',
+    color: "black",
   },
   buttonContainer: {
     marginTop: 20,
@@ -256,43 +287,74 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
   },
   button: {
-    color: 'white',
-    fontWeight: 'bold',
-    textAlign: 'center',
+    backgroundColor: "#007AFF",
+    paddingVertical: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    color: "white",
+    fontWeight: "bold",
+    textAlign: "center",
   },
   background: {
-    resizeMode: 'cover',
-    justifyContent: 'center',
-    height: '100%',
-    width: '100%'
+    resizeMode: "cover",
+    height: "100%",
+    width: "100%",
+  },
+  textboxes: {
+    paddingLeft: screenWidth * 0.03,
+    paddingTop: screenHeight * 0.15,
+    width: screenWidth * 0.55,
   },
   header: {
     fontSize: 24,
-    fontWeight: 'bold',
-    textAlign: 'center',
+    fontWeight: "bold",
+    textAlign: "center",
     marginBottom: 20,
-    color: 'black',
+    color: "black",
   },
   container: {
-    width: '100%',
-    height: '100%',
+    width: "100%",
+    height: "100%",
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
-    color: 'white',
+    color: "white",
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
     marginBottom: 10,
-    backgroundColor: 'white',
+    backgroundColor: "white",
+    paddingLeft: screenWidth*0.036,
+    fontSize: 16,
+    color: '#888',
+  },
+  gender: {
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    padding: 10,
+    marginBottom: 10,
+    backgroundColor: "white",
+    height: screenHeight * 0.043,
+    justifyContent: "center",
   },
   logoContainer: {
     flexDirection: 'row',
+
+    justifyContent: 'space-between',
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  logo: {
+    width: 100,
+    height: 100,
+    resizeMode: 'contain',
     justifyContent: 'space-between',
     marginTop: 20,
     paddingHorizontal: 10,
