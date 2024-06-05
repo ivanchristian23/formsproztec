@@ -254,7 +254,7 @@ const Forms = ({ route, navigation }) => {
     "Vietnamese", "Welsh", "Yemenite", "Zambian", "Zimbabwean"
   ];
 
-  return show ? (
+  return (
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS == "ios" ? "padding" : "height"}
