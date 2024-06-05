@@ -1,27 +1,15 @@
-import React, { useState } from "react";
-import {
-  View,
-  Text,
-  Image,
-  TextInput,
-  Button,
-  StyleSheet,
-  ImageBackground,
-  TouchableOpacity,
-  KeyboardAvoidingView,
-  Platform,
-  ScrollView,
-  Dimensions,
-} from "react-native";
-import { doc, setDoc } from "firebase/firestore";
-import { db } from "./config";
-import { getDocs, addDoc, collection } from "firebase/firestore";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import React, { useState } from 'react';
+import { View, Text, Image, TextInput, Button, StyleSheet, ImageBackground, TouchableOpacity,KeyboardAvoidingView,Platform, ScrollView } from 'react-native';
+import {doc, setDoc} from "firebase/firestore";
+import { db } from './config'
+import {getDocs,addDoc, collection} from "firebase/firestore";
+import DateTimePicker from '@react-native-community/datetimepicker';
+import {Picker} from '@react-native-picker/picker';
+import Vi from 'date-and-time/locale/vi';
 
-const screenWidth = Dimensions.get("window").width;
-const screenHeight = Dimensions.get("window").height;
 
-const Forms = () => {
+const Forms = ({route,navigation}) => {
+  const { language } = route.params
   const [date, setDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -42,22 +30,23 @@ const Forms = () => {
   const readAll = async () => {
     const docs = await getDocs(collection(db, "users"));
     docs.forEach((doc) => {
-      // doc.data() is never undefined for query doc snapshots
-      console.log(doc.id, " => ", doc.data());
+    // doc.data() is never undefined for query doc snapshots
+    console.log(doc.id, " => ", doc.data());
     });
-  };
-
+    }
+    
   const add = async () => {
     const docRef = await addDoc(collection(db, "users"), {
-      date: date,
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      phone: phone,
-      gender: gender,
+    date: date,
+    firstName: firstName,
+    lastName:lastName,
+    email:email,
+    phone:phone,
+    gender:gender,
     });
     console.log("Document written with ID: ", docRef.id);
-  };
+
+    }
 
   const handleSubmit = () => {
     // Handle form submission here
