@@ -16,9 +16,10 @@ import {
 
   
 } from "react-native";
-import { getDocs, addDoc, collection } from "firebase/firestore";
-import { db } from "./config";
 import { Picker } from "@react-native-picker/picker";
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import * as MediaLibrary from 'expo-media-library';
 import Success from './Success'; // Import Success component
 
 const screenWidth = Dimensions.get("window").width;
@@ -37,45 +38,86 @@ const Forms = ({ route, navigation }) => {
   const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
   const [isModalVisible, setModalVisible] = useState(false); // State variable for success modal
 
-  const handleDateChange = (event, selectedDate) => {
-    const currentDate = selectedDate || date;
-    setDate(currentDate);
+  const requestPermissions = async () => {
+    const { status } = await MediaLibrary.requestPermissionsAsync();
+    if (status !== 'granted') {
+      Alert.alert('Permission to access storage was denied');
+      return false;
+    }
+    return true;
   };
 
-  const goBack = () => {
-    setShow(true);
-  };
-
-  const readAll = async () => {
-    const docs = await getDocs(collection(db, "users"));
-    docs.forEach((doc) => {
-      console.log(doc.id, " => ", doc.data());
-    });
-  };
-
-  const add = async () => {
-    const docRef = await addDoc(collection(db, "users"), {
-      date: date,
-      firstName: firstName,
-      lastName: lastName,
-      email: email,
-      phone: phone,
-      gender: gender,
-    });
-    console.log("Document written with ID: ", docRef.id);
-  };
-
-  const handleSubmit = () => {
-    add();
+  const handleSubmit = async () => {
+    const csvData = [
+      ["Date", "First Name", "Last Name", "Email", "Phone","Gender","Nationality"],
+      [date.toDateString(), firstName, lastName, email, phone,gender,nationality]
+    ];
+  
+    const csvString = csvData.map(row => row.join(",")).join("\n");
+  
+    const hasPermission = await requestPermissions();
+    if (!hasPermission) return;
+  
+    const filePath = `${FileSystem.documentDirectory}formData.csv`;
+  
+    try {
+      // Check if the file already exists
+      const fileExists = await FileSystem.getInfoAsync(filePath);
+      let existingData = "";
+  
+      if (fileExists.exists) {
+        // Read the existing data
+        existingData = await FileSystem.readAsStringAsync(filePath, { encoding: FileSystem.EncodingType.UTF8 });
+        // Remove the header from the new data to avoid duplicating the header row
+        const newData = csvString.split("\n")[1];
+        // Append the new data to the existing data
+        const updatedData = `${existingData}\n${newData}`;
+        await FileSystem.writeAsStringAsync(filePath, updatedData, { encoding: FileSystem.EncodingType.UTF8 });
+      } else {
+        // Write the new data with header if the file does not exist
+        await FileSystem.writeAsStringAsync(filePath, csvString, { encoding: FileSystem.EncodingType.UTF8 });
+      }
+      console.log('CSV file created/updated at:', filePath);
+  
+      // Check if the file is written successfully
+      const fileWritten = await FileSystem.getInfoAsync(filePath);
+      if (!fileWritten.exists) {
+        throw new Error('File not written successfully');
+      }
+  
+      // Move the file to the Downloads folder
+      const downloadsDir = FileSystem.documentDirectory + 'Download/';
+      await FileSystem.makeDirectoryAsync(downloadsDir, { intermediates: true });
+      const newFilePath = downloadsDir + 'formData.csv';
+      await FileSystem.moveAsync({
+        from: filePath,
+        to: newFilePath,
+      });
+  
+      console.log('CSV file moved to Downloads folder:', newFilePath);
+  
+      // Share the file after it is written
+      if (await Sharing.isAvailableAsync()) {
+        await Sharing.shareAsync(newFilePath);
+      } else {
+        Alert.alert("Sharing is not available on this device");
+      }
+    } catch (error) {
+      console.error('Error writing CSV file:', error);
+      Alert.alert('Error writing CSV file:', error.message);
+    }
+  
     setEmail("");
     setFirstName("");
     setLastName("");
     setPhone("");
-    setGender(""); // Reset gender to default
+    setGender("")
+    setNationality("")
     setShow(false);
     setModalVisible(true); // Show success modal
   };
-
+  
+  
   const handleGenderChange = (itemValue) => {
     setGender(itemValue);
     if (itemValue === "") {
