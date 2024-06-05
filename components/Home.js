@@ -1,7 +1,7 @@
 import { StyleSheet, Text, View, Button, ImageBackground } from "react-native";
 import React, { useState,useEffect } from "react";
 import RNPickerSelect from "react-native-picker-select";
-
+import { Foundation } from "react-native-vector-icons";
 const Home = ({ navigation, route }) => {
   const [language, setLanguage] = useState("english");
   const [submissions, setSubmissions] = useState([]);
@@ -10,12 +10,15 @@ const Home = ({ navigation, route }) => {
         // console.log(route.params.newSubmission);
         let temp = [...submissions];
         temp.push(route.params.newSubmission);
+        console.log(temp);
         setSubmissions(temp);
-        console.log(submissions);
     }
   }, [route.params?.newSubmission]);
   const handleSubmit = () => {
     navigation.navigate("Forms", { language: language });
+  };
+  const handleExport = () => {
+    navigation.navigate("Admin",{submissions:submissions});
   };
 
   return (
@@ -47,6 +50,15 @@ const Home = ({ navigation, route }) => {
         <View style={styles.buttonContainer}>
           <Button title="Submit" onPress={handleSubmit} color="#1E90FF" />
         </View>
+        <View style={styles.exportButtonContainer}>
+        <Foundation
+            name="page-export-csv"
+            size={50}
+            onPress={handleExport}
+            color="white"
+          />
+        </View>
+        
       </View>
     </ImageBackground>
   );
@@ -60,6 +72,11 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     flex: 1,
+  },
+  exportButtonContainer: {
+    position: 'absolute',
+    right: 10,
+    bottom: 10,
   },
   welcomeText: {
     fontSize: 24,

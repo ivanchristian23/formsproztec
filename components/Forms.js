@@ -51,7 +51,7 @@ const Forms = ({ route, navigation }) => {
     setNationality("")
     setModalVisible(true); // Show success modal
     console.log(newSubmission);
-    navigation.replace('Home', {params: newSubmission});
+    navigation.navigate('Home', {newSubmission});
   };  
   
   const handleGenderChange = (itemValue) => {
