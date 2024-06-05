@@ -46,33 +46,42 @@ const Forms = ({ route, navigation }) => {
 
   const handleSubmit = async () => {
     const csvData = [
-      ["Date", "First Name", "Last Name", "Email", "Phone"],
-      [date.toDateString(), firstName, lastName, email, phone]
+      ["Date", "First Name", "Last Name", "Email", "Phone","Gender","Nationality"],
+      [date.toDateString(), firstName, lastName, email, phone,gender,nationality]
     ];
-
+  
     const csvString = csvData.map(row => row.join(",")).join("\n");
-
+  
     const hasPermission = await requestPermissions();
     if (!hasPermission) return;
-
+  
     const filePath = `${FileSystem.documentDirectory}formData.csv`;
-
+  
     try {
-      // Write to the file
+      // Check if the file already exists
       const fileExists = await FileSystem.getInfoAsync(filePath);
+      let existingData = "";
+  
       if (fileExists.exists) {
-        await FileSystem.writeAsStringAsync(filePath, `\n${csvString.split("\n")[1]}`, { encoding: FileSystem.EncodingType.UTF8, append: true });
+        // Read the existing data
+        existingData = await FileSystem.readAsStringAsync(filePath, { encoding: FileSystem.EncodingType.UTF8 });
+        // Remove the header from the new data to avoid duplicating the header row
+        const newData = csvString.split("\n")[1];
+        // Append the new data to the existing data
+        const updatedData = `${existingData}\n${newData}`;
+        await FileSystem.writeAsStringAsync(filePath, updatedData, { encoding: FileSystem.EncodingType.UTF8 });
       } else {
+        // Write the new data with header if the file does not exist
         await FileSystem.writeAsStringAsync(filePath, csvString, { encoding: FileSystem.EncodingType.UTF8 });
       }
       console.log('CSV file created/updated at:', filePath);
-
+  
       // Check if the file is written successfully
       const fileWritten = await FileSystem.getInfoAsync(filePath);
       if (!fileWritten.exists) {
         throw new Error('File not written successfully');
       }
-
+  
       // Move the file to the Downloads folder
       const downloadsDir = FileSystem.documentDirectory + 'Download/';
       await FileSystem.makeDirectoryAsync(downloadsDir, { intermediates: true });
@@ -81,9 +90,9 @@ const Forms = ({ route, navigation }) => {
         from: filePath,
         to: newFilePath,
       });
-
+  
       console.log('CSV file moved to Downloads folder:', newFilePath);
-
+  
       // Share the file after it is written
       if (await Sharing.isAvailableAsync()) {
         await Sharing.shareAsync(newFilePath);
@@ -94,14 +103,17 @@ const Forms = ({ route, navigation }) => {
       console.error('Error writing CSV file:', error);
       Alert.alert('Error writing CSV file:', error.message);
     }
-
+  
     setEmail("");
     setFirstName("");
     setLastName("");
     setPhone("");
+    setGender("")
+    setNationality("")
     setShow(false);
     setModalVisible(true); // Show success modal
   };
+  
   
   const handleGenderChange = (itemValue) => {
     setGender(itemValue);
