@@ -1,7 +1,5 @@
 import { StatusBar } from 'expo-status-bar';
 import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
-import Shopping from './components/Shopping';
-import Content from './components/Content';
 import Forms from './components/Forms';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
