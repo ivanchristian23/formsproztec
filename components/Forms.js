@@ -7,21 +7,19 @@ import {
   Dimensions,
   StyleSheet,
   ImageBackground,
-  TouchableOpacity,
   KeyboardAvoidingView,
-  Platform,
   Image,
-  ScrollView,
-  Alert
+  Alert,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-import Success from './Success'; // Import Success component
+import { Dropdown } from "react-native-element-dropdown";
+import Success from "./Success"; // Import Success component
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const Forms = ({ route, navigation }) => {
-  const { language, addSubmission  } = route.params;
+const Forms = ({ route }) => {
+  const { language, addSubmission } = route.params;
   const [date, setDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -30,34 +28,59 @@ const Forms = ({ route, navigation }) => {
   const [gender, setGender] = useState("");
   const [nationality, setNationality] = useState(""); // New state for nationality
   const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
+  const [placeholderColor1, setPlaceholderColor1] = useState("#888"); // Grey color for placeholder
   const [isModalVisible, setModalVisible] = useState(false); // State variable for success modal
-  const [show1, setShow1] = useState(false);
-  const [countryCode, setCountryCode] = useState('');
 
   const handleSubmit = () => {
-    const newSubmission = {
-      date: date.toDateString(),
-      firstName,
-      lastName,
-      email,
-      phone,
-      gender,
-      nationality
-    };
-    setEmail("");
-    setFirstName("");
-    setLastName("");
-    setPhone("");
-    setGender("")
-    setNationality("")
-    setModalVisible(true); // Show success modal
-    console.log(newSubmission);
-    if (addSubmission) {
-      addSubmission(newSubmission); // Call the callback function with newSubmission
+    // Check if any required field is empty
+    if (
+      !firstName.trim() ||
+      !lastName.trim() ||
+      !email.trim() ||
+      !phone.trim() ||
+      !gender.trim() ||
+      !nationality.trim()
+    ) {
+      // Alert user that all fields are required
+      Alert.alert(
+        "Incomplete Form",
+        "Please fill out all fields to submit the form.",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+      );
+    } else {
+      // Prepare the new submission object
+      const newSubmission = {
+        date: date.toDateString(),
+        firstName,
+        lastName,
+        email,
+        phone,
+        gender,
+        nationality,
+      };
+
+      // Reset fields
+      setEmail("");
+      setFirstName("");
+      setLastName("");
+      setPhone("");
+      setGender("");
+      setNationality("");
+      setModalVisible(true); // Show success modal
+
+      // Log the new submission to console
+      console.log(newSubmission);
+
+      // Call the callback function if it exists
+      if (addSubmission) {
+        addSubmission(newSubmission); // Call the callback function with newSubmission
+      }
+
+      // Optionally navigate back to home or another screen
+      // navigation.navigate('Home', {newSubmission});
     }
-    // navigation.navigate('Home', {newSubmission});
-  };  
-  
+  };
+
   const handleGenderChange = (itemValue) => {
     setGender(itemValue);
     if (itemValue === "") {
@@ -70,163 +93,373 @@ const Forms = ({ route, navigation }) => {
   const handleNationalityChange = (itemValue) => {
     setNationality(itemValue);
     if (itemValue === "") {
-      setPlaceholderColor("#888"); // Grey color for placeholder
+      setPlaceholderColor1("#888"); // Grey color for placeholder
     } else {
-      setPlaceholderColor("black"); // Default color for selected text
+      setPlaceholderColor1("black"); // Default color for selected text
     }
   };
 
   const labels = {
     english: {
       welcome: "Welcome to Fanar",
-      date: "Date:",
-      firstName: "First Name:",
-      lastName: "Last Name:",
-      email: "Email:",
-      phone: "Phone:",
+      date: "Date",
+      firstName: "First Name",
+      lastName: "Last Name",
+      email: "Email",
+      phone: "Phone",
       submit: "Submit",
       thankYou: "Thank you for your response",
-      goBack: "Go back"
+      goBack: "Go back",
+      gender: "Gender",
+      nationality: "Nationality",
+      selectGender: "Select Gender",
+      selectNationality: "Select Nationality"
     },
     spanish: {
       welcome: "Bienvenido a Fanar",
-      date: "Fecha:",
-      firstName: "Nombre:",
-      lastName: "Apellido:",
-      email: "Correo Electrónico:",
-      phone: "Teléfono:",
+      date: "Fecha",
+      firstName: "Nombre",
+      lastName: "Apellido",
+      email: "Correo Electrónico",
+      phone: "Teléfono",
       submit: "Enviar",
       thankYou: "Gracias por su respuesta",
-      goBack: "Regresar"
+      goBack: "Regresar",
+      gender: "Género",
+      nationality: "Nacionalidad",
+      selectGender: "Seleccionar Género",
+      selectNationality: "Seleccionar Nacionalidad"
     },
     french: {
       welcome: "Bienvenue à Fanar",
-      date: "Date:",
-      firstName: "Prénom:",
-      lastName: "Nom de famille:",
-      email: "Email:",
-      phone: "Téléphone:",
+      date: "Date",
+      firstName: "Prénom",
+      lastName: "Nom de famille",
+      email: "Email",
+      phone: "Téléphone",
       submit: "Soumettre",
       thankYou: "Merci pour votre réponse",
-      goBack: "Retourner"
+      goBack: "Retourner",
+      gender: "Genre",
+      nationality: "Nationalité",
+      selectGender: "Sélectionner le genre",
+      selectNationality: "Sélectionner la nationalité"
     },
     german: {
       welcome: "Willkommen bei Fanar",
-      date: "Datum:",
-      firstName: "Vorname:",
-      lastName: "Nachname:",
-      email: "Email:",
-      phone: "Telefon:",
+      date: "Datum",
+      firstName: "Vorname",
+      lastName: "Nachname",
+      email: "Email",
+      phone: "Telefon",
       submit: "Einreichen",
       thankYou: "Vielen Dank für Ihre Antwort",
-      goBack: "Zurück"
+      goBack: "Zurück",
+      gender: "Geschlecht",
+      nationality: "Nationalität",
+      selectGender: "Geschlecht auswählen",
+      selectNationality: "Nationalität auswählen"
     },
     chinese: {
       welcome: "欢迎来到Fanar",
-      date: "日期:",
-      firstName: "名字:",
-      lastName: "姓氏:",
-      email: "电子邮件:",
+      date: "日期",
+      firstName: "名字",
+      lastName: "姓氏",
+      email: "电子邮件",
       phone: "电话:",
       submit: "提交",
       thankYou: "感谢您的回复",
-      goBack: "返回"
+      goBack: "返回",
+      gender: "性别",
+      nationality: "国籍",
+      selectGender: "选择性别",
+      selectNationality: "选择国籍"
     },
     portuguese: {
       welcome: "Bem-vindo ao Fanar",
-      date: "Data:",
-      firstName: "Nome:",
-      lastName: "Sobrenome:",
-      email: "Email:",
-      phone: "Telefone:",
+      date: "Data",
+      firstName: "Nome",
+      lastName: "Sobrenome",
+      email: "Email",
+      phone: "Telefone",
       submit: "Enviar",
       thankYou: "Obrigado pela sua resposta",
-      goBack: "Voltar"
+      goBack: "Voltar",
+      gender: "Gênero",
+      nationality: "Nacionalidade",
+      selectGender: "Selecionar Gênero",
+      selectNationality: "Selecionar Nacionalidade"
     },
     russian: {
       welcome: "Добро пожаловать в Fanar",
-      date: "Дата:",
-      firstName: "Имя:",
-      lastName: "Фамилия:",
-      email: "Эл. почта:",
-      phone: "Телефон:",
+      date: "Дата",
+      firstName: "Имя",
+      lastName: "Фамилия",
+      email: "Эл. почта",
+      phone: "Телефон",
       submit: "Отправить",
       thankYou: "Спасибо за ваш ответ",
-      goBack: "Вернуться"
+      goBack: "Вернуться",
+      gender: "Пол",
+      nationality: "Национальность",
+      selectGender: "Выберите пол",
+      selectNationality: "Выберите национальность"
     },
     japanese: {
       welcome: "ファナールへようこそ",
-      date: "日付:",
-      firstName: "名:",
-      lastName: "姓:",
-      email: "メール:",
-      phone: "電話:",
+      date: "日付",
+      firstName: "名",
+      lastName: "姓",
+      email: "メール",
+      phone: "電話",
       submit: "送信",
       thankYou: "ご回答いただきありがとうございます",
-      goBack: "戻る"
+      goBack: "戻る",
+      gender: "性別",
+      nationality: "国籍",
+      selectGender: "性別を選択",
+      selectNationality: "国籍を選択"
     },
     italian: {
       welcome: "Benvenuto a Fanar",
-      date: "Data:",
-      firstName: "Nome:",
-      lastName: "Cognome:",
-      email: "Email:",
-      phone: "Telefono:",
+      date: "Data",
+      firstName: "Nome",
+      lastName: "Cognome",
+      email: "Email",
+      phone: "Telefono",
       submit: "Invia",
       thankYou: "Grazie per la tua risposta",
-      goBack: "Torna indietro"
-    }
+      goBack: "Torna indietro",
+      gender: "Genere",
+      nationality: "Nazionalità",
+      selectGender: "Seleziona il genere",
+      selectNationality: "Seleziona la nazionalità"
+    },
   };
 
   const currentLabels = labels[language] || labels.english;
 
   // List of nationalities
-  const nationalities = [
-    "Select Nationality", "Afghan", "Albanian", "Algerian", "American", "Andorran",
-    "Angolan", "Antiguans", "Argentinean", "Armenian", "Australian", "Austrian", "Azerbaijani",
-    "Bahamian", "Bahraini", "Bangladeshi", "Barbadian", "Barbudans", "Batswana", "Belarusian",
-    "Belgian", "Belizean", "Beninese", "Bhutanese", "Bolivian", "Bosnian", "Brazilian",
-    "British", "Bruneian", "Bulgarian", "Burkinabe", "Burmese", "Burundian", "Cambodian",
-    "Cameroonian", "Canadian", "Cape Verdean", "Central African", "Chadian", "Chilean",
-    "Chinese", "Colombian", "Comoran", "Congolese", "Costa Rican", "Croatian", "Cuban",
-    "Cypriot", "Czech", "Danish", "Djibouti", "Dominican", "Dutch", "East Timorese", "Ecuadorean",
-    "Egyptian", "Emirian", "Equatorial Guinean", "Eritrean", "Estonian", "Ethiopian", "Fijian",
-    "Filipino", "Finnish", "French", "Gabonese", "Gambian", "Georgian", "German", "Ghanaian",
-    "Greek", "Grenadian", "Guatemalan", "Guinea-Bissauan", "Guinean", "Guyanese", "Haitian",
-    "Herzegovinian", "Honduran", "Hungarian", "Icelander", "Indian", "Indonesian", "Iranian",
-    "Iraqi", "Irish", "Israeli", "Italian", "Ivorian", "Jamaican", "Japanese", "Jordanian",
-    "Kazakhstani", "Kenyan", "Kittian and Nevisian", "Kuwaiti", "Kyrgyz", "Laotian", "Latvian",
-    "Lebanese", "Liberian", "Libyan", "Liechtensteiner", "Lithuanian", "Luxembourger", "Macedonian",
-    "Malagasy", "Malawian", "Malaysian", "Maldivan", "Malian", "Maltese", "Marshallese",
-    "Mauritanian", "Mauritian", "Mexican", "Micronesian", "Moldovan", "Monacan", "Mongolian",
-    "Moroccan", "Mosotho", "Motswana", "Mozambican", "Namibian", "Nauruan", "Nepalese",
-    "New Zealander", "Nicaraguan", "Nigerian", "Nigerien", "North Korean", "Northern Irish",
-    "Norwegian", "Omani", "Pakistani", "Palauan", "Panamanian", "Papua New Guinean",
-    "Paraguayan", "Peruvian", "Polish", "Portuguese", "Qatari", "Romanian", "Russian", "Rwandan",
-    "Saint Lucian", "Salvadoran", "Samoan", "San Marinese", "Sao Tomean", "Saudi", "Scottish",
-    "Senegalese", "Serbian", "Seychellois", "Sierra Leonean", "Singaporean", "Slovakian",
-    "Slovenian", "Solomon Islander", "Somali", "South African", "South Korean", "Spanish",
-    "Sri Lankan", "Sudanese", "Surinamer", "Swazi", "Swedish", "Swiss", "Syrian", "Taiwanese",
-    "Tajik", "Tanzanian", "Thai", "Togolese", "Tongan", "Trinidadian or Tobagonian", "Tunisian",
-    "Turkish", "Tuvaluan", "Ugandan", "Ukrainian", "Uruguayan", "Uzbekistani", "Venezuelan",
-    "Vietnamese", "Welsh", "Yemenite", "Zambian", "Zimbabwean"
+  const nationalit = [
+    "Afghan",
+    "Algerian",
+    "Albanian",
+    "American",
+    "Andorran",
+    "Angolan",
+    "Antiguans",
+    "Argentinean",
+    "Armenian",
+    "Australian",
+    "Austrian",
+    "Bahamian",
+    "Azerbaijani",
+    "Bahraini",
+    "Bangladeshi",
+    "Barbadian",
+    "Barbudans",
+    "Batswana",
+    "Belarusian",
+    "Belgian",
+    "Belizean",
+    "Beninese",
+    "Bhutanese",
+    "Bolivian",
+    "Bosnian",
+    "Brazilian",
+    "British",
+    "Bruneian",
+    "Bulgarian",
+    "Burkinabe",
+    "Burmese",
+    "Burundian",
+    "Cambodian",
+    "Cameroonian",
+    "Canadian",
+    "Cape Verdean",
+    "Central African",
+    "Chadian",
+    "Chilean",
+    "Chinese",
+    "Colombian",
+    "Comoran",
+    "Congolese",
+    "Costa Rican",
+    "Croatian",
+    "Cuban",
+    "Cypriot",
+    "Czech",
+    "Danish",
+    "Djibouti",
+    "Dominican",
+    "Dutch",
+    "East Timorese",
+    "Ecuadorean",
+    "Egyptian",
+    "Emirian",
+    "Equatorial Guinean",
+    "Eritrean",
+    "Estonian",
+    "Ethiopian",
+    "Fijian",
+    "Filipino",
+    "Finnish",
+    "French",
+    "Gabonese",
+    "Gambian",
+    "Georgian",
+    "German",
+    "Ghanaian",
+    "Greek",
+    "Grenadian",
+    "Guatemalan",
+    "Guinea-Bissauan",
+    "Guinean",
+    "Guyanese",
+    "Haitian",
+    "Herzegovinian",
+    "Honduran",
+    "Hungarian",
+    "Icelander",
+    "Indian",
+    "Indonesian",
+    "Iranian",
+    "Iraqi",
+    "Irish",
+    "Israeli",
+    "Italian",
+    "Ivorian",
+    "Jamaican",
+    "Japanese",
+    "Jordanian",
+    "Kazakhstani",
+    "Kenyan",
+    "Kittian and Nevisian",
+    "Kuwaiti",
+    "Kyrgyz",
+    "Laotian",
+    "Latvian",
+    "Lebanese",
+    "Liberian",
+    "Libyan",
+    "Liechtensteiner",
+    "Lithuanian",
+    "Luxembourger",
+    "Macedonian",
+    "Malagasy",
+    "Malawian",
+    "Malaysian",
+    "Maldivan",
+    "Malian",
+    "Maltese",
+    "Marshallese",
+    "Mauritanian",
+    "Mauritian",
+    "Mexican",
+    "Micronesian",
+    "Moldovan",
+    "Monacan",
+    "Mongolian",
+    "Moroccan",
+    "Mosotho",
+    "Motswana",
+    "Mozambican",
+    "Namibian",
+    "Nauruan",
+    "Nepalese",
+    "New Zealander",
+    "Nicaraguan",
+    "Nigerian",
+    "Nigerien",
+    "North Korean",
+    "Northern Irish",
+    "Norwegian",
+    "Omani",
+    "Pakistani",
+    "Palauan",
+    "Panamanian",
+    "Papua New Guinean",
+    "Paraguayan",
+    "Peruvian",
+    "Polish",
+    "Portuguese",
+    "Qatari",
+    "Romanian",
+    "Russian",
+    "Rwandan",
+    "Saint Lucian",
+    "Salvadoran",
+    "Samoan",
+    "San Marinese",
+    "Sao Tomean",
+    "Saudi",
+    "Scottish",
+    "Senegalese",
+    "Serbian",
+    "Seychellois",
+    "Sierra Leonean",
+    "Singaporean",
+    "Slovakian",
+    "Slovenian",
+    "Solomon Islander",
+    "Somali",
+    "South African",
+    "South Korean",
+    "Spanish",
+    "Sri Lankan",
+    "Sudanese",
+    "Surinamer",
+    "Swazi",
+    "Swedish",
+    "Swiss",
+    "Syrian",
+    "Taiwanese",
+    "Tajik",
+    "Tanzanian",
+    "Thai",
+    "Togolese",
+    "Tongan",
+    "Trinidadian or Tobagonian",
+    "Tunisian",
+    "Turkish",
+    "Tuvaluan",
+    "Ugandan",
+    "Ukrainian",
+    "Uruguayan",
+    "Uzbekistani",
+    "Venezuelan",
+    "Vietnamese",
+    "Welsh",
+    "Yemenite",
+    "Zambian",
+    "Zimbabwean",
   ];
+
+  const nationalities = nationalit.map((nationality) => ({
+    label: nationality,
+    value: nationality.toLowerCase(),
+  }));
 
   return (
     <KeyboardAvoidingView
       style={styles.container}
-      behavior={Platform.OS == "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100}
+      behavior={"height"}
+      keyboardVerticalOffset={90}
     >
       <View>
         <ImageBackground
           source={require("../assets/fanar.jpg")}
           style={styles.background}
         >
-          <View style={styles.date}><Text style={styles.dates}>{currentLabels.date} {date.toDateString()}</Text></View>
-          <View style={styles.head}><Text style={styles.heading}>Welcome to Fanar</Text></View>
+          <View style={styles.date}>
+            <Text style={styles.dates}>
+              {currentLabels.date} {date.toDateString()}
+            </Text>
+          </View>
+          <View style={styles.head}>
+            <Text style={styles.heading}>Welcome to Fanar</Text>
+          </View>
           <View style={styles.textboxes}>
-          
             <Text style={styles.label}>{currentLabels.firstName}</Text>
             <TextInput
               style={styles.input}
@@ -240,6 +473,29 @@ const Forms = ({ route, navigation }) => {
               value={lastName}
               onChangeText={setLastName}
               placeholder={currentLabels.lastName}
+            />
+            <Text style={styles.label}>{currentLabels.nationality}</Text>
+            <Dropdown
+              data={nationalities}
+              placeholder={currentLabels.selectNationality}
+              value={nationality}
+              labelField="label"
+              valueField="value"
+              style={[
+                styles.input,
+                {
+                  width: "100%",
+                  height: screenHeight * 0.043,
+                  justifyContent: "center",
+                },
+              ]}
+              search
+              selectedTextStyle={{ fontSize: 16 }}
+              searchPlaceholder="Search..."
+              placeholderStyle={{ color: "#888" }}
+              onChange={(item) => {
+                handleNationalityChange(item.value);
+              }}
             />
             <Text style={styles.label}>{currentLabels.email}</Text>
             <TextInput
@@ -258,66 +514,64 @@ const Forms = ({ route, navigation }) => {
               placeholder={currentLabels.phone}
               keyboardType="phone-pad"
             />
-            <Text style={styles.label}>Gender:</Text>
+            <Text style={styles.label}>{currentLabels.gender}</Text>
             <View style={styles.gender}>
               <Picker
                 selectedValue={gender}
                 onValueChange={handleGenderChange}
                 style={{ color: placeholderColor }}
               >
-                <Picker.Item label="Select Gender" value="" />
+                <Picker.Item label={currentLabels.selectGender} value="" />
                 <Picker.Item label="Male" value="male" />
                 <Picker.Item label="Female" value="female" />
                 <Picker.Item label="Others" value="others" />
               </Picker>
             </View>
-            <Text style={styles.label}>Nationality</Text>
-            <View style={styles.gender}>
-              <Picker
-                selectedValue={nationality}
-                onValueChange={handleNationalityChange}
-                style={{ color: placeholderColor }}
-              >
-                {nationalities.map((nation, index) => (
-                  <Picker.Item key={index} label={nation} value={nation.toLowerCase()} />
-                ))}
-              </Picker>
-            </View>
+            
             <View style={styles.buttonContainer}>
-              <Button title={currentLabels.submit} color="" onPress={handleSubmit} style={styles.button} />
+              <Button
+                title={currentLabels.submit}
+                onPress={handleSubmit}
+                style={styles.button}
+              />
             </View>
           </View>
           <View style={styles.logoContainer}>
-              <Image source={require('../assets/loogo.png')} style={styles.logo} />
-              
+            <Image
+              source={require("../assets/loogo.png")}
+              style={styles.logo}
+            />
           </View>
         </ImageBackground>
       </View>
-      <Success visible={isModalVisible} onClose={() => setModalVisible(false)} />
+      <Success
+        visible={isModalVisible}
+        onClose={() => setModalVisible(false)}
+      />
     </KeyboardAvoidingView>
-  )
+  );
 };
 
 const styles = StyleSheet.create({
   head: {
-    alignItems: 'center'
+    alignItems: "center",
   },
   heading: {
-    fontSize:screenWidth*0.08,
-    color: '#002142',
-    fontWeight: 'bold'
+    fontSize: screenWidth * 0.08,
+    color: "#002142",
+    fontWeight: "bold",
   },
   date: {
     padding: 10,
     marginBottom: 10,
-    alignItems: 'flex-end',
+    alignItems: "flex-end",
     color: "black",
-    paddingLeft: screenWidth*0.036,
+    paddingLeft: screenWidth * 0.036,
   },
   dates: {
-    fontSize: screenWidth*0.025,
-    color: 'white',
-    fontWeight: 'bold'
+    fontSize: screenWidth * 0.025,
+    color: "white",
+    fontWeight: "bold",
   },
   thankYou: {
     fontSize: 20,
@@ -374,11 +628,12 @@ const styles = StyleSheet.create({
     padding: 10,
     marginBottom: 10,
     backgroundColor: "white",
-    paddingLeft: screenWidth*0.036,
+    paddingLeft: screenWidth * 0.036,
     fontSize: 16,
-    color: '#888',
+    color: "#888", // This might not be necessary for the input box itself, consider moving it to a text style if it's for placeholders
   },
   gender: {
+    // Keep this if the style for gender picker is meant to be distinct
     borderWidth: 1,
     borderColor: "#ccc",
     borderRadius: 5,
@@ -389,20 +644,19 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   logoContainer: {
-    flexDirection: 'row',
-
-    justifyContent: 'space-between',
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginTop: 20,
     paddingHorizontal: 10,
   },
   logo: {
     width: 250,
     height: 250,
-    resizeMode: 'contain',
-    justifyContent: 'space-between',
+    resizeMode: "contain",
+    justifyContent: "space-between",
     marginTop: 20,
     paddingHorizontal: 10,
-  }
+  },
 });
 
 export default Forms;
