@@ -13,6 +13,15 @@ LogBox.ignoreLogs([
   'Non-serializable values were found in the navigation state.'
 
 ]);
+ErrorUtils.setGlobalHandler((error, isFatal) => {
+  if (error instanceof TypeError) {
+    // Ignore TypeError
+    return;
+  }
+  // Handle other types of errors or log them
+  console.error(error);
+});
+
 
 
 export default function App() {

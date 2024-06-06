@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system';
-import * as Sharing from 'expo-sharing';
 import * as MailComposer from 'expo-mail-composer';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Admin = ({ route, navigation }) => {
   const { submissions } = route.params;
@@ -11,12 +11,30 @@ const Admin = ({ route, navigation }) => {
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
-  const [currentPassword, setCurrentPassword] = useState('admin123'); // This is a placeholder. In a real app, you should securely fetch and manage passwords.
+  const [currentPassword, setCurrentPassword] = useState('');
   const [message, setMessage] = useState('');
   const [showChangePassword, setShowChangePassword] = useState(false);
 
+  useEffect(() => {
+    const getPassword = async () => {
+      const savedPassword = await AsyncStorage.getItem('adminPassword');
+      if (savedPassword) {
+        setCurrentPassword(savedPassword);
+      } else {
+        setCurrentPassword('admin123'); // Default password
+      }
+    };
+
+    getPassword();
+  }, []);
+
   const handlePasswordSubmit = () => {
     if (password === currentPassword) {
+      if (!submissions || submissions.length === 0) {
+        Alert.alert('Error', 'No submissions available');
+        setPassword('');
+        return;
+      }
       setMessage('Access granted');
       shareSubmissions();
     } else {
@@ -24,11 +42,16 @@ const Admin = ({ route, navigation }) => {
     }
   };
 
-  const handleChangePassword = () => {
+  const handleChangePassword = async () => {
     if (password === currentPassword) {
       if (newPassword === confirmPassword) {
+        await AsyncStorage.setItem('adminPassword', newPassword);
         setCurrentPassword(newPassword);
         setMessage('Password successfully changed');
+        setShowChangePassword(!showChangePassword);
+        setPassword('');
+        setNewPassword('');
+        setConfirmPassword('');
       } else {
         setMessage('New passwords do not match');
       }
@@ -47,7 +70,7 @@ const Admin = ({ route, navigation }) => {
 
     // Share the CSV file via email
     const options = {
-      recipients: [], // Add the recipient's email here
+      recipients: ['abdullabin2024@gmail.com'], // Add the recipient's email here
       subject: 'Submissions CSV',
       body: 'Please find the submissions attached as a CSV file.',
       attachments: [fileUri],
@@ -59,7 +82,7 @@ const Admin = ({ route, navigation }) => {
         .then(result => {
           if (result.status === MailComposer.MailComposerStatus.SENT) {
             Alert.alert('Success', 'Email sent successfully');
-            navigation.replace('Home')
+            navigation.replace('Home');
           } else {
             Alert.alert('Error', 'Failed to send email');
           }
@@ -74,6 +97,7 @@ const Admin = ({ route, navigation }) => {
   };
 
   const convertToCSV = (array) => {
+    if (!array || array.length === 0) return '';
     const header = Object.keys(array[0]).join(',') + '\n';
     const rows = array.map(obj => Object.values(obj).join(',')).join('\n');
     return header + rows;
@@ -93,14 +117,14 @@ const Admin = ({ route, navigation }) => {
             onChangeText={setPassword}
           />
           <View style={styles.buttonContainer}>
-            <Button title="Submit" onPress={handlePasswordSubmit} />
+            <Button title="Export Submissions To CSV" onPress={handlePasswordSubmit} />
           </View>
         </>
       )}
 
       <View style={styles.buttonContainer}>
         <Button 
-          title={showChangePassword? "Log in":"Change Password"}
+          title={showChangePassword ? "Log in" : "Change Password"}
           onPress={() => setShowChangePassword(!showChangePassword)}
         />
       </View>
