@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as MailComposer from 'expo-mail-composer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import * as MediaLibrary from 'expo-media-library';
 const Admin = ({ route, navigation }) => {
   const { submissions } = route.params;
   console.log(submissions);
@@ -82,7 +82,7 @@ const Admin = ({ route, navigation }) => {
         .then(result => {
           if (result.status === MailComposer.MailComposerStatus.SENT) {
             Alert.alert('Success', 'Email sent successfully');
-            navigation.replace('Home');
+            // navigation.replace('Home');
           } else {
             Alert.alert('Error', 'Failed to send email');
           }
@@ -98,7 +98,13 @@ const Admin = ({ route, navigation }) => {
 
   const convertToCSV = (array) => {
     if (!array || array.length === 0) return '';
-    const header = Object.keys(array[0]).join(',') + '\n';
+  
+    const capitalizeFirstLetter = (string) => string.charAt(0).toUpperCase() + string.slice(1);
+  
+    const header = Object.keys(array[0])
+      .map(key => capitalizeFirstLetter(key))
+      .join(',') + '\n';
+  
     const rows = array.map(obj => Object.values(obj).join(',')).join('\n');
     return header + rows;
   };
@@ -119,6 +125,9 @@ const Admin = ({ route, navigation }) => {
           <View style={styles.buttonContainer}>
             <Button title="Export Submissions To CSV" onPress={handlePasswordSubmit} />
           </View>
+          {/* <View style={styles.buttonContainer}>
+            <Button title="Save CSV to Downloads" onPress={saveCsvToDownloads} />
+          </View> */}
         </>
       )}
 

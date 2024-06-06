@@ -470,8 +470,11 @@ const Forms = ({ route }) => {
     >
       <View>
         <ImageBackground
-          source={require("../assets/fanar.jpg")}
+          source={require("../assets/fanardarknewest.jpg")}
           style={styles.background}
+          imageStyle={{
+            resizeMode:'contain'
+          }}
         >
           <View style={styles.date}>
             <Text style={styles.dates}>
@@ -567,6 +570,7 @@ const Forms = ({ route }) => {
               onChangeText={setPhone}
               placeholder={currentLabels.phone}
               keyboardType="phone-pad"
+              maxLength={13}
             />
             <Text style={styles.label}>{currentLabels.gender}</Text>
             <View style={styles.gender}>
@@ -612,7 +616,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: screenWidth * 0.08,
-    color: "#002142",
+    color: "white",
     fontWeight: "bold",
   },
   date: {
@@ -649,9 +653,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   background: {
-    resizeMode: "cover",
-    height: "100%",
-    width: "100%",
+    // alignSelf:'stretch',
+    height: '100%',
+    width: '100%',
+    backgroundColor:'black'
   },
   textboxes: {
     paddingLeft: screenWidth * 0.03,
