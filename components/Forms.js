@@ -16,6 +16,7 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Success from './Success'; // Import Success component
+import {CountryPicker} from "react-native-country-codes-picker";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -31,6 +32,9 @@ const Forms = ({ route, navigation }) => {
   const [nationality, setNationality] = useState(""); // New state for nationality
   const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
   const [isModalVisible, setModalVisible] = useState(false); // State variable for success modal
+  const [show1, setShow1] = useState(false);
+  const [countryCode, setCountryCode] = useState('');
+
 
 
   const handleSubmit = () => {
@@ -219,14 +223,10 @@ const Forms = ({ route, navigation }) => {
           source={require("../assets/fanar.jpg")}
           style={styles.background}
         >
+          <View style={styles.date}><Text style={styles.dates}>{currentLabels.date} {date.toDateString()}</Text></View>
+          <View style={styles.head}><Text style={styles.heading}>Welcome to Fanar</Text></View>
           <View style={styles.textboxes}>
-          <Text style={styles.label}>{currentLabels.date}</Text>
-          <TextInput
-              placeholder={currentLabels.date}
-              value={date.toDateString()} // Format the date to display properly
-              editable={false}
-              style={styles.date}
-            />
+          
             <Text style={styles.label}>{currentLabels.firstName}</Text>
             <TextInput
               style={styles.input}
@@ -271,7 +271,7 @@ const Forms = ({ route, navigation }) => {
                 <Picker.Item label="Others" value="others" />
               </Picker>
             </View>
-            <Text style={styles.label}>{currentLabels.nationality}</Text>
+            <Text style={styles.label}>Nationality</Text>
             <View style={styles.gender}>
               <Picker
                 selectedValue={nationality}
@@ -299,16 +299,25 @@ const Forms = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  head: {
+    alignItems: 'center'
+  },
+  heading: {
+    fontSize:screenWidth*0.08,
+    color: '#003366',
+    fontWeight: 'bold'
+  },
   date: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+    alignItems: 'flex-end',
     color: "black",
-    backgroundColor: "white",
     paddingLeft: screenWidth*0.036,
-    fontSize: 16,
+  },
+  dates: {
+    fontSize: screenWidth*0.025,
+    color: 'white',
+    fontWeight: 'bold'
   },
   thankYou: {
     fontSize: 20,
@@ -338,7 +347,7 @@ const styles = StyleSheet.create({
   },
   textboxes: {
     paddingLeft: screenWidth * 0.03,
-    paddingTop: screenHeight * 0.15,
+    paddingTop: screenHeight * 0.03,
     width: screenWidth * 0.55,
   },
   header: {
@@ -393,12 +402,7 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     marginTop: 20,
     paddingHorizontal: 10,
-  },
-  logo: {
-    width: 100,
-    height: 100,
-    resizeMode: 'contain',
-  },
+  }
 });
 
 export default Forms;
