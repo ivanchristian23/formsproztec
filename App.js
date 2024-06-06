@@ -9,6 +9,9 @@ import Admin from './components/Admin';
 LogBox.ignoreLogs([
   'Warning: ...', // Replace this with the specific warning message you want to ignore
   /Possible Unhandled Promise Rejection/, // Use a regex to match patterns
+  'Warning: TextInputComponent: Support for defaultProps will be removed from function components in a future major release. Use JavaScript default parameters instead.',
+  'Non-serializable values were found in the navigation state.'
+
 ]);
 
 
