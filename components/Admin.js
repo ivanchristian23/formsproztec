@@ -1,14 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
 
-const Admin = ({route,navigation}) => {
-    const { submissions } = route.params;
-    console.log(submissions);
+const Admin = ({ route, navigation }) => {
+  const { submissions } = route.params;
+  console.log(submissions);
+
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
   const [currentPassword, setCurrentPassword] = useState('admin123'); // This is a placeholder. In a real app, you should securely fetch and manage passwords.
   const [message, setMessage] = useState('');
+  const [showChangePassword, setShowChangePassword] = useState(false);
 
   const handlePasswordSubmit = () => {
     if (password === currentPassword) {
@@ -45,33 +47,43 @@ const Admin = ({route,navigation}) => {
       />
       <Button title="Submit" onPress={handlePasswordSubmit} />
 
-      <Text style={styles.header}>Change Password</Text>
-
-      <Text style={styles.label}>Current Password:</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      
-      <Text style={styles.label}>New Password:</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={newPassword}
-        onChangeText={setNewPassword}
+      <Button 
+        title="Change Password"
+        onPress={() => setShowChangePassword(!showChangePassword)}
+        style={styles.changePasswordButton}
       />
 
-      <Text style={styles.label}>Confirm New Password:</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={confirmPassword}
-        onChangeText={setConfirmPassword}
-      />
+      {showChangePassword && (
+        <>
+          <Text style={styles.header}>Change Password</Text>
 
-      <Button title="Change Password" onPress={handleChangePassword} />
+          <Text style={styles.label}>Current Password:</Text>
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+          
+          <Text style={styles.label}>New Password:</Text>
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            value={newPassword}
+            onChangeText={setNewPassword}
+          />
+
+          <Text style={styles.label}>Confirm New Password:</Text>
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            value={confirmPassword}
+            onChangeText={setConfirmPassword}
+          />
+
+          <Button title="Submit New Password" onPress={handleChangePassword} />
+        </>
+      )}
 
       {message ? <Text style={styles.message}>{message}</Text> : null}
     </View>
@@ -110,5 +122,8 @@ const styles = StyleSheet.create({
     marginTop: 20,
     fontSize: 16,
     color: 'red',
+  },
+  changePasswordButton: {
+    marginTop: 20,
   },
 });
