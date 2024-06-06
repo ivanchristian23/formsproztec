@@ -4,6 +4,13 @@ import Forms from './components/Forms';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Home from './components/Home';
+import { LogBox } from 'react-native'; // Import LogBox
+import Admin from './components/Admin';
+LogBox.ignoreLogs([
+  'Warning: ...', // Replace this with the specific warning message you want to ignore
+  /Possible Unhandled Promise Rejection/, // Use a regex to match patterns
+]);
+
 
 export default function App() {
   const Stack = createNativeStackNavigator()
@@ -12,6 +19,7 @@ export default function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name='Home' component={Home} options={{ title: 'Welcome', headerShown: false }} />
         <Stack.Screen name='Forms' component={Forms} options={{ title: 'Abdullah Bin Zaid Islamic Center', headerTitleAlign:'center'}}/>
+        <Stack.Screen name='Admin' component={Admin} />
       </Stack.Navigator>
     </NavigationContainer>
   );
