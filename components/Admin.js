@@ -83,20 +83,27 @@ const Admin = ({ route, navigation }) => {
     <View style={styles.container}>
       <Text style={styles.header}>Admin Access</Text>
 
-      <Text style={styles.label}>Enter Password:</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button title="Submit" onPress={handlePasswordSubmit} />
+      {!showChangePassword && (
+        <>
+          <Text style={styles.label}>Enter Password:</Text>
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+          <View style={styles.buttonContainer}>
+            <Button title="Submit" onPress={handlePasswordSubmit} />
+          </View>
+        </>
+      )}
 
-      <Button 
-        title="Change Password"
-        onPress={() => setShowChangePassword(!showChangePassword)}
-        style={styles.changePasswordButton}
-      />
+      <View style={styles.buttonContainer}>
+        <Button 
+          title={showChangePassword? "Log in":"Change Password"}
+          onPress={() => setShowChangePassword(!showChangePassword)}
+        />
+      </View>
 
       {showChangePassword && (
         <>
@@ -126,7 +133,9 @@ const Admin = ({ route, navigation }) => {
             onChangeText={setConfirmPassword}
           />
 
-          <Button title="Submit New Password" onPress={handleChangePassword} />
+          <View style={styles.buttonContainer}>
+            <Button title="Submit New Password" onPress={handleChangePassword} />
+          </View>
         </>
       )}
 
@@ -168,7 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'red',
   },
-  changePasswordButton: {
-    marginTop: 20,
+  buttonContainer: {
+    marginBottom: 20,
   },
 });
