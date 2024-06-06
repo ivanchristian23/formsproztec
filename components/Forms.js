@@ -31,7 +31,6 @@ const Forms = ({ route, navigation }) => {
   const [nationality, setNationality] = useState(""); // New state for nationality
   const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
   const [isModalVisible, setModalVisible] = useState(false); // State variable for success modal
-  const [show1, setShow1] = useState(false);
   const [countryCode, setCountryCode] = useState('');
 
   const handleSubmit = () => {
