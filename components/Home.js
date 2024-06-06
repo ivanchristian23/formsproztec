@@ -1,7 +1,11 @@
-import { StyleSheet, Text, View, Button, ImageBackground, Image } from "react-native";
+import { StyleSheet, Text, View, Button, ImageBackground, Image, Dimensions } from "react-native";
 import React, { useState,useEffect } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import { Foundation } from "react-native-vector-icons";
+
+const screenWidth = Dimensions.get("window").width;
+const screenHeight = Dimensions.get("window").height;
+
 const Home = ({ navigation, route }) => {
   const [language, setLanguage] = useState("english");
   const [submissions, setSubmissions] = useState([]);
@@ -15,7 +19,12 @@ const Home = ({ navigation, route }) => {
     }
   }, [route.params?.newSubmission]);
   const handleNext = () => {
-    navigation.navigate("Forms", { language: language });
+    navigation.navigate("Forms", { 
+      language: language, 
+      addSubmission: (newSubmission) => {
+        setSubmissions((prevSubmissions) => [...prevSubmissions, newSubmission]);
+      }
+    });
   };
   const handleExport = () => {
     navigation.navigate("Admin",{submissions:submissions});
@@ -34,7 +43,6 @@ const Home = ({ navigation, route }) => {
         <RNPickerSelect
           onValueChange={(value) => setLanguage(value)}
           items={[
-            { label: "English", value: "english" },
             { label: "Spanish", value: "spanish" },
             { label: "French", value: "french" },
             { label: "German", value: "german" },
@@ -45,10 +53,10 @@ const Home = ({ navigation, route }) => {
             { label: "Italian", value: "italian" },
           ]}
           style={pickerSelectStyles}
-          placeholder={{ label: "Select a language...", value: null }}
+          placeholder={{ label: "English", value: "english" }}
         />
         <View style={styles.buttonContainer}>
-          <Button title="Next" onPress={handleNext} color="#1E90FF" />
+          <Button title="Next" onPress={handleNext} color="" />
         </View>
         <View style={styles.logoContainer}>
           <Image source={require('../assets/loogo.png')} style={styles.logo} />
@@ -82,21 +90,22 @@ const styles = StyleSheet.create({
     bottom: 10,
   },
   welcomeText: {
-    fontSize: 24,
+    fontSize: 40,
     fontWeight: "bold",
     marginBottom: 20,
-    color: 'white',
+    color: '#FFFFE0',
     textAlign: 'center',
   },
   instructions: {
-    fontSize: 16,
+    fontSize: 17,
     marginBottom: 10,
     textAlign: "center",
-    color: "white",
+    color: "#FFFFE0",
+    fontWeight: '500'
   },
   buttonContainer: {
     marginTop: 20,
-    width: "60%",
+    width: screenWidth*0.5 ,
   },
   background: {
     resizeMode: "cover",
@@ -126,7 +135,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 4,
     color: "white",
     paddingRight: 30,
-    width: "80%",
+    width: screenWidth*0.5,
     alignSelf: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
@@ -139,7 +148,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 8,
     color: "white",
     paddingRight: 30,
-    width: "80%",
+    width: screenWidth*0.5,
     alignSelf: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
