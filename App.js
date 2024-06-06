@@ -11,7 +11,7 @@ export default function App() {
     <NavigationContainer>
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name='Home' component={Home} options={{ title: 'Welcome', headerShown: false }} />
-        <Stack.Screen name='Forms' component={Forms} />
+        <Stack.Screen name='Forms' component={Forms} options={{ title: 'Abdullah Bin Zaid Islamic Center', headerTitleAlign:'center'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
