@@ -12,15 +12,13 @@ import {
   Platform,
   Image,
   ScrollView
-  
-
-  
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import * as FileSystem from 'expo-file-system';
 import * as Sharing from 'expo-sharing';
 import * as MediaLibrary from 'expo-media-library';
 import Success from './Success'; // Import Success component
+import {CountryPicker} from "react-native-country-codes-picker";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -37,6 +35,9 @@ const Forms = ({ route, navigation }) => {
   const [show, setShow] = useState(true);
   const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
   const [isModalVisible, setModalVisible] = useState(false); // State variable for success modal
+  const [show1, setShow1] = useState(false);
+  const [countryCode, setCountryCode] = useState('');
+
 
   const requestPermissions = async () => {
     const { status } = await MediaLibrary.requestPermissionsAsync();
@@ -146,132 +147,101 @@ const Forms = ({ route, navigation }) => {
       phone: "Phone:",
       submit: "Submit",
       thankYou: "Thank you for your response",
-      goBack: "Go back",
-      gender: "Gender:",
-      nationality: "Nationality:"
+      goBack: "Go back"
     },
     spanish: {
       welcome: "Bienvenido a Fanar",
       date: "Fecha:",
       firstName: "Nombre:",
       lastName: "Apellido:",
-      email: "Correo electrónico:",
+      email: "Correo Electrónico:",
       phone: "Teléfono:",
       submit: "Enviar",
       thankYou: "Gracias por su respuesta",
-      goBack: "Volver",
-      gender: "Género:",
-      nationality: "Nacionalidad:"
+      goBack: "Regresar"
     },
     french: {
       welcome: "Bienvenue à Fanar",
       date: "Date:",
-      firstName: "Prénom",
-      lastName: "Nom de famille",
-      email: "Email",
-      phone: "Téléphone",
+      firstName: "Prénom:",
+      lastName: "Nom de famille:",
+      email: "Email:",
+      phone: "Téléphone:",
       submit: "Soumettre",
       thankYou: "Merci pour votre réponse",
-      goBack: "Retourner",
-      gender: "Genre",
-      nationality: "Nationalité",
-      selectGender: "Sélectionner le genre",
-      selectNationality: "Sélectionner la nationalité"
+      goBack: "Retourner"
     },
     german: {
       welcome: "Willkommen bei Fanar",
       date: "Datum:",
-      firstName: "Vorname",
-      lastName: "Nachname",
-      email: "Email",
-      phone: "Telefon",
+      firstName: "Vorname:",
+      lastName: "Nachname:",
+      email: "Email:",
+      phone: "Telefon:",
       submit: "Einreichen",
       thankYou: "Vielen Dank für Ihre Antwort",
-      goBack: "Zurück",
-      gender: "Geschlecht",
-      nationality: "Nationalität",
-      selectGender: "Geschlecht auswählen",
-      selectNationality: "Nationalität auswählen"
+      goBack: "Zurück"
     },
     chinese: {
       welcome: "欢迎来到Fanar",
       date: "日期:",
-      firstName: "名字",
-      lastName: "姓氏",
-      email: "电子邮件",
-      phone: "电话",
+      firstName: "名字:",
+      lastName: "姓氏:",
+      email: "电子邮件:",
+      phone: "电话:",
       submit: "提交",
       thankYou: "感谢您的回复",
-      goBack: "返回",
-      gender: "性别",
-      nationality: "国籍",
-      selectGender: "选择性别",
-      selectNationality: "选择国籍"
-    },
-    italian: {
-      welcome: "Benvenuto a Fanar",
-      date: "Data:",
-      firstName: "Nome",
-      lastName: "Cognome",
-      email: "Email",
-      phone: "Telefono",
-      submit: "Invia",
-      thankYou: "Grazie per la tua risposta",
-      goBack: "Torna indietro",
-      gender: "Genere",
-      nationality: "Nazionalità",
-      selectGender: "Seleziona genere",
-      selectNationality: "Seleziona nazionalità"
+      goBack: "返回"
     },
     portuguese: {
       welcome: "Bem-vindo ao Fanar",
       date: "Data:",
-      firstName: "Nome",
-      lastName: "Sobrenome",
-      email: "Email",
-      phone: "Telefone",
+      firstName: "Nome:",
+      lastName: "Sobrenome:",
+      email: "Email:",
+      phone: "Telefone:",
       submit: "Enviar",
       thankYou: "Obrigado pela sua resposta",
-      goBack: "Voltar",
-      gender: "Gênero",
-      nationality: "Nacionalidade",
-      selectGender: "Selecione o gênero",
-      selectNationality: "Selecione a nacionalidade"
+      goBack: "Voltar"
     },
     russian: {
       welcome: "Добро пожаловать в Fanar",
       date: "Дата:",
-      firstName: "Имя",
-      lastName: "Фамилия",
-      email: "Эл. почта",
-      phone: "Телефон",
+      firstName: "Имя:",
+      lastName: "Фамилия:",
+      email: "Эл. почта:",
+      phone: "Телефон:",
       submit: "Отправить",
       thankYou: "Спасибо за ваш ответ",
-      goBack: "Вернуться",
-      gender: "Пол:",
-      nationality: "Национальность",
-      selectGender: "Выберите пол",
-      selectNationality: "Выберите национальность"
+      goBack: "Вернуться"
     },
     japanese: {
-      welcome: "ファナーへようこそ",
-      date: "日付：",
-      firstName: "名",
-      lastName: "姓",
-      email: "Eメール",
-      phone: "電話",
-      submit: "提出",
-      thankYou: "回答いただきありがとうございます",
-      goBack: "戻る",
-      gender: "性別",
-      nationality: "国籍",
-      selectGender: "性別を選択",
-      selectNationality: "国籍を選択"
+      welcome: "ファナールへようこそ",
+      date: "日付:",
+      firstName: "名:",
+      lastName: "姓:",
+      email: "メール:",
+      phone: "電話:",
+      submit: "送信",
+      thankYou: "ご回答いただきありがとうございます",
+      goBack: "戻る"
+    },
+    italian: {
+      welcome: "Benvenuto a Fanar",
+      date: "Data:",
+      firstName: "Nome:",
+      lastName: "Cognome:",
+      email: "Email:",
+      phone: "Telefono:",
+      submit: "Invia",
+      thankYou: "Grazie per la tua risposta",
+      goBack: "Torna indietro"
     }
   };
 
   const currentLabels = labels[language] || labels.english;
 
+  // List of nationalities
   const nationalities = [
     "Select Nationality", "Afghan", "Albanian", "Algerian", "American", "Andorran",
     "Angolan", "Antiguans", "Argentinean", "Armenian", "Australian", "Austrian", "Azerbaijani",
@@ -304,25 +274,20 @@ const Forms = ({ route, navigation }) => {
   ];
 
   return (
-   
     <KeyboardAvoidingView
       style={styles.container}
       behavior={Platform.OS == "ios" ? "padding" : "height"}
       keyboardVerticalOffset={100}
-    >    
+    >
       <View>
         <ImageBackground
           source={require("../assets/fanar.jpg")}
           style={styles.background}
         >
+          <View style={styles.date}><Text style={styles.dates}>{currentLabels.date} {date.toDateString()}</Text></View>
+          <View style={styles.head}><Text style={styles.heading}>Welcome to Fanar</Text></View>
           <View style={styles.textboxes}>
-          <Text style={styles.label}>{currentLabels.date}</Text>
-          <TextInput
-              placeholder={currentLabels.date}
-              value={date.toDateString()} // Format the date to display properly
-              editable={false}
-              style={styles.date}
-            />
+          
             <Text style={styles.label}>{currentLabels.firstName}</Text>
             <TextInput
               style={styles.input}
@@ -354,7 +319,7 @@ const Forms = ({ route, navigation }) => {
               placeholder={currentLabels.phone}
               keyboardType="phone-pad"
             />
-            <Text style={styles.label}>{currentLabels.gender}</Text>
+            <Text style={styles.label}>Gender:</Text>
             <View style={styles.gender}>
               <Picker
                 selectedValue={gender}
@@ -367,7 +332,7 @@ const Forms = ({ route, navigation }) => {
                 <Picker.Item label="Others" value="others" />
               </Picker>
             </View>
-            <Text style={styles.label}>{currentLabels.nationality}</Text>
+            <Text style={styles.label}>Nationality</Text>
             <View style={styles.gender}>
               <Picker
                 selectedValue={nationality}
@@ -384,7 +349,8 @@ const Forms = ({ route, navigation }) => {
             </View>
           </View>
           <View style={styles.logoContainer}>
-              <Image source={require('../assets/loogo.png')} style={styles.logo} />
+              <Image source={require('../assets/logo.jpg')} style={styles.logo} />
+              <Image source={require('../assets/fanar logo_0.png')} style={styles.logo} />
           </View>
         </ImageBackground>
       </View>
@@ -394,17 +360,25 @@ const Forms = ({ route, navigation }) => {
 };
 
 const styles = StyleSheet.create({
+  head: {
+    alignItems: 'center'
+  },
+  heading: {
+    fontSize:screenWidth*0.08,
+    color: '#003366',
+    fontWeight: 'bold'
+  },
   date: {
-    borderWidth: 1,
-    borderColor: "#ccc",
-    borderRadius: 5,
     padding: 10,
     marginBottom: 10,
+    alignItems: 'flex-end',
     color: "black",
-    backgroundColor: "white",
     paddingLeft: screenWidth*0.036,
-    paddingLeft: screenWidth*0.036,
-    fontSize: 16,
+  },
+  dates: {
+    fontSize: screenWidth*0.025,
+    color: 'white',
+    fontWeight: 'bold'
   },
   thankYou: {
     fontSize: 20,
@@ -434,7 +408,7 @@ const styles = StyleSheet.create({
   },
   textboxes: {
     paddingLeft: screenWidth * 0.03,
-    paddingTop: screenHeight * 0.15,
+    paddingTop: screenHeight * 0.03,
     width: screenWidth * 0.55,
   },
   header: {
@@ -462,7 +436,6 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: "white",
     paddingLeft: screenWidth*0.036,
-    paddingLeft: screenWidth*0.036,
     fontSize: 16,
     color: '#888',
   },
@@ -480,14 +453,17 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
 
     justifyContent: 'space-between',
-   
-    paddingHorizontal:10,
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
   logo: {
-    width: 300,
-    height: 300,
+    width: 100,
+    height: 100,
     resizeMode: 'contain',
-  },
+    justifyContent: 'space-between',
+    marginTop: 20,
+    paddingHorizontal: 10,
+  }
 });
 
 export default Forms;
