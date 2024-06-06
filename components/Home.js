@@ -36,7 +36,7 @@ const Home = ({ navigation, route }) => {
       style={styles.background}
     >
       <View style={styles.container}>
-        <Text style={styles.welcomeText}>Welcome to Our App!</Text>
+        <Text style={styles.welcomeText}>Welcome!</Text>
         <Text style={styles.instructions}>
           Please select your preferred language:
         </Text>
@@ -146,10 +146,15 @@ const pickerSelectStyles = StyleSheet.create({
     borderWidth: 0.5,
     borderColor: "gray",
     borderRadius: 8,
-    color: "white",
+    color: "black",
     paddingRight: 30,
     width: screenWidth*0.5,
     alignSelf: "center",
-    backgroundColor: "rgba(0,0,0,0.5)",
+    // backgroundColor: "rgba(0,0,0,0.5)",
+    backgroundColor: 'white'
+  },
+  placeholder: {
+    color: 'black', // Your custom color for the placeholder
+    fontSize: 16,
   },
 });
