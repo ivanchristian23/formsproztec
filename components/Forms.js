@@ -17,12 +17,11 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import Success from './Success'; // Import Success component
 
-
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const Forms = ({ route, navigation }) => {
-  const { language } = route.params;
+  const { language, addSubmission  } = route.params;
   const [date, setDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -34,8 +33,6 @@ const Forms = ({ route, navigation }) => {
   const [isModalVisible, setModalVisible] = useState(false); // State variable for success modal
   const [show1, setShow1] = useState(false);
   const [countryCode, setCountryCode] = useState('');
-
-
 
   const handleSubmit = () => {
     const newSubmission = {
@@ -55,7 +52,10 @@ const Forms = ({ route, navigation }) => {
     setNationality("")
     setModalVisible(true); // Show success modal
     console.log(newSubmission);
-    navigation.navigate('Home', {newSubmission});
+    if (addSubmission) {
+      addSubmission(newSubmission); // Call the callback function with newSubmission
+    }
+    // navigation.navigate('Home', {newSubmission});
   };  
   
   const handleGenderChange = (itemValue) => {
@@ -284,7 +284,7 @@ const Forms = ({ route, navigation }) => {
               </Picker>
             </View>
             <View style={styles.buttonContainer}>
-              <Button title={currentLabels.submit} onPress={handleSubmit} style={styles.button} />
+              <Button title={currentLabels.submit} color="" onPress={handleSubmit} style={styles.button} />
             </View>
           </View>
           <View style={styles.logoContainer}>
@@ -304,7 +304,7 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize:screenWidth*0.08,
-    color: '#003366',
+    color: '#002142',
     fontWeight: 'bold'
   },
   date: {
