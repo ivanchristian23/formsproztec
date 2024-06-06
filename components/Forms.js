@@ -31,6 +31,11 @@ const Forms = ({ route }) => {
   const [placeholderColor1, setPlaceholderColor1] = useState("#888"); // Grey color for placeholder
   const [isModalVisible, setModalVisible] = useState(false); // State variable for success modal
 
+  const validateEmail = (email) => {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email);
+  };
+
   const handleSubmit = () => {
     // Check if any required field is empty
     if (
@@ -45,6 +50,13 @@ const Forms = ({ route }) => {
       Alert.alert(
         "Incomplete Form",
         "Please fill out all fields to submit the form.",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
+      );
+    } else if (!validateEmail(email)) {
+      // Alert user if email is invalid
+      Alert.alert(
+        "Invalid Email",
+        "Please enter a valid email address.",
         [{ text: "OK", onPress: () => console.log("OK Pressed") }]
       );
     } else {
