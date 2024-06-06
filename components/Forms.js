@@ -16,7 +16,7 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import Success from './Success'; // Import Success component
-import {CountryPicker} from "react-native-country-codes-picker";
+
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;

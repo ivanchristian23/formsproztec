@@ -6507,6 +6507,11 @@ react-native-picker-select@^9.1.3:
     react-freeze "^1.0.0"
     warn-once "^0.1.0"
 
+react-native-searchable-dropdown@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.npmjs.org/react-native-searchable-dropdown/-/react-native-searchable-dropdown-1.1.3.tgz"
+  integrity sha512-ip6YwjKED/h27oRQGN3f62usFMj5IfS6tr/zZWfQItCAV/XAq5E9P0Exvg/86gSlcGJnnZdoixK+PS1sElxcyA==
+
 react-native-vector-icons@^10.1.0:
   version "10.1.0"
   resolved "https://registry.npmjs.org/react-native-vector-icons/-/react-native-vector-icons-10.1.0.tgz"
