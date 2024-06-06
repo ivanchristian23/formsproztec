@@ -1,5 +1,8 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View, TextInput, Button } from 'react-native';
+import { StyleSheet, Text, View, TextInput, Button, Alert } from 'react-native';
+import * as FileSystem from 'expo-file-system';
+import * as Sharing from 'expo-sharing';
+import * as MailComposer from 'expo-mail-composer';
 
 const Admin = ({ route, navigation }) => {
   const { submissions } = route.params;
@@ -15,7 +18,7 @@ const Admin = ({ route, navigation }) => {
   const handlePasswordSubmit = () => {
     if (password === currentPassword) {
       setMessage('Access granted');
-      // Navigate to admin panel or perform admin actions
+      shareSubmissions();
     } else {
       setMessage('Access denied');
     }
@@ -34,24 +37,73 @@ const Admin = ({ route, navigation }) => {
     }
   };
 
+  const shareSubmissions = async () => {
+    // Convert submissions to CSV format
+    const csvString = convertToCSV(submissions);
+
+    // Create a file with the CSV data
+    const fileUri = `${FileSystem.cacheDirectory}submissions.csv`;
+    await FileSystem.writeAsStringAsync(fileUri, csvString);
+
+    // Share the CSV file via email
+    const options = {
+      recipients: [], // Add the recipient's email here
+      subject: 'Submissions CSV',
+      body: 'Please find the submissions attached as a CSV file.',
+      attachments: [fileUri],
+    };
+
+    const isAvailable = await MailComposer.isAvailableAsync();
+    if (isAvailable) {
+      MailComposer.composeAsync(options)
+        .then(result => {
+          if (result.status === MailComposer.MailComposerStatus.SENT) {
+            Alert.alert('Success', 'Email sent successfully');
+            navigation.replace('Home')
+          } else {
+            Alert.alert('Error', 'Failed to send email');
+          }
+        })
+        .catch(error => {
+          console.error(error);
+          Alert.alert('Error', 'An error occurred while sending email');
+        });
+    } else {
+      Alert.alert('Error', 'Email service is not available');
+    }
+  };
+
+  const convertToCSV = (array) => {
+    const header = Object.keys(array[0]).join(',') + '\n';
+    const rows = array.map(obj => Object.values(obj).join(',')).join('\n');
+    return header + rows;
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Admin Access</Text>
 
-      <Text style={styles.label}>Enter Password:</Text>
-      <TextInput
-        style={styles.input}
-        secureTextEntry
-        value={password}
-        onChangeText={setPassword}
-      />
-      <Button title="Submit" onPress={handlePasswordSubmit} />
+      {!showChangePassword && (
+        <>
+          <Text style={styles.label}>Enter Password:</Text>
+          <TextInput
+            style={styles.input}
+            secureTextEntry
+            value={password}
+            onChangeText={setPassword}
+          />
+          <View style={styles.buttonContainer}>
+            <Button title="Submit" onPress={handlePasswordSubmit} />
+          </View>
+        </>
+      )}
 
-      <Button 
-        title="Change Password"
-        onPress={() => setShowChangePassword(!showChangePassword)}
-        style={styles.changePasswordButton}
-      />
+      <View style={styles.buttonContainer}>
+        <Button 
+          title={showChangePassword? "Log in":"Change Password"}
+          onPress={() => setShowChangePassword(!showChangePassword)}
+        />
+      </View>
 
       {showChangePassword && (
         <>
@@ -81,7 +133,9 @@ const Admin = ({ route, navigation }) => {
             onChangeText={setConfirmPassword}
           />
 
-          <Button title="Submit New Password" onPress={handleChangePassword} />
+          <View style={styles.buttonContainer}>
+            <Button title="Submit New Password" onPress={handleChangePassword} />
+          </View>
         </>
       )}
 
@@ -123,7 +177,7 @@ const styles = StyleSheet.create({
     fontSize: 16,
     color: 'red',
   },
-  changePasswordButton: {
-    marginTop: 20,
+  buttonContainer: {
+    marginBottom: 20,
   },
 });
