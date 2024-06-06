@@ -288,8 +288,8 @@ const Forms = ({ route, navigation }) => {
             </View>
           </View>
           <View style={styles.logoContainer}>
-              <Image source={require('../assets/logo.jpg')} style={styles.logo} />
-              <Image source={require('../assets/fanar logo_0.png')} style={styles.logo} />
+              <Image source={require('../assets/loogo.png')} style={styles.logo} />
+              
           </View>
         </ImageBackground>
       </View>
@@ -396,8 +396,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   logo: {
-    width: 100,
-    height: 100,
+    width: 250,
+    height: 250,
     resizeMode: 'contain',
     justifyContent: 'space-between',
     marginTop: 20,

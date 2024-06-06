@@ -1,4 +1,4 @@
-import { StyleSheet, Text, View, Button, ImageBackground } from "react-native";
+import { StyleSheet, Text, View, Button, ImageBackground, Image } from "react-native";
 import React, { useState,useEffect } from "react";
 import RNPickerSelect from "react-native-picker-select";
 import { Foundation } from "react-native-vector-icons";
@@ -14,7 +14,7 @@ const Home = ({ navigation, route }) => {
         setSubmissions(temp);
     }
   }, [route.params?.newSubmission]);
-  const handleSubmit = () => {
+  const handleNext = () => {
     navigation.navigate("Forms", { language: language });
   };
   const handleExport = () => {
@@ -48,7 +48,10 @@ const Home = ({ navigation, route }) => {
           placeholder={{ label: "Select a language...", value: null }}
         />
         <View style={styles.buttonContainer}>
-          <Button title="Submit" onPress={handleSubmit} color="#1E90FF" />
+          <Button title="Next" onPress={handleNext} color="#1E90FF" />
+        </View>
+        <View style={styles.logoContainer}>
+          <Image source={require('../assets/loogo.png')} style={styles.logo} />
         </View>
         <View style={styles.exportButtonContainer}>
         <Foundation
@@ -82,8 +85,8 @@ const styles = StyleSheet.create({
     fontSize: 24,
     fontWeight: "bold",
     marginBottom: 20,
-    color: "white",
-    textAlign: "center",
+    color: 'white',
+    textAlign: 'center',
   },
   instructions: {
     fontSize: 16,
@@ -100,6 +103,16 @@ const styles = StyleSheet.create({
     height: "100%",
     width: "100%",
     flex: 1,
+  },
+  logoContainer: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
+  },
+  logo: {
+    width: 250,
+    height: 250,
+    resizeMode: 'contain',
   },
 });
 
