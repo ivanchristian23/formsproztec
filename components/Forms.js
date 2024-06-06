@@ -24,42 +24,52 @@ const Forms = ({ route }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("");
+  const [phone, setPhone] = useState("+");
   const [gender, setGender] = useState("");
   const [nationality, setNationality] = useState(""); // New state for nationality
   const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
   const [placeholderColor1, setPlaceholderColor1] = useState("#888"); // Grey color for placeholder
   const [isModalVisible, setModalVisible] = useState(false); // State variable for success modal
+  const [firstNameBorderColor, setFirstNameBorderColor] = useState("#ccc"); // Border color for first name
+  const [lastNameBorderColor, setLastNameBorderColor] = useState("#ccc"); // Border color for last name
+  const [firstNameError, setFirstNameError] = useState(""); // Error message for first name
+  const [lastNameError, setLastNameError] = useState(""); // Error message for last name
 
-  const validateEmail = (email) => {
-    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return re.test(email);
+  const validateSpecialCharacters = (text) => {
+    const re = /^[a-zA-Z]+$/;
+    return re.test(text);
   };
 
   const handleSubmit = () => {
-    // Check if any required field is empty
+    // Check if any required field is empty or contains special characters
     if (
       !firstName.trim() ||
       !lastName.trim() ||
-      !email.trim() ||
-      !phone.trim() ||
-      !gender.trim() ||
-      !nationality.trim()
+      !nationality.trim() ||
+      !validateSpecialCharacters(firstName) ||
+      !validateSpecialCharacters(lastName)
     ) {
-      // Alert user that all fields are required
+      if (!validateSpecialCharacters(firstName)) {
+        setFirstNameBorderColor("red");
+        setFirstNameError("No special characters allowed");
+      } else {
+        setFirstNameBorderColor("#ccc");
+        setFirstNameError("");
+      }
+      if (!validateSpecialCharacters(lastName)) {
+        setLastNameBorderColor("red");
+        setLastNameError("No special characters allowed");
+      } else {
+        setLastNameBorderColor("#ccc");
+        setLastNameError("");
+      }
+      // Alert user that all fields are required and no special characters are allowed
       Alert.alert(
-        "Incomplete Form",
-        "Please fill out all fields to submit the form.",
+        "Invalid Input",
+        "Please fill out all fields with valid data.",
         [{ text: "OK", onPress: () => console.log("OK Pressed") }]
       );
-    } else if (!validateEmail(email)) {
-      // Alert user if email is invalid
-      Alert.alert(
-        "Invalid Email",
-        "Please enter a valid email address.",
-        [{ text: "OK", onPress: () => console.log("OK Pressed") }]
-      );
-    } else {
+    }  else {
       // Prepare the new submission object
       const newSubmission = {
         date: date.toDateString(),
@@ -472,21 +482,53 @@ const Forms = ({ route }) => {
             <Text style={styles.heading}>Welcome to Fanar</Text>
           </View>
           <View style={styles.textboxes}>
-            <Text style={styles.label}>{currentLabels.firstName}</Text>
+            <Text style={styles.label}>{'* '+currentLabels.firstName}</Text>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                { borderColor: firstNameBorderColor }, // Apply border color based on validation
+              ]}
               value={firstName}
-              onChangeText={setFirstName}
+              onChangeText={(text) => {
+                setFirstName(text);
+                if (text === "") {
+                  setFirstNameError("");
+                  setFirstNameBorderColor("#ccc");
+                } else if (validateSpecialCharacters(text)) {
+                  setFirstNameError("");
+                  setFirstNameBorderColor("#ccc");
+                } else {
+                  setFirstNameError("No special characters allowed");
+                  setFirstNameBorderColor("red");
+                }
+              }}
               placeholder={currentLabels.firstName}
             />
-            <Text style={styles.label}>{currentLabels.lastName}</Text>
+            {firstNameError ? <Text style={styles.errorText}>{firstNameError}</Text> : null}
+            <Text style={styles.label}>{'* '+currentLabels.lastName}</Text>
             <TextInput
-              style={styles.input}
+              style={[
+                styles.input,
+                { borderColor: lastNameBorderColor }, // Apply border color based on validation
+              ]}
               value={lastName}
-              onChangeText={setLastName}
+              onChangeText={(text) => {
+                setLastName(text);
+                if (text === "") {
+                  setLastNameError("");
+                  setLastNameBorderColor("#ccc");
+                } else if (validateSpecialCharacters(text)) {
+                  setLastNameError("");
+                  setLastNameBorderColor("#ccc");
+                } else {
+                  setLastNameError("No special characters allowed");
+                  setLastNameBorderColor("red");
+                }
+              }}
               placeholder={currentLabels.lastName}
             />
-            <Text style={styles.label}>{currentLabels.nationality}</Text>
+            {lastNameError ? <Text style={styles.errorText}>{lastNameError}</Text> : null}
+            <Text style={styles.label}>{'* '+currentLabels.nationality}</Text>
             <Dropdown
               data={nationalities}
               placeholder={currentLabels.selectNationality}
@@ -668,6 +710,10 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     marginTop: 20,
     paddingHorizontal: 10,
+  },
+  errorText: {
+    color: "red",
+    marginBottom: 10,
   },
 });
 
