@@ -20,7 +20,6 @@ const SubmissionsScreen = ({ route }) => {
 
   useEffect(() => {
     (async () => {
-      // Use expo-media-library to request permissions
       const { status } = await MediaLibrary.requestPermissionsAsync();
       if (status !== "granted") {
         Alert.alert(
@@ -108,7 +107,6 @@ const SubmissionsScreen = ({ route }) => {
     return header + rows;
   };
 
-  // Helper function to capitalize first letter and add space between words
   const capitalizeFirstLetter = (string) => {
     return string
       .replace(/([A-Z])/g, " $1")
@@ -117,7 +115,12 @@ const SubmissionsScreen = ({ route }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
-      <Text style={styles.header}>Submissions</Text>
+      {/* <Text style={styles.header}>Submissions</Text> */}
+      <View style={styles.buttonContainer}>
+        {/* <Button title="Export to CSV" onPress={exportToCSV} /> */}
+        <Button title="Send CSV via Email" onPress={sendCSV} />
+      </View>
+      <Text/>
       <View style={styles.table}>
         <View style={styles.tableHeader}>
           <Text style={styles.tableHeaderCell}>ID</Text>
@@ -130,7 +133,6 @@ const SubmissionsScreen = ({ route }) => {
         {submissions.map((submission, index) => (
           <View key={index} style={styles.tableRow}>
             <Text style={styles.tableCell}>{index + 1}</Text>
-            {/* Displaying ID */}
             {Object.values(submission).map((value, subIndex) => (
               <Text key={subIndex} style={styles.tableCell}>
                 {value}
@@ -138,10 +140,6 @@ const SubmissionsScreen = ({ route }) => {
             ))}
           </View>
         ))}
-      </View>
-      <View style={styles.buttonContainer}>
-        <Button title="Export to CSV" onPress={exportToCSV} />
-        <Button title="Send CSV via Email" onPress={sendCSV} />
       </View>
     </ScrollView>
   );
@@ -151,38 +149,45 @@ export default SubmissionsScreen;
 
 const styles = StyleSheet.create({
   container: {
-    padding: 20,
+    padding: 30,
     alignItems: "center",
     justifyContent: "center",
+    backgroundColor: "#f5f5f5", // Light background for better readability
   },
   header: {
-    fontSize: 24,
+    fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 20,
+    marginBottom: 30,
     textAlign: "center",
   },
   table: {
     width: screenWidth * 0.9,
-    marginBottom: 20,
+    marginBottom: 30,
+    backgroundColor: "#fff", // White background for the table
+    borderRadius: 10, // Rounded corners for the table
+    overflow: "hidden", // Ensure rounded corners
   },
   tableHeader: {
     flexDirection: "row",
-    borderBottomWidth: 1,
+    borderBottomWidth: 2,
     borderBottomColor: "#ccc",
+    backgroundColor: "#eaeaea", // Slightly darker header background
   },
   tableHeaderCell: {
     flex: 1,
     fontWeight: "bold",
-    padding: 10,
+    padding: 10, // Increased padding for better touch targets
     textAlign: "center",
+    fontSize: 13, // Larger font size for better readability
   },
   tableRow: {
     flexDirection: "row",
   },
   tableCell: {
     flex: 1,
-    padding: 10,
+    padding: 10, // Increased padding for better touch targets
     textAlign: "center",
+    fontSize: 16, // Larger font size for better readability
     borderBottomWidth: 1,
     borderBottomColor: "#eee",
   },
@@ -190,5 +195,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-around",
     width: "100%",
+    marginTop: 20, // Added margin top for spacing
   },
 });

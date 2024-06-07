@@ -86,7 +86,7 @@ const Forms = ({ route }) => {
         firstName,
         lastName,
         email,
-        phone: "+" + phone,
+        phone: phone === ""? "": "+" + phone,
         gender,
         nationality,
       };
@@ -469,7 +469,7 @@ const Forms = ({ route }) => {
 
   const nationalities = nationalit.map((nationality) => ({
     label: nationality,
-    value: nationality.toLowerCase(),
+    value: nationality
   }));
 
   return (
@@ -621,7 +621,7 @@ const Forms = ({ route }) => {
               style={styles.logo}
             />
             <Image
-              source={require("../assets/fanarlogo1.png")}
+              source={require("../assets/fanarlogo2.png")}
               style={styles.logo1}
             />
           </View>
@@ -741,11 +741,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   logo1: {
-    width: screenWidth * 0.5,
-    height: screenHeight * 0.2,
+    width: screenWidth * 0.13,
+    height: screenWidth * 0.13, // Ensure the height is equal to the width
     resizeMode: "contain",
-    marginTop: 20,
+    marginTop: 90,
+    marginRight:40,
     paddingHorizontal: 10,
+    borderRadius: (screenWidth * 0.15) / 2, // Make the borderRadius half of the width
+    backgroundColor: 'white'
   },
   errorText: {
     color: "red",
