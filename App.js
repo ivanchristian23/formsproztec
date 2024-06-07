@@ -33,8 +33,8 @@ export default function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name='Home' component={Home} options={{ title: 'Welcome', headerShown: false }} />
         <Stack.Screen name='Forms' component={Forms} options={{ title: 'Abdullah Bin Zaid Islamic Center', headerTitleAlign:'center'}}/>
-        <Stack.Screen name='Admin' component={Admin} />
-        <Stack.Screen name="SubmissionsScreen" component={SubmissionsScreen} />
+        <Stack.Screen name='Admin' component={Admin} options={{ headerTitleAlign:'center'}}/>
+        <Stack.Screen name="SubmissionsScreen" component={SubmissionsScreen} options={{ title: 'Submissions', headerTitleAlign:'center'}}/>
       </Stack.Navigator>
     </NavigationContainer>
   );
