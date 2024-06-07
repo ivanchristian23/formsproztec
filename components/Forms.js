@@ -10,7 +10,7 @@ import {
   KeyboardAvoidingView,
   Image,
   Alert,
-  ScrollView
+  ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Dropdown } from "react-native-element-dropdown";
@@ -41,12 +41,21 @@ const Forms = ({ route }) => {
     return re.test(text);
   };
 
+  // Function to validate email format
+  const validateEmail = (email) => {
+    // Regular expression for email validation
+    const re = /\S+@\S+\.\S+/;
+    return re.test(email);
+  };
+
   const handleSubmit = () => {
     // Check if any required field is empty or contains special characters
     if (
       !firstName.trim() ||
       !lastName.trim() ||
       !nationality.trim() ||
+      !email.trim() ||
+      !validateEmail(email) ||
       !validateSpecialCharacters(firstName) ||
       !validateSpecialCharacters(lastName)
     ) {
@@ -70,7 +79,7 @@ const Forms = ({ route }) => {
         "Please fill out all fields with valid data.",
         [{ text: "OK", onPress: () => console.log("OK Pressed") }]
       );
-    }  else {
+    } else {
       // Prepare the new submission object
       const newSubmission = {
         date: date.toDateString(),
@@ -86,7 +95,7 @@ const Forms = ({ route }) => {
       setEmail("");
       setFirstName("");
       setLastName("");
-      setPhone("");
+      setPhone("+");
       setGender("");
       setNationality("");
       setModalVisible(true); // Show success modal
@@ -136,7 +145,7 @@ const Forms = ({ route }) => {
       gender: "Gender",
       nationality: "Nationality",
       selectGender: "Select Gender",
-      selectNationality: "Select Nationality"
+      selectNationality: "Select Nationality",
     },
     spanish: {
       welcome: "Bienvenido a Fanar",
@@ -151,7 +160,7 @@ const Forms = ({ route }) => {
       gender: "Género",
       nationality: "Nacionalidad",
       selectGender: "Seleccionar Género",
-      selectNationality: "Seleccionar Nacionalidad"
+      selectNationality: "Seleccionar Nacionalidad",
     },
     french: {
       welcome: "Bienvenue à Fanar",
@@ -166,7 +175,7 @@ const Forms = ({ route }) => {
       gender: "Genre",
       nationality: "Nationalité",
       selectGender: "Sélectionner le genre",
-      selectNationality: "Sélectionner la nationalité"
+      selectNationality: "Sélectionner la nationalité",
     },
     german: {
       welcome: "Willkommen bei Fanar",
@@ -181,7 +190,7 @@ const Forms = ({ route }) => {
       gender: "Geschlecht",
       nationality: "Nationalität",
       selectGender: "Geschlecht auswählen",
-      selectNationality: "Nationalität auswählen"
+      selectNationality: "Nationalität auswählen",
     },
     chinese: {
       welcome: "欢迎来到Fanar",
@@ -196,7 +205,7 @@ const Forms = ({ route }) => {
       gender: "性别",
       nationality: "国籍",
       selectGender: "选择性别",
-      selectNationality: "选择国籍"
+      selectNationality: "选择国籍",
     },
     portuguese: {
       welcome: "Bem-vindo ao Fanar",
@@ -211,7 +220,7 @@ const Forms = ({ route }) => {
       gender: "Gênero",
       nationality: "Nacionalidade",
       selectGender: "Selecionar Gênero",
-      selectNationality: "Selecionar Nacionalidade"
+      selectNationality: "Selecionar Nacionalidade",
     },
     russian: {
       welcome: "Добро пожаловать в Fanar",
@@ -226,7 +235,7 @@ const Forms = ({ route }) => {
       gender: "Пол",
       nationality: "Национальность",
       selectGender: "Выберите пол",
-      selectNationality: "Выберите национальность"
+      selectNationality: "Выберите национальность",
     },
     japanese: {
       welcome: "ファナールへようこそ",
@@ -241,7 +250,7 @@ const Forms = ({ route }) => {
       gender: "性別",
       nationality: "国籍",
       selectGender: "性別を選択",
-      selectNationality: "国籍を選択"
+      selectNationality: "国籍を選択",
     },
     italian: {
       welcome: "Benvenuto a Fanar",
@@ -256,7 +265,7 @@ const Forms = ({ route }) => {
       gender: "Genere",
       nationality: "Nazionalità",
       selectGender: "Seleziona il genere",
-      selectNationality: "Seleziona la nazionalità"
+      selectNationality: "Seleziona la nazionalità",
     },
   };
 
@@ -474,7 +483,7 @@ const Forms = ({ route }) => {
           source={require("../assets/fanardarknewest.jpg")}
           style={styles.background}
           imageStyle={{
-            resizeMode:'contain'
+            resizeMode: "contain",
           }}
         >
           <View style={styles.date}>
@@ -486,7 +495,7 @@ const Forms = ({ route }) => {
             <Text style={styles.heading}>Welcome to Fanar</Text>
           </View>
           <View style={styles.textboxes}>
-            <Text style={styles.label}>{'* '+currentLabels.firstName}</Text>
+            <Text style={styles.label}>{"* " + currentLabels.firstName}</Text>
             <TextInput
               style={[
                 styles.input,
@@ -508,8 +517,10 @@ const Forms = ({ route }) => {
               }}
               placeholder={currentLabels.firstName}
             />
-            {firstNameError ? <Text style={styles.errorText}>{firstNameError}</Text> : null}
-            <Text style={styles.label}>{'* '+currentLabels.lastName}</Text>
+            {firstNameError ? (
+              <Text style={styles.errorText}>{firstNameError}</Text>
+            ) : null}
+            <Text style={styles.label}>{"* " + currentLabels.lastName}</Text>
             <TextInput
               style={[
                 styles.input,
@@ -531,8 +542,10 @@ const Forms = ({ route }) => {
               }}
               placeholder={currentLabels.lastName}
             />
-            {lastNameError ? <Text style={styles.errorText}>{lastNameError}</Text> : null}
-            <Text style={styles.label}>{'* '+currentLabels.nationality}</Text>
+            {lastNameError ? (
+              <Text style={styles.errorText}>{lastNameError}</Text>
+            ) : null}
+            <Text style={styles.label}>{"* " + currentLabels.nationality}</Text>
             <Dropdown
               data={nationalities}
               placeholder={currentLabels.selectNationality}
@@ -555,7 +568,7 @@ const Forms = ({ route }) => {
                 handleNationalityChange(item.value);
               }}
             />
-            <Text style={styles.label}>{currentLabels.email}</Text>
+            <Text style={styles.label}>* {currentLabels.email}</Text>
             <TextInput
               style={styles.input}
               value={email}
@@ -564,6 +577,10 @@ const Forms = ({ route }) => {
               placeholder={currentLabels.email}
               keyboardType="email-address"
             />
+
+            {!validateEmail(email) && email.trim() !== "" && (
+              <Text style={styles.errorText}>Invalid email address</Text>
+            )}
             <Text style={styles.label}>{currentLabels.phone}</Text>
             <TextInput
               style={styles.input}
@@ -586,7 +603,7 @@ const Forms = ({ route }) => {
                 <Picker.Item label="Others" value="others" />
               </Picker>
             </View>
-            
+
             <View style={styles.buttonContainer}>
               <Button
                 title={currentLabels.submit}
@@ -659,9 +676,9 @@ const styles = StyleSheet.create({
   },
   background: {
     // alignSelf:'stretch',
-    height: '100%',
-    width: '100%',
-    backgroundColor:'black'
+    height: "100%",
+    width: "100%",
+    backgroundColor: "black",
   },
   textboxes: {
     paddingLeft: screenWidth * 0.03,
@@ -721,8 +738,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 10,
   },
   logo1: {
-    width: screenWidth*0.5,
-    height: screenHeight*0.2,
+    width: screenWidth * 0.5,
+    height: screenHeight * 0.2,
     resizeMode: "contain",
     marginTop: 20,
     paddingHorizontal: 10,

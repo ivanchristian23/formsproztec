@@ -4,6 +4,7 @@ import * as FileSystem from 'expo-file-system';
 import * as MailComposer from 'expo-mail-composer';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as MediaLibrary from 'expo-media-library';
+
 const Admin = ({ route, navigation }) => {
   const { submissions } = route.params;
   console.log(submissions);
@@ -21,7 +22,7 @@ const Admin = ({ route, navigation }) => {
       if (savedPassword) {
         setCurrentPassword(savedPassword);
       } else {
-        setCurrentPassword('admin123'); // Default password
+        setCurrentPassword('Admin123'); // Default password
       }
     };
 
@@ -36,7 +37,8 @@ const Admin = ({ route, navigation }) => {
         return;
       }
       setMessage('Access granted');
-      shareSubmissions();
+      navigation.navigate('SubmissionsScreen', { submissions }); 
+      // shareSubmissions();
     } else {
       setMessage('Access denied');
     }
