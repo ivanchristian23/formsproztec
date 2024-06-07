@@ -25,7 +25,7 @@ const Forms = ({ route }) => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
-  const [phone, setPhone] = useState("+");
+  const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("");
   const [nationality, setNationality] = useState(""); // New state for nationality
   const [placeholderColor, setPlaceholderColor] = useState("#888"); // Grey color for placeholder
@@ -86,7 +86,7 @@ const Forms = ({ route }) => {
         firstName,
         lastName,
         email,
-        phone,
+        phone: "+" + phone,
         gender,
         nationality,
       };
@@ -95,7 +95,7 @@ const Forms = ({ route }) => {
       setEmail("");
       setFirstName("");
       setLastName("");
-      setPhone("+");
+      setPhone("");
       setGender("");
       setNationality("");
       setModalVisible(true); // Show success modal
@@ -582,14 +582,17 @@ const Forms = ({ route }) => {
               <Text style={styles.errorText}>Invalid email address</Text>
             )}
             <Text style={styles.label}>{currentLabels.phone}</Text>
-            <TextInput
-              style={styles.input}
-              value={phone}
-              onChangeText={setPhone}
-              placeholder={currentLabels.phone}
-              keyboardType="phone-pad"
-              maxLength={13}
-            />
+            <View style={styles.phoneContainer}>
+              <Text style={styles.phonePrefix}>+</Text>
+              <TextInput
+                style={styles.phoneInput}
+                value={phone}
+                onChangeText={setPhone}
+                placeholder={currentLabels.phone}
+                keyboardType="phone-pad"
+                maxLength={15} // Including the "+" sign
+              />
+            </View>
             <Text style={styles.label}>{currentLabels.gender}</Text>
             <View style={styles.gender}>
               <Picker
@@ -747,6 +750,25 @@ const styles = StyleSheet.create({
   errorText: {
     color: "red",
     marginBottom: 10,
+  },
+  phoneContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    borderRadius: 5,
+    marginBottom: 10,
+    backgroundColor: "white",
+    paddingHorizontal: 10,
+  },
+  phonePrefix: {
+    fontSize: 16,
+    paddingHorizontal: 10,
+  },
+  phoneInput: {
+    flex: 1,
+    padding: 10,
+    fontSize: 16,
   },
 });
 
