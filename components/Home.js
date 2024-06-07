@@ -59,8 +59,15 @@ const Home = ({ navigation, route }) => {
           <Button title="Next" onPress={handleNext} color="" />
         </View>
         <View style={styles.logoContainer}>
-          <Image source={require('../assets/loogo.png')} style={styles.logo} />
-        </View>
+            <Image
+              source={require("../assets/loogo.png")}
+              style={styles.logo}
+            />
+            <Image
+              source={require("../assets/fanarlogo1.png")}
+              style={styles.logo1}
+            />
+          </View>
         <View style={styles.exportButtonContainer}>
         <Foundation
             name="page-export-csv"
@@ -113,15 +120,35 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
   },
+  // logoContainer: {
+  //   position: 'absolute',
+  //   bottom: 20,
+  //   left: 20,
+  // },
+  // logo: {
+  //   width: 250,
+  //   height: 250,
+  //   resizeMode: 'contain',
+  // },
   logoContainer: {
-    position: 'absolute',
-    bottom: 20,
-    left: 20,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
   logo: {
     width: 250,
     height: 250,
-    resizeMode: 'contain',
+    resizeMode: "contain",
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  logo1: {
+    width: screenWidth*0.5,
+    height: screenHeight*0.2,
+    resizeMode: "contain",
+    marginTop: 20,
+    paddingHorizontal: 10,
   },
 });
 

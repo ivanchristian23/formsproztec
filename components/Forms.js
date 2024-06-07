@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Image,
   Alert,
+  ScrollView
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Dropdown } from "react-native-element-dropdown";
@@ -599,6 +600,10 @@ const Forms = ({ route }) => {
               source={require("../assets/loogo.png")}
               style={styles.logo}
             />
+            <Image
+              source={require("../assets/fanarlogo1.png")}
+              style={styles.logo1}
+            />
           </View>
         </ImageBackground>
       </View>
@@ -712,7 +717,13 @@ const styles = StyleSheet.create({
     width: 250,
     height: 250,
     resizeMode: "contain",
-    justifyContent: "space-between",
+    marginTop: 20,
+    paddingHorizontal: 10,
+  },
+  logo1: {
+    width: screenWidth*0.5,
+    height: screenHeight*0.2,
+    resizeMode: "contain",
     marginTop: 20,
     paddingHorizontal: 10,
   },
