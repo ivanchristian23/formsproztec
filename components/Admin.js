@@ -36,7 +36,9 @@ const Admin = ({ route, navigation }) => {
         setPassword('');
         return;
       }
-      setMessage('Access granted');
+      // setMessage('Access granted');
+      setPassword("")
+
       navigation.navigate('SubmissionsScreen', { submissions }); 
       // shareSubmissions();
     } else {

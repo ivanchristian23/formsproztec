@@ -58,14 +58,18 @@ const Home = ({ navigation, route }) => {
         <View style={styles.buttonContainer}>
           <Button title="Next" onPress={handleNext} color="" />
         </View>
+        
         <View style={styles.logoContainer}>
             <Image
+              source={require("../assets/fanarlogo2.png")}
+              style={styles.logo1}
+            />
+            
+          </View>
+          <View style={styles.logoContainer2}>
+          <Image
               source={require("../assets/loogo.png")}
               style={styles.logo}
-            />
-            <Image
-              source={require("../assets/fanarlogo1.png")}
-              style={styles.logo1}
             />
           </View>
         <View style={styles.exportButtonContainer}>
@@ -94,7 +98,7 @@ const styles = StyleSheet.create({
   exportButtonContainer: {
     position: 'absolute',
     right: 10,
-    bottom: 10,
+    top: 30,
   },
   welcomeText: {
     fontSize: 40,
@@ -132,9 +136,15 @@ const styles = StyleSheet.create({
   // },
   logoContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-    paddingHorizontal: 10,
+    position: 'absolute',
+    right: 15,
+    bottom: 26,
+  },
+  logoContainer2: {
+    flexDirection: "row",
+    position: 'absolute',
+    left:-50,
+    bottom: -50,
   },
   logo: {
     width: 250,
@@ -142,13 +152,16 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     marginTop: 20,
     paddingHorizontal: 10,
+    marginRight:0
   },
   logo1: {
-    width: screenWidth*0.5,
-    height: screenHeight*0.2,
+    width: screenWidth * 0.13,
+    height: screenWidth * 0.13, // Ensure the height is equal to the width
     resizeMode: "contain",
-    marginTop: 20,
+    marginTop: 90,
     paddingHorizontal: 10,
+    borderRadius: (screenWidth * 0.15) / 2, // Make the borderRadius half of the width
+    backgroundColor: 'white'
   },
 });
 
