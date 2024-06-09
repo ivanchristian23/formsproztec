@@ -147,6 +147,21 @@ const Forms = ({ route }) => {
       selectGender: "Select Gender",
       selectNationality: "Select Nationality",
     },
+    arabic: {
+      welcome: "مرحبًا بكم في فنار",
+      date: "التاريخ",
+      firstName: "الاسم الأول",
+      lastName: "الاسم الأخير",
+      email: "البريد الإلكتروني",
+      phone: "الهاتف",
+      submit: "إرسال",
+      thankYou: "شكرًا لاستجابتك",
+      goBack: "العودة",
+      gender: "الجنس",
+      nationality: "الجنسية",
+      selectGender: "اختر الجنس",
+      selectNationality: "اختر الجنسية",
+    },    
     spanish: {
       welcome: "Bienvenido a Fanar",
       date: "Fecha",
@@ -480,10 +495,10 @@ const Forms = ({ route }) => {
     >
       <View>
         <ImageBackground
-          source={require("../assets/fanardarknewest.jpg")}
+          source={require("../assets/up.jpg")}
           style={styles.background}
           imageStyle={{
-            resizeMode: "contain",
+            resizeMode: "cover",
           }}
         >
           <View style={styles.date}>
