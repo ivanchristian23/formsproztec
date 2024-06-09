@@ -43,6 +43,7 @@ const Home = ({ navigation, route }) => {
         <RNPickerSelect
           onValueChange={(value) => setLanguage(value)}
           items={[
+            { label: "Arabic", value: "arabic" },
             { label: "Spanish", value: "spanish" },
             { label: "French", value: "french" },
             { label: "German", value: "german" },
