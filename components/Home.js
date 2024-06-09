@@ -1,7 +1,16 @@
-import { StyleSheet, Text, View, Button, ImageBackground, Image, Dimensions } from "react-native";
-import React, { useState,useEffect } from "react";
+import React, { useState, useEffect } from "react";
+import {
+  StyleSheet,
+  Text,
+  View,
+  Button,
+  ImageBackground,
+  Image,
+  Dimensions,
+} from "react-native";
 import RNPickerSelect from "react-native-picker-select";
 import { Foundation } from "react-native-vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
@@ -9,30 +18,66 @@ const screenHeight = Dimensions.get("window").height;
 const Home = ({ navigation, route }) => {
   const [language, setLanguage] = useState("english");
   const [submissions, setSubmissions] = useState([]);
+
+  useEffect(() => {
+    const loadSubmissions = async () => {
+      try {
+        const savedSubmissions = await AsyncStorage.getItem("submissions");
+        if (savedSubmissions) {
+          setSubmissions(JSON.parse(savedSubmissions));
+        }
+      } catch (error) {
+        console.error("Failed to load submissions", error);
+      }
+    };
+
+    loadSubmissions();
+  }, []);
+
   useEffect(() => {
     if (route.params?.newSubmission) {
-        // console.log(route.params.newSubmission);
-        let temp = [...submissions];
-        temp.push(route.params.newSubmission);
-        console.log(temp);
-        setSubmissions(temp);
+      console.log("New submission received:", route.params.newSubmission);
+      setSubmissions((prevSubmissions) => {
+        const updatedSubmissions = [...prevSubmissions, route.params.newSubmission];
+        saveSubmissions(updatedSubmissions);
+        return updatedSubmissions;
+      });
+
+      // Cleanup to prevent re-processing the same submission
+      navigation.setParams({ newSubmission: null });
     }
   }, [route.params?.newSubmission]);
+
+  const saveSubmissions = async (submissions) => {
+    try {
+      await AsyncStorage.setItem("submissions", JSON.stringify(submissions));
+    } catch (error) {
+      console.error("Failed to save submissions", error);
+    }
+  };
+
   const handleNext = () => {
-    navigation.navigate("Forms", { 
-      language: language, 
+    navigation.navigate("Forms", {
+      language: language,
       addSubmission: (newSubmission) => {
-        setSubmissions((prevSubmissions) => [...prevSubmissions, newSubmission]);
-      }
+        setSubmissions((prevSubmissions) => {
+          const updatedSubmissions = [...prevSubmissions, newSubmission];
+          saveSubmissions(updatedSubmissions);
+          return updatedSubmissions;
+        });
+      },
     });
   };
+
   const handleExport = () => {
-    navigation.navigate("Admin",{submissions:submissions});
+    navigation.navigate("Admin", { submissions: submissions });
   };
 
   return (
     <ImageBackground
-      source={require("../assets/fanar.jpg")}
+    blurRadius={2} 
+
+      source={require("../assets/fanar6.jpg")}
       style={styles.background}
     >
       <View style={styles.container}>
@@ -43,7 +88,7 @@ const Home = ({ navigation, route }) => {
         <RNPickerSelect
           onValueChange={(value) => setLanguage(value)}
           items={[
-            { label: "Arabic", value: "arabic" },
+            { label: "العربية", value: "arabic" },
             { label: "Spanish", value: "spanish" },
             { label: "French", value: "french" },
             { label: "German", value: "german" },
@@ -59,29 +104,24 @@ const Home = ({ navigation, route }) => {
         <View style={styles.buttonContainer}>
           <Button title="Next" onPress={handleNext} color="" />
         </View>
-        
+
         <View style={styles.logoContainer}>
-            <Image
-              source={require("../assets/fanarlogo2.png")}
-              style={styles.logo1}
-            />
-            
-          </View>
-          <View style={styles.logoContainer2}>
           <Image
-              source={require("../assets/loogo.png")}
-              style={styles.logo}
-            />
-          </View>
+            source={require("../assets/fanarlogo2.png")}
+            style={styles.logo1}
+          />
+        </View>
+        <View style={styles.logoContainer2}>
+          <Image source={require("../assets/loogo.png")} style={styles.logo} />
+        </View>
         <View style={styles.exportButtonContainer}>
-        <Foundation
+          <Foundation
             name="page-export-csv"
             size={50}
             onPress={handleExport}
             color="white"
           />
         </View>
-        
       </View>
     </ImageBackground>
   );
@@ -97,27 +137,27 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   exportButtonContainer: {
-    position: 'absolute',
+    position: "absolute",
     right: 10,
     top: 30,
   },
   welcomeText: {
-    fontSize: 40,
+    fontSize: 45,
     fontWeight: "bold",
     marginBottom: 20,
-    color: '#FFFFE0',
-    textAlign: 'center',
+    color: "black",
+    textAlign: "center",
   },
   instructions: {
-    fontSize: 17,
+    fontSize: 21,
     marginBottom: 10,
     textAlign: "center",
-    color: "#FFFFE0",
-    fontWeight: '500'
+    color: "black",
+    fontWeight: "500",
   },
   buttonContainer: {
     marginTop: 20,
-    width: screenWidth*0.5 ,
+    width: screenWidth * 0.5,
   },
   background: {
     resizeMode: "cover",
@@ -125,26 +165,16 @@ const styles = StyleSheet.create({
     width: "100%",
     flex: 1,
   },
-  // logoContainer: {
-  //   position: 'absolute',
-  //   bottom: 20,
-  //   left: 20,
-  // },
-  // logo: {
-  //   width: 250,
-  //   height: 250,
-  //   resizeMode: 'contain',
-  // },
   logoContainer: {
     flexDirection: "row",
-    position: 'absolute',
+    position: "absolute",
     right: 15,
     bottom: 26,
   },
   logoContainer2: {
     flexDirection: "row",
-    position: 'absolute',
-    left:-50,
+    position: "absolute",
+    left: -50,
     bottom: -50,
   },
   logo: {
@@ -153,7 +183,7 @@ const styles = StyleSheet.create({
     resizeMode: "contain",
     marginTop: 20,
     paddingHorizontal: 10,
-    marginRight:0
+    marginRight: 0,
   },
   logo1: {
     width: screenWidth * 0.13,
@@ -162,7 +192,7 @@ const styles = StyleSheet.create({
     marginTop: 90,
     paddingHorizontal: 10,
     borderRadius: (screenWidth * 0.15) / 2, // Make the borderRadius half of the width
-    backgroundColor: 'white'
+    backgroundColor: "white",
   },
 });
 
@@ -176,7 +206,7 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 4,
     color: "white",
     paddingRight: 30,
-    width: screenWidth*0.5,
+    width: screenWidth * 0.5,
     alignSelf: "center",
     backgroundColor: "rgba(0,0,0,0.5)",
   },
@@ -189,13 +219,13 @@ const pickerSelectStyles = StyleSheet.create({
     borderRadius: 8,
     color: "black",
     paddingRight: 30,
-    width: screenWidth*0.5,
+    width: screenWidth * 0.5,
     alignSelf: "center",
     // backgroundColor: "rgba(0,0,0,0.5)",
-    backgroundColor: 'white'
+    backgroundColor: "white",
   },
   placeholder: {
-    color: 'black', // Your custom color for the placeholder
+    color: "black", // Your custom color for the placeholder
     fontSize: 16,
   },
 });

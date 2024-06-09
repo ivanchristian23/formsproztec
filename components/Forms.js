@@ -495,10 +495,10 @@ const Forms = ({ route }) => {
     >
       <View>
         <ImageBackground
-          source={require("../assets/fanardarknewest.jpg")}
+          source={require("../assets/up.jpg")}
           style={styles.background}
           imageStyle={{
-            resizeMode: "contain",
+            resizeMode: "cover",
           }}
         >
           <View style={styles.date}>
