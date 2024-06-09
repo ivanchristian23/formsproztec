@@ -37,8 +37,8 @@ const Forms = ({ route }) => {
   const [lastNameError, setLastNameError] = useState(""); // Error message for last name
 
   const validateSpecialCharacters = (text) => {
-    const re = /^[a-zA-Z]+$/;
-    return re.test(text);
+    const blacklistRe = /[!@#$%^&*(),.?":{}<>0-9]/;
+    return !blacklistRe.test(text);
   };
 
   // Function to validate email format
@@ -134,7 +134,6 @@ const Forms = ({ route }) => {
   const labels = {
     english: {
       welcome: "Welcome to Fanar",
-      date: "Date",
       firstName: "First Name",
       lastName: "Last Name",
       email: "Email",
@@ -142,14 +141,17 @@ const Forms = ({ route }) => {
       submit: "Submit",
       thankYou: "Thank you for your response",
       goBack: "Go back",
-      gender: "Gender",
       nationality: "Nationality",
       selectGender: "Select Gender",
       selectNationality: "Select Nationality",
+      gender: "Gender",
+      male: "Male",
+      female: "Female",
+      others: "Others",
     },
     arabic: {
       welcome: "مرحبًا بكم في فنار",
-      date: "التاريخ",
+     
       firstName: "الاسم الأول",
       lastName: "الاسم الأخير",
       email: "البريد الإلكتروني",
@@ -157,14 +159,18 @@ const Forms = ({ route }) => {
       submit: "إرسال",
       thankYou: "شكرًا لاستجابتك",
       goBack: "العودة",
-      gender: "الجنس",
       nationality: "الجنسية",
-      selectGender: "اختر الجنس",
       selectNationality: "اختر الجنسية",
+      gender: "الجنس",
+    selectGender: "اختر الجنس",
+    male: "ذكر",
+    female: "أنثى",
+    others: "آخرون",
+      
     },    
     spanish: {
       welcome: "Bienvenido a Fanar",
-      date: "Fecha",
+     
       firstName: "Nombre",
       lastName: "Apellido",
       email: "Correo Electrónico",
@@ -172,14 +178,17 @@ const Forms = ({ route }) => {
       submit: "Enviar",
       thankYou: "Gracias por su respuesta",
       goBack: "Regresar",
-      gender: "Género",
       nationality: "Nacionalidad",
-      selectGender: "Seleccionar Género",
       selectNationality: "Seleccionar Nacionalidad",
+      gender: "Género",
+      selectGender: "Seleccionar Género",
+      male: "Masculino",
+      female: "Femenino",
+      others: "Otros",
     },
     french: {
       welcome: "Bienvenue à Fanar",
-      date: "Date",
+    
       firstName: "Prénom",
       lastName: "Nom de famille",
       email: "Email",
@@ -187,14 +196,17 @@ const Forms = ({ route }) => {
       submit: "Soumettre",
       thankYou: "Merci pour votre réponse",
       goBack: "Retourner",
-      gender: "Genre",
       nationality: "Nationalité",
-      selectGender: "Sélectionner le genre",
       selectNationality: "Sélectionner la nationalité",
+      gender: "Genre",
+    selectGender: "Sélectionner le genre",
+    male: "Masculin",
+    female: "Féminin",
+    others: "Autre",
     },
     german: {
       welcome: "Willkommen bei Fanar",
-      date: "Datum",
+     
       firstName: "Vorname",
       lastName: "Nachname",
       email: "Email",
@@ -202,14 +214,17 @@ const Forms = ({ route }) => {
       submit: "Einreichen",
       thankYou: "Vielen Dank für Ihre Antwort",
       goBack: "Zurück",
-      gender: "Geschlecht",
       nationality: "Nationalität",
-      selectGender: "Geschlecht auswählen",
       selectNationality: "Nationalität auswählen",
+      gender: "Geschlecht",
+    selectGender: "Geschlecht auswählen",
+    male: "Männlich",
+    female: "Weiblich",
+    others: "Andere",
     },
     chinese: {
       welcome: "欢迎来到Fanar",
-      date: "日期",
+     
       firstName: "名字",
       lastName: "姓氏",
       email: "电子邮件",
@@ -217,14 +232,17 @@ const Forms = ({ route }) => {
       submit: "提交",
       thankYou: "感谢您的回复",
       goBack: "返回",
-      gender: "性别",
       nationality: "国籍",
-      selectGender: "选择性别",
       selectNationality: "选择国籍",
+      gender: "性别",
+      selectGender: "选择性别",
+      male: "男性",
+      female: "女性",
+      others: "其他",
     },
     portuguese: {
       welcome: "Bem-vindo ao Fanar",
-      date: "Data",
+      
       firstName: "Nome",
       lastName: "Sobrenome",
       email: "Email",
@@ -232,14 +250,17 @@ const Forms = ({ route }) => {
       submit: "Enviar",
       thankYou: "Obrigado pela sua resposta",
       goBack: "Voltar",
-      gender: "Gênero",
       nationality: "Nacionalidade",
-      selectGender: "Selecionar Gênero",
       selectNationality: "Selecionar Nacionalidade",
+      gender: "Gênero",
+    selectGender: "Selecionar Gênero",
+    male: "Masculino",
+    female: "Feminino",
+    others: "Outros",
     },
     russian: {
       welcome: "Добро пожаловать в Fanar",
-      date: "Дата",
+    
       firstName: "Имя",
       lastName: "Фамилия",
       email: "Эл. почта",
@@ -247,14 +268,17 @@ const Forms = ({ route }) => {
       submit: "Отправить",
       thankYou: "Спасибо за ваш ответ",
       goBack: "Вернуться",
-      gender: "Пол",
       nationality: "Национальность",
-      selectGender: "Выберите пол",
       selectNationality: "Выберите национальность",
+      gender: "Пол",
+    selectGender: "Выберите пол",
+    male: "Мужской",
+    female: "Женский",
+    others: "Другой",
     },
     japanese: {
       welcome: "ファナールへようこそ",
-      date: "日付",
+   
       firstName: "名",
       lastName: "姓",
       email: "メール",
@@ -262,14 +286,17 @@ const Forms = ({ route }) => {
       submit: "送信",
       thankYou: "ご回答いただきありがとうございます",
       goBack: "戻る",
-      gender: "性別",
       nationality: "国籍",
-      selectGender: "性別を選択",
       selectNationality: "国籍を選択",
+      gender: "性別",
+    selectGender: "性別を選択",
+    male: "男性",
+    female: "女性",
+    others: "その他",
     },
     italian: {
       welcome: "Benvenuto a Fanar",
-      date: "Data",
+   
       firstName: "Nome",
       lastName: "Cognome",
       email: "Email",
@@ -277,10 +304,13 @@ const Forms = ({ route }) => {
       submit: "Invia",
       thankYou: "Grazie per la tua risposta",
       goBack: "Torna indietro",
-      gender: "Genere",
       nationality: "Nazionalità",
-      selectGender: "Seleziona il genere",
       selectNationality: "Seleziona la nazionalità",
+      gender: "Genere",
+      selectGender: "Seleziona il genere",
+      male: "Maschile",
+      female: "Femminile",
+      others: "Altro",
     },
   };
 
@@ -503,7 +533,7 @@ const Forms = ({ route }) => {
         >
           <View style={styles.date}>
             <Text style={styles.dates}>
-              {currentLabels.date} {date.toDateString()}
+               {date.toDateString()}
             </Text>
           </View>
           <View style={styles.head}>
@@ -610,16 +640,16 @@ const Forms = ({ route }) => {
             </View>
             <Text style={styles.label}>{currentLabels.gender}</Text>
             <View style={styles.gender}>
-              <Picker
-                selectedValue={gender}
-                onValueChange={handleGenderChange}
-                style={{ color: placeholderColor }}
-              >
-                <Picker.Item label={currentLabels.selectGender} value="" />
-                <Picker.Item label="Male" value="male" />
-                <Picker.Item label="Female" value="female" />
-                <Picker.Item label="Others" value="others" />
-              </Picker>
+            <Picker
+            selectedValue={gender}
+            onValueChange={handleGenderChange}
+            style={{ color: placeholderColor }}
+          >
+            <Picker.Item label={currentLabels.selectGender} value="" />
+            <Picker.Item label={currentLabels.male} value="male" />
+            <Picker.Item label={currentLabels.female} value="female" />
+            <Picker.Item label={currentLabels.others} value="others" />
+          </Picker>
             </View>
 
             <View style={styles.buttonContainer}>
