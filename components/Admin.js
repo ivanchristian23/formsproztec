@@ -7,8 +7,6 @@ import * as MediaLibrary from 'expo-media-library';
 
 const Admin = ({ route, navigation }) => {
   const { submissions } = route.params;
-  console.log(submissions);
-
   const [password, setPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');

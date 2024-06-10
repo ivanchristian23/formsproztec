@@ -75,12 +75,18 @@ const Home = ({ navigation, route }) => {
 
   return (
     <ImageBackground
-    blurRadius={2} 
-
+      blurRadius={2}
       source={require("../assets/fanar6.jpg")}
       style={styles.background}
     >
       <View style={styles.container}>
+        <View style={styles.topLeftLogoContainer}>
+          <Image
+            source={require("../assets/fanar1.png")}
+            style={styles.topLeftLogo}
+          />
+        </View>
+
         <Text style={styles.welcomeText}>Welcome!</Text>
         <Text style={styles.instructions}>
           Please select your preferred language:
@@ -107,12 +113,9 @@ const Home = ({ navigation, route }) => {
 
         <View style={styles.logoContainer}>
           <Image
-            source={require("../assets/fanarlogo2.png")}
+            source={require("../assets/ministry.png")}
             style={styles.logo1}
           />
-        </View>
-        <View style={styles.logoContainer2}>
-          <Image source={require("../assets/loogo.png")} style={styles.logo} />
         </View>
         <View style={styles.exportButtonContainer}>
           <Foundation
@@ -136,10 +139,20 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     flex: 1,
   },
+  topLeftLogoContainer: {
+    position: "absolute",
+    top: 10,
+    left: 10,
+  },
+  topLeftLogo: {
+    width: 230,
+    height: 200,
+    resizeMode: "contain",
+  },
   exportButtonContainer: {
     position: "absolute",
-    right: 10,
-    top: 30,
+    right: 30,
+    bottom: 20,
   },
   welcomeText: {
     fontSize: 45,
@@ -162,37 +175,19 @@ const styles = StyleSheet.create({
   background: {
     resizeMode: "cover",
     height: "100%",
-    width: "100%",
+    width: "103%",
     flex: 1,
+    transform: [{ rotate: '0deg' }], // Rotate the background image
   },
   logoContainer: {
-    flexDirection: "row",
     position: "absolute",
-    right: 15,
-    bottom: 26,
-  },
-  logoContainer2: {
-    flexDirection: "row",
-    position: "absolute",
-    left: -50,
-    bottom: -50,
-  },
-  logo: {
-    width: 250,
-    height: 250,
-    resizeMode: "contain",
-    marginTop: 20,
-    paddingHorizontal: 10,
-    marginRight: 0,
+    right: -1,
+    top: -10,
   },
   logo1: {
-    width: screenWidth * 0.13,
-    height: screenWidth * 0.13, // Ensure the height is equal to the width
+    width: screenWidth * 0.4,
+    height: screenWidth * 0.4,
     resizeMode: "contain",
-    marginTop: 90,
-    paddingHorizontal: 10,
-    borderRadius: (screenWidth * 0.15) / 2, // Make the borderRadius half of the width
-    backgroundColor: "white",
   },
 });
 
@@ -225,7 +220,7 @@ const pickerSelectStyles = StyleSheet.create({
     backgroundColor: "white",
   },
   placeholder: {
-    color: "black", // Your custom color for the placeholder
+    color: "black",
     fontSize: 16,
   },
 });
