@@ -15,13 +15,14 @@ import {
 import { Picker } from "@react-native-picker/picker";
 import { Dropdown } from "react-native-element-dropdown";
 import Success from "./Success"; // Import Success component
+import moment from "moment";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const Forms = ({ route }) => {
   const { language, addSubmission } = route.params;
-  const [date, setDate] = useState(new Date());
+  // const [date, setDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
@@ -82,12 +83,12 @@ const Forms = ({ route }) => {
     } else {
       // Prepare the new submission object
       const newSubmission = {
-        date: date.toDateString(),
+        date: date,
         firstName,
         lastName,
         email,
         phone: phone === ""? "": "+" + phone,
-        gender,
+        gender: gender,
         nationality,
       };
 
@@ -99,9 +100,6 @@ const Forms = ({ route }) => {
       setGender("");
       setNationality("");
       setModalVisible(true); // Show success modal
-
-      // Log the new submission to console
-      console.log(newSubmission);
 
       // Call the callback function if it exists
       if (addSubmission) {
@@ -517,6 +515,14 @@ const Forms = ({ route }) => {
     value: nationality
   }));
 
+  // Function to format the date
+  const formatDate = (date) => {
+    return moment(date).format("dddd, Do MMMM YYYY");
+  };
+
+  const date = formatDate(new Date());
+
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -532,12 +538,11 @@ const Forms = ({ route }) => {
           }}
         >
           <View style={styles.date}>
-            <Text style={styles.dates}>
-               {date.toDateString()}
-            </Text>
+          <Text style={styles.dates}>{date}</Text>
+
           </View>
           <View style={styles.head}>
-            <Text style={styles.heading}>Welcome to Fanar</Text>
+            <Text style={styles.heading}>{currentLabels.welcome}</Text>
           </View>
           <View style={styles.textboxes}>
             <Text style={styles.label}>{"* " + currentLabels.firstName}</Text>
@@ -646,9 +651,9 @@ const Forms = ({ route }) => {
             style={{ color: placeholderColor }}
           >
             <Picker.Item label={currentLabels.selectGender} value="" />
-            <Picker.Item label={currentLabels.male} value="male" />
-            <Picker.Item label={currentLabels.female} value="female" />
-            <Picker.Item label={currentLabels.others} value="others" />
+            <Picker.Item label={currentLabels.male} value={currentLabels.male} />
+            <Picker.Item label={currentLabels.female} value={currentLabels.female} />
+            <Picker.Item label={currentLabels.others} value={currentLabels.others} />
           </Picker>
             </View>
 
@@ -659,17 +664,7 @@ const Forms = ({ route }) => {
                 style={styles.button}
               />
             </View>
-          </View>
-          <View style={styles.logoContainer}>
-            <Image
-              source={require("../assets/loogo.png")}
-              style={styles.logo}
-            />
-            <Image
-              source={require("../assets/fanarlogo2.png")}
-              style={styles.logo1}
-            />
-          </View>
+          </View>      
         </ImageBackground>
       </View>
       <Success
@@ -774,26 +769,29 @@ const styles = StyleSheet.create({
   },
   logoContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
-    marginTop: 20,
-    paddingHorizontal: 10,
+    position: "absolute",
+    right: 15,
+    bottom: -20,
+  },
+  logoContainer2: {
+    flexDirection: "row",
+    position: "absolute",
+    left:-10,
+    top: -100,
   },
   logo: {
-    width: 250,
+    width: 200,
     height: 250,
     resizeMode: "contain",
-    marginTop: 20,
     paddingHorizontal: 10,
+    marginRight: 0,
   },
   logo1: {
-    width: screenWidth * 0.13,
-    height: screenWidth * 0.13, // Ensure the height is equal to the width
+    width: screenWidth * 0.4,
+    height: screenWidth * 0.4, // Ensure the height is equal to the width
     resizeMode: "contain",
-    marginTop: 90,
-    marginRight:40,
     paddingHorizontal: 10,
-    borderRadius: (screenWidth * 0.15) / 2, // Make the borderRadius half of the width
-    backgroundColor: 'white'
+  
   },
   errorText: {
     color: "red",
