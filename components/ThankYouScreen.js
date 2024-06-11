@@ -17,7 +17,7 @@ const ThankYouScreen = ({ navigation }) => {
           }}
         >  
       <View style={styles.textContainer}>
-        <Text style={styles.header}>Thank you for registering with Fanar!</Text>
+        <Text style={styles.header}>Thank you for registering</Text>
         <Text style={styles.subHeader}>We wish you a pleasant tour.</Text>
       </View>
       <TouchableOpacity onPress={goToHome} style={styles.iconContainer}>

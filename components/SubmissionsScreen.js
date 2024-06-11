@@ -24,33 +24,43 @@ const SubmissionsScreen = ({ route }) => {
     submissionsData.length
   );
 
-  useEffect(() => {
-    (async () => {
-      const { status } = await MediaLibrary.requestPermissionsAsync();
-      if (status !== "granted") {
-        Alert.alert(
-          "Permission required",
-          "Please grant permission to access the media library"
-        );
-      }
-    })();
-  }, []);
+  // useEffect(() => {
+  //   (async () => {
+  //     const { status } = await MediaLibrary.requestPermissionsAsync();
+  //     if (status !== "granted") {
+  //       Alert.alert(
+  //         "Permission required",
+  //         "Please grant permission to access the media library"
+  //       );
+  //     }
+  //   })();
+  // }, []);
 
   useEffect(() => {
     // Fetch data from AsyncStorage when component mounts
     fetchDataFromStorage();
-  }, []);
+    // Update submission count whenever submissionsData changes
+    setSubmissionCount(submissionsData.length);
+  }, [submissionsData]); // Add submissionsData as a dependency
 
   const fetchDataFromStorage = async () => {
     try {
       const storedData = await AsyncStorage.getItem("submissions");
       if (storedData) {
-        setSubmissionsData(JSON.parse(storedData));
+        const parsedData = JSON.parse(storedData);
+        // console.log(parsedData);
+        setSubmissionsData(parsedData);
+        setSubmissionCount(parsedData.length); // Update submission count
+      } else {
+        // If no submissions data found, set both submissionsData and submissionCount to empty
+        setSubmissionsData([]);
+        setSubmissionCount(0);
       }
     } catch (error) {
       console.error("Error fetching data from AsyncStorage:", error);
     }
   };
+  
   const deleteAllSubmissions = async () => {
     try {
       await AsyncStorage.removeItem("submissions");
@@ -60,6 +70,7 @@ const SubmissionsScreen = ({ route }) => {
       console.error("Error deleting all submissions:", error);
     }
   };
+  
   
   const deleteSubmission = async (index) => {
     const updatedSubmissions = [...submissionsData];
@@ -194,7 +205,7 @@ const SubmissionsScreen = ({ route }) => {
             ))}
             <FontAwesome
               name="trash"
-              size={45}
+              size={35}
               color="red"
               onPress={() => deleteSubmission(index)}
               style={{marginLeft:20}}

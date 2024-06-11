@@ -40,6 +40,7 @@ const Home = ({ navigation, route }) => {
       setSubmissions((prevSubmissions) => {
         const updatedSubmissions = [...prevSubmissions, route.params.newSubmission];
         saveSubmissions(updatedSubmissions);
+        console.log(updatedSubmissions);
         return updatedSubmissions;
       });
 
@@ -76,7 +77,7 @@ const Home = ({ navigation, route }) => {
   return (
     <ImageBackground
       blurRadius={2}
-      source={require("../assets/fanar6.jpg")}
+      source={require("../assets/fanar6.2.jpg")}
       style={styles.background}
     >
       <View style={styles.container}>

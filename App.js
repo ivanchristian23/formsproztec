@@ -8,7 +8,6 @@ import { LogBox } from 'react-native'; // Import LogBox
 import Admin from './components/Admin';
 import SubmissionsScreen from './components/SubmissionsScreen';
 import ThankYouScreen from './components/ThankYouScreen';
-
 LogBox.ignoreLogs([
   'Warning: ...', // Replace this with the specific warning message you want to ignore
   /Possible Unhandled Promise Rejection/, // Use a regex to match patterns
