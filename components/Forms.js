@@ -16,11 +16,12 @@ import { Picker } from "@react-native-picker/picker";
 import { Dropdown } from "react-native-element-dropdown";
 import Success from "./Success"; // Import Success component
 import moment from "moment";
+import CheckBox from "expo-checkbox";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const Forms = ({ route }) => {
+const Forms = ({ navigation, route }) => {
   const { language, addSubmission } = route.params;
   // const [date, setDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
@@ -36,6 +37,8 @@ const Forms = ({ route }) => {
   const [lastNameBorderColor, setLastNameBorderColor] = useState("#ccc"); // Border color for last name
   const [firstNameError, setFirstNameError] = useState(""); // Error message for first name
   const [lastNameError, setLastNameError] = useState(""); // Error message for last name
+  const [termsAccepted, setTermsAccepted] = useState(false); // State variable for terms acceptance
+  const [newsletterSubscribed, setNewsletterSubscribed] = useState(false); // State variable for newsletter subscription
 
   const validateSpecialCharacters = (text) => {
     const blacklistRe = /[!@#$%^&*(),.?":{}<>0-9]/;
@@ -58,7 +61,8 @@ const Forms = ({ route }) => {
       !email.trim() ||
       !validateEmail(email) ||
       !validateSpecialCharacters(firstName) ||
-      !validateSpecialCharacters(lastName)
+      !validateSpecialCharacters(lastName) ||
+      !termsAccepted
     ) {
       if (!validateSpecialCharacters(firstName)) {
         setFirstNameBorderColor("red");
@@ -77,7 +81,7 @@ const Forms = ({ route }) => {
       // Alert user that all fields are required and no special characters are allowed
       Alert.alert(
         "Invalid Input",
-        "Please fill out all fields with valid data.",
+        "Please fill out all fields with valid data agree to the terms & conditions.",
         [{ text: "OK", onPress: () => console.log("OK Pressed") }]
       );
     } else {
@@ -87,10 +91,12 @@ const Forms = ({ route }) => {
         firstName,
         lastName,
         email,
-        phone: phone === ""? "": "+" + phone,
+        phone: phone === "" ? "" : "+" + phone,
         gender: gender,
         nationality,
+        newsletterSubscribed: newsletterSubscribed == true ? "Yes": "No" , // Include newsletter subscription in the submission
       };
+      console.log(newSubmission);
 
       // Reset fields
       setEmail("");
@@ -99,7 +105,9 @@ const Forms = ({ route }) => {
       setPhone("");
       setGender("");
       setNationality("");
-      setModalVisible(true); // Show success modal
+      // setModalVisible(true); // Show success modal
+      setTermsAccepted(false); // Reset terms acceptance
+      setNewsletterSubscribed(false); // Reset newsletter subscription
 
       // Call the callback function if it exists
       if (addSubmission) {
@@ -108,6 +116,7 @@ const Forms = ({ route }) => {
 
       // Optionally navigate back to home or another screen
       // navigation.navigate('Home', {newSubmission});
+      navigation.navigate("ThankYouScreen", { newSubmission });
     }
   };
 
@@ -131,7 +140,7 @@ const Forms = ({ route }) => {
 
   const labels = {
     english: {
-      welcome: "Welcome to Fanar",
+      welcome: "Marhaba",
       firstName: "First Name",
       lastName: "Last Name",
       email: "Email",
@@ -148,8 +157,7 @@ const Forms = ({ route }) => {
       others: "Others",
     },
     arabic: {
-      welcome: "مرحبًا بكم في فنار",
-     
+      welcome: "مرحبا",
       firstName: "الاسم الأول",
       lastName: "الاسم الأخير",
       email: "البريد الإلكتروني",
@@ -160,15 +168,13 @@ const Forms = ({ route }) => {
       nationality: "الجنسية",
       selectNationality: "اختر الجنسية",
       gender: "الجنس",
-    selectGender: "اختر الجنس",
-    male: "ذكر",
-    female: "أنثى",
-    others: "آخرون",
-      
-    },    
+      selectGender: "اختر الجنس",
+      male: "ذكر",
+      female: "أنثى",
+      others: "آخرون",
+    },
     spanish: {
-      welcome: "Bienvenido a Fanar",
-     
+      welcome: "Hola",
       firstName: "Nombre",
       lastName: "Apellido",
       email: "Correo Electrónico",
@@ -185,8 +191,8 @@ const Forms = ({ route }) => {
       others: "Otros",
     },
     french: {
-      welcome: "Bienvenue à Fanar",
-    
+      welcome: "Hola",
+
       firstName: "Prénom",
       lastName: "Nom de famille",
       email: "Email",
@@ -197,14 +203,14 @@ const Forms = ({ route }) => {
       nationality: "Nationalité",
       selectNationality: "Sélectionner la nationalité",
       gender: "Genre",
-    selectGender: "Sélectionner le genre",
-    male: "Masculin",
-    female: "Féminin",
-    others: "Autre",
+      selectGender: "Sélectionner le genre",
+      male: "Masculin",
+      female: "Féminin",
+      others: "Autre",
     },
     german: {
-      welcome: "Willkommen bei Fanar",
-     
+      welcome: "Hallo",
+
       firstName: "Vorname",
       lastName: "Nachname",
       email: "Email",
@@ -215,14 +221,14 @@ const Forms = ({ route }) => {
       nationality: "Nationalität",
       selectNationality: "Nationalität auswählen",
       gender: "Geschlecht",
-    selectGender: "Geschlecht auswählen",
-    male: "Männlich",
-    female: "Weiblich",
-    others: "Andere",
+      selectGender: "Geschlecht auswählen",
+      male: "Männlich",
+      female: "Weiblich",
+      others: "Andere",
     },
     chinese: {
-      welcome: "欢迎来到Fanar",
-     
+      welcome: "你好",
+
       firstName: "名字",
       lastName: "姓氏",
       email: "电子邮件",
@@ -239,8 +245,8 @@ const Forms = ({ route }) => {
       others: "其他",
     },
     portuguese: {
-      welcome: "Bem-vindo ao Fanar",
-      
+      welcome: "Olá",
+
       firstName: "Nome",
       lastName: "Sobrenome",
       email: "Email",
@@ -251,14 +257,14 @@ const Forms = ({ route }) => {
       nationality: "Nacionalidade",
       selectNationality: "Selecionar Nacionalidade",
       gender: "Gênero",
-    selectGender: "Selecionar Gênero",
-    male: "Masculino",
-    female: "Feminino",
-    others: "Outros",
+      selectGender: "Selecionar Gênero",
+      male: "Masculino",
+      female: "Feminino",
+      others: "Outros",
     },
     russian: {
-      welcome: "Добро пожаловать в Fanar",
-    
+      welcome: "Привет",
+
       firstName: "Имя",
       lastName: "Фамилия",
       email: "Эл. почта",
@@ -269,14 +275,14 @@ const Forms = ({ route }) => {
       nationality: "Национальность",
       selectNationality: "Выберите национальность",
       gender: "Пол",
-    selectGender: "Выберите пол",
-    male: "Мужской",
-    female: "Женский",
-    others: "Другой",
+      selectGender: "Выберите пол",
+      male: "Мужской",
+      female: "Женский",
+      others: "Другой",
     },
     japanese: {
-      welcome: "ファナールへようこそ",
-   
+      welcome: "こんにちは",
+
       firstName: "名",
       lastName: "姓",
       email: "メール",
@@ -287,14 +293,14 @@ const Forms = ({ route }) => {
       nationality: "国籍",
       selectNationality: "国籍を選択",
       gender: "性別",
-    selectGender: "性別を選択",
-    male: "男性",
-    female: "女性",
-    others: "その他",
+      selectGender: "性別を選択",
+      male: "男性",
+      female: "女性",
+      others: "その他",
     },
     italian: {
-      welcome: "Benvenuto a Fanar",
-   
+      welcome: "Ciao",
+
       firstName: "Nome",
       lastName: "Cognome",
       email: "Email",
@@ -512,7 +518,7 @@ const Forms = ({ route }) => {
 
   const nationalities = nationalit.map((nationality) => ({
     label: nationality,
-    value: nationality
+    value: nationality,
   }));
 
   // Function to format the date
@@ -521,7 +527,6 @@ const Forms = ({ route }) => {
   };
 
   const date = formatDate(new Date());
-
 
   return (
     <KeyboardAvoidingView
@@ -538,8 +543,7 @@ const Forms = ({ route }) => {
           }}
         >
           <View style={styles.date}>
-          <Text style={styles.dates}>{date}</Text>
-
+            <Text style={styles.dates}>{date}</Text>
           </View>
           <View style={styles.head}>
             <Text style={styles.heading}>{currentLabels.welcome}</Text>
@@ -645,18 +649,48 @@ const Forms = ({ route }) => {
             </View>
             <Text style={styles.label}>{currentLabels.gender}</Text>
             <View style={styles.gender}>
-            <Picker
-            selectedValue={gender}
-            onValueChange={handleGenderChange}
-            style={{ color: placeholderColor }}
-          >
-            <Picker.Item label={currentLabels.selectGender} value="" />
-            <Picker.Item label={currentLabels.male} value={currentLabels.male} />
-            <Picker.Item label={currentLabels.female} value={currentLabels.female} />
-            <Picker.Item label={currentLabels.others} value={currentLabels.others} />
-          </Picker>
+              <Picker
+                selectedValue={gender}
+                onValueChange={handleGenderChange}
+                style={{ color: placeholderColor }}
+              >
+                <Picker.Item label={currentLabels.selectGender} value="" />
+                <Picker.Item
+                  label={currentLabels.male}
+                  value={currentLabels.male}
+                />
+                <Picker.Item
+                  label={currentLabels.female}
+                  value={currentLabels.female}
+                />
+                <Picker.Item
+                  label={currentLabels.others}
+                  value={currentLabels.others}
+                />
+              </Picker>
             </View>
-
+            <View style={styles.checkboxContainer}>
+              <View style={styles.checkbox}>
+                <CheckBox
+                  value={termsAccepted}
+                  onValueChange={(newValue) => setTermsAccepted(newValue)}
+                />
+                <Text style={styles.label}>
+                  I agree to accept the terms and conditions
+                </Text>
+              </View>
+              <View style={styles.checkbox}>
+                <CheckBox
+                  value={newsletterSubscribed}
+                  onValueChange={(newValue) =>
+                    setNewsletterSubscribed(newValue)
+                  }
+                />
+                <Text style={styles.label}>
+                  I agree to receive the newsletter
+                </Text>
+              </View>
+            </View>
             <View style={styles.buttonContainer}>
               <Button
                 title={currentLabels.submit}
@@ -664,7 +698,7 @@ const Forms = ({ route }) => {
                 style={styles.button}
               />
             </View>
-          </View>      
+          </View>
         </ImageBackground>
       </View>
       <Success
@@ -762,7 +796,7 @@ const styles = StyleSheet.create({
     borderColor: "#ccc",
     borderRadius: 5,
     padding: 10,
-    marginBottom: 10,
+    marginBottom: 20,
     backgroundColor: "white",
     height: screenHeight * 0.043,
     justifyContent: "center",
@@ -776,7 +810,7 @@ const styles = StyleSheet.create({
   logoContainer2: {
     flexDirection: "row",
     position: "absolute",
-    left:-10,
+    left: -10,
     top: -100,
   },
   logo: {
@@ -791,7 +825,6 @@ const styles = StyleSheet.create({
     height: screenWidth * 0.4, // Ensure the height is equal to the width
     resizeMode: "contain",
     paddingHorizontal: 10,
-  
   },
   errorText: {
     color: "red",
@@ -815,6 +848,19 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 10,
     fontSize: 16,
+  },
+  checkboxContainer: {
+    marginBottom: 0,
+  },
+  checkbox: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  label: {
+    fontSize: 16,
+    color: "white",
+    marginLeft: 10,
   },
 });
 
