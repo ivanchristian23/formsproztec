@@ -7,6 +7,7 @@ import Home from './components/Home';
 import { LogBox } from 'react-native'; // Import LogBox
 import Admin from './components/Admin';
 import SubmissionsScreen from './components/SubmissionsScreen';
+import ThankYouScreen from './components/ThankYouScreen';
 
 LogBox.ignoreLogs([
   'Warning: ...', // Replace this with the specific warning message you want to ignore
@@ -35,6 +36,7 @@ export default function App() {
         <Stack.Screen name='Forms' component={Forms} options={{ title: 'Abdullah Bin Zaid Islamic Center', headerTitleAlign:'center'}}/>
         <Stack.Screen name='Admin' component={Admin} options={{ headerTitleAlign:'center'}}/>
         <Stack.Screen name="SubmissionsScreen" component={SubmissionsScreen} options={{ title: 'Submissions', headerTitleAlign:'center'}}/>
+        <Stack.Screen name='ThankYouScreen' component={ThankYouScreen} options={{headerShown: false }}/>
       </Stack.Navigator>
     </NavigationContainer>
   );

@@ -20,7 +20,7 @@ import moment from "moment";
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
-const Forms = ({ route }) => {
+const Forms = ({ navigation,route }) => {
   const { language, addSubmission } = route.params;
   // const [date, setDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
@@ -99,7 +99,7 @@ const Forms = ({ route }) => {
       setPhone("");
       setGender("");
       setNationality("");
-      setModalVisible(true); // Show success modal
+      // setModalVisible(true); // Show success modal
 
       // Call the callback function if it exists
       if (addSubmission) {
@@ -108,6 +108,7 @@ const Forms = ({ route }) => {
 
       // Optionally navigate back to home or another screen
       // navigation.navigate('Home', {newSubmission});
+      navigation.navigate('ThankYouScreen', { newSubmission });
     }
   };
 

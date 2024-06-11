@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   View,
@@ -11,12 +11,18 @@ import {
 import * as FileSystem from "expo-file-system";
 import * as MailComposer from "expo-mail-composer";
 import * as MediaLibrary from "expo-media-library";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { FontAwesome } from "@expo/vector-icons";
 
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
 const SubmissionsScreen = ({ route }) => {
   const { submissions } = route.params;
+  const [submissionsData, setSubmissionsData] = useState(submissions);
+  const [submissionCount, setSubmissionCount] = useState(
+    submissionsData.length
+  );
 
   useEffect(() => {
     (async () => {
@@ -30,13 +36,54 @@ const SubmissionsScreen = ({ route }) => {
     })();
   }, []);
 
+  useEffect(() => {
+    // Fetch data from AsyncStorage when component mounts
+    fetchDataFromStorage();
+  }, []);
+
+  const fetchDataFromStorage = async () => {
+    try {
+      const storedData = await AsyncStorage.getItem("submissions");
+      if (storedData) {
+        setSubmissionsData(JSON.parse(storedData));
+      }
+    } catch (error) {
+      console.error("Error fetching data from AsyncStorage:", error);
+    }
+  };
+  const deleteAllSubmissions = async () => {
+    try {
+      await AsyncStorage.removeItem("submissions");
+      setSubmissionsData([]);
+      setSubmissionCount(0); // Reset submission count
+    } catch (error) {
+      console.error("Error deleting all submissions:", error);
+    }
+  };
+  
+  const deleteSubmission = async (index) => {
+    const updatedSubmissions = [...submissionsData];
+    updatedSubmissions.splice(index, 1);
+    setSubmissionsData(updatedSubmissions);
+    setSubmissionCount(updatedSubmissions.length); // Update submission count
+    try {
+      await AsyncStorage.setItem(
+        "submissions",
+        JSON.stringify(updatedSubmissions)
+      );
+    } catch (error) {
+      console.error("Error updating AsyncStorage:", error);
+    }
+  };
+  
+
   const exportToCSV = async () => {
-    if (!submissions || submissions.length === 0) {
+    if (!submissionsData || submissionsData.length === 0) {
       Alert.alert("Error", "No submissions available");
       return;
     }
 
-    const csvString = convertToCSV(submissions);
+    const csvString = convertToCSV(submissionsData);
     const fileUri = `${FileSystem.documentDirectory}submissions.csv`;
 
     try {
@@ -51,12 +98,12 @@ const SubmissionsScreen = ({ route }) => {
   };
 
   const sendCSV = async () => {
-    if (!submissions || submissions.length === 0) {
+    if (!submissionsData || submissionsData.length === 0) {
       Alert.alert("Error", "No submissions available");
       return;
     }
 
-    const csvString = convertToCSV(submissions);
+    const csvString = convertToCSV(submissionsData);
     const fileUri = `${FileSystem.cacheDirectory}submissions.csv`;
 
     try {
@@ -116,21 +163,28 @@ const SubmissionsScreen = ({ route }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       {/* <Text style={styles.header}>Submissions</Text> */}
+      <View style={styles.counterContainer}>
+        <Text style={styles.counterText}>
+          Total Submissions: {submissionCount}
+        </Text>
+      </View>
       <View style={styles.buttonContainer}>
         {/* <Button title="Export to CSV" onPress={exportToCSV} /> */}
         <Button title="Send CSV via Email" onPress={sendCSV} />
+        <Button title="Delete All Submissions" onPress={deleteAllSubmissions} />
       </View>
-      <Text/>
+      <Text />
       <View style={styles.table}>
         <View style={styles.tableHeader}>
           <Text style={styles.tableHeaderCell}>ID</Text>
-          {Object.keys(submissions[0] || {}).map((key, index) => (
+          {Object.keys(submissionsData[0] || {}).map((key, index) => (
             <Text key={index} style={styles.tableHeaderCell}>
               {capitalizeFirstLetter(key)}
             </Text>
           ))}
+          <Text style={styles.tableHeaderCell}>Actions</Text>
         </View>
-        {submissions.map((submission, index) => (
+        {submissionsData.map((submission, index) => (
           <View key={index} style={styles.tableRow}>
             <Text style={styles.tableCell}>{index + 1}</Text>
             {Object.values(submission).map((value, subIndex) => (
@@ -138,6 +192,13 @@ const SubmissionsScreen = ({ route }) => {
                 {value}
               </Text>
             ))}
+            <FontAwesome
+              name="trash"
+              size={45}
+              color="red"
+              onPress={() => deleteSubmission(index)}
+              style={{marginLeft:20}}
+            />
           </View>
         ))}
       </View>
@@ -176,7 +237,7 @@ const styles = StyleSheet.create({
   tableHeaderCell: {
     flex: 1,
     fontWeight: "bold",
-    padding: 10, // Increased padding for better touch targets
+    padding: 5, // Increased padding for better touch targets
     textAlign: "center",
     fontSize: 13, // Larger font size for better readability
   },
@@ -185,7 +246,7 @@ const styles = StyleSheet.create({
   },
   tableCell: {
     flex: 1,
-    padding: 10, // Increased padding for better touch targets
+    padding: 5, // Increased padding for better touch targets
     textAlign: "center",
     fontSize: 16, // Larger font size for better readability
     borderBottomWidth: 1,
@@ -196,5 +257,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-around",
     width: "100%",
     marginTop: 20, // Added margin top for spacing
+  },
+  counterContainer: {
+    alignItems: "center",
+    marginBottom: 10,
+  },
+  counterText: {
+    fontSize: 25,
   },
 });
