@@ -18,36 +18,36 @@ const screenHeight = Dimensions.get("window").height;
 const Home = ({ navigation, route }) => {
   const [language, setLanguage] = useState("english");
   const [submissions, setSubmissions] = useState([]);
+  const loadSubmissions = async () => {
+    try {
+      const savedSubmissions = await AsyncStorage.getItem("submissions");
+      if (savedSubmissions) {
+        setSubmissions(JSON.parse(savedSubmissions));
+      }
+    } catch (error) {
+      console.error("Failed to load submissions", error);
+    }
+  };
 
   useEffect(() => {
-    const loadSubmissions = async () => {
-      try {
-        const savedSubmissions = await AsyncStorage.getItem("submissions");
-        if (savedSubmissions) {
-          setSubmissions(JSON.parse(savedSubmissions));
-        }
-      } catch (error) {
-        console.error("Failed to load submissions", error);
-      }
-    };
-
+    
     loadSubmissions();
   }, []);
 
-  useEffect(() => {
-    if (route.params?.newSubmission) {
-      console.log("New submission received:", route.params.newSubmission);
-      setSubmissions((prevSubmissions) => {
-        const updatedSubmissions = [...prevSubmissions, route.params.newSubmission];
-        saveSubmissions(updatedSubmissions);
-        console.log(updatedSubmissions);
-        return updatedSubmissions;
-      });
+  // useEffect(() => {
+  //   if (route.params?.newSubmission) {
+  //     console.log("New submission received:", route.params.newSubmission);
+  //     setSubmissions((prevSubmissions) => {
+  //       const updatedSubmissions = [...prevSubmissions, route.params.newSubmission];
+  //       saveSubmissions(updatedSubmissions);
+  //       console.log(updatedSubmissions);
+  //       return updatedSubmissions;
+  //     });
 
-      // Cleanup to prevent re-processing the same submission
-      navigation.setParams({ newSubmission: null });
-    }
-  }, [route.params?.newSubmission]);
+  //     // Cleanup to prevent re-processing the same submission
+  //     navigation.setParams({ newSubmission: null });
+  //   }
+  // }, [route.params?.newSubmission]);
 
   const saveSubmissions = async (submissions) => {
     try {
@@ -70,14 +70,14 @@ const Home = ({ navigation, route }) => {
     });
   };
 
-  const handleExport = () => {
+  const handleExport = async() => {
     navigation.navigate("Admin", { submissions: submissions });
   };
 
   return (
     <ImageBackground
       blurRadius={2}
-      source={require("../assets/fanar6.2.jpg")}
+      source={require("../assets/fanarnew.jpg")}
       style={styles.background}
     >
       <View style={styles.container}>
