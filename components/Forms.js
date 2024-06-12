@@ -81,7 +81,7 @@ const Forms = ({ navigation, route }) => {
       // Alert user that all fields are required and no special characters are allowed
       Alert.alert(
         "Invalid Input",
-        "Please fill out all fields with valid data agree to the terms & conditions.",
+        "Please fill out all fields with valid data and Consent to data usage",
         [{ text: "OK", onPress: () => console.log("OK Pressed") }]
       );
     } else {
@@ -676,7 +676,7 @@ const Forms = ({ navigation, route }) => {
                   onValueChange={(newValue) => setTermsAccepted(newValue)}
                 />
                 <Text style={styles.label}>
-                  I agree to accept the terms and conditions
+                By checking this box, you consent to the collection and utilization of usage data for analytical purposes.
                 </Text>
               </View>
               <View style={styles.checkbox}>
@@ -737,14 +737,16 @@ const styles = StyleSheet.create({
     color: "black",
   },
   buttonContainer: {
-    marginTop: 20,
+    marginTop: -5,
     borderRadius: 5,
     paddingVertical: 10,
+
   },
   button: {
     backgroundColor: "#007AFF",
     paddingVertical: 10,
     borderRadius: 5,
+    
   },
   buttonText: {
     color: "white",

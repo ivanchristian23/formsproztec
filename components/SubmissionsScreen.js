@@ -13,7 +13,7 @@ import * as MailComposer from "expo-mail-composer";
 import * as MediaLibrary from "expo-media-library";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { FontAwesome } from "@expo/vector-icons";
-
+import * as Updates from 'expo-updates'; // Import Updates module
 const screenWidth = Dimensions.get("window").width;
 const screenHeight = Dimensions.get("window").height;
 
@@ -66,6 +66,7 @@ const SubmissionsScreen = ({ route }) => {
       await AsyncStorage.removeItem("submissions");
       setSubmissionsData([]);
       setSubmissionCount(0); // Reset submission count
+      await Updates.reloadAsync();
     } catch (error) {
       console.error("Error deleting all submissions:", error);
     }
