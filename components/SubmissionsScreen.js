@@ -19,12 +19,13 @@ const screenWidth = Dimensions.get('window').width;
 
 const SubmissionsScreen = ({ route }) => {
   const { submissions } = route.params;
-  const [submissionsData, setSubmissionsData] = useState(submissions);
+  const [submissionsData, setSubmissionsData] = useState(submissions.reverse());
   const [submissionCount, setSubmissionCount] = useState(submissionsData.length);
   const [refreshKey, setRefreshKey] = useState(0); // State to force re-render
 
   useEffect(() => {
     fetchDataFromStorage(); // Fetch initial data from AsyncStorage
+    scheduleEndOfMonthReminder(); // Schedule the end of month reminder
   }, []); // Empty dependency array to run only once on mount
 
   useEffect(() => {
@@ -35,7 +36,7 @@ const SubmissionsScreen = ({ route }) => {
     try {
       const storedData = await AsyncStorage.getItem('submissions');
       if (storedData) {
-        const parsedData = JSON.parse(storedData);
+        const parsedData = JSON.parse(storedData).reverse(); // Reverse the data here
         setSubmissionsData(parsedData);
         setSubmissionCount(parsedData.length);
       } else {
@@ -55,7 +56,7 @@ const SubmissionsScreen = ({ route }) => {
     const updatedData = submissionsData.filter((entry) => {
       const entryDate = moment(entry.date, 'dddd, Do MMMM YYYY');
       return !(entryDate.month() === lastMonth && entryDate.year() === lastMonthYear);
-    });
+    }).reverse(); // Reverse the updated data here
 
     if (updatedData.length < submissionsData.length) {
       try {
@@ -161,13 +162,41 @@ const SubmissionsScreen = ({ route }) => {
     <View key={`${index}_${refreshKey}`} style={styles.tableRow}>
       <Text style={styles.tableCell}>{index + 1}</Text>
       {Object.values(item).map((value, subIndex) => (
-        <Text key={subIndex} style={styles.tableCell}>
+        <Text
+          key={subIndex}
+          style={[
+            styles.tableCell,
+            value.toLowerCase() === 'yes' ? styles.yesCell : null,
+          ]}
+        >
           {value}
         </Text>
       ))}
     </View>
   );
 
+  const scheduleEndOfMonthReminder = () => {
+    const now = moment();
+    const endOfMonth = moment().endOf('month');
+  
+    // Check if there are submissions from last month
+    const lastMonthEntries = submissionsData.filter((entry) => {
+      const entryDate = moment(entry.date, 'dddd, Do MMMM YYYY');
+      return entryDate.month() === now.subtract(1, 'month').month() && entryDate.year() === now.year();
+    });
+  
+    // Only schedule the alert if there are entries from last month
+    if (lastMonthEntries.length > 0) {
+      // Calculate time until end of month in milliseconds
+      const timeUntilEndOfMonth = endOfMonth.diff(endOfMonth);
+  
+      // Schedule a timeout to remind at the end of the month
+      setTimeout(() => {
+        Alert.alert("Reminder", "It's the end of the month. Please send the CSV file via email and consider deleting previous records.");
+      }, timeUntilEndOfMonth);
+    }
+  };
+  
   return (
     <View style={styles.container}>
       <View style={styles.counterContainer}>
@@ -177,6 +206,7 @@ const SubmissionsScreen = ({ route }) => {
         <Button title="Send CSV via Email" onPress={sendCSV} />
         <Button title="Delete Last Month's Submissions" onPress={deleteLastMonthSubmissions} />
       </View>
+      <Text/>
       <View style={styles.table}>
         <View style={styles.tableHeader}>
           <Text style={styles.tableHeaderCell}>ID</Text>
@@ -196,7 +226,7 @@ const SubmissionsScreen = ({ route }) => {
   );
 };
 
-export default SubmissionsScreen;
+
 
 const styles = StyleSheet.create({
   container: {
@@ -225,7 +255,7 @@ const styles = StyleSheet.create({
     marginBottom: 30,
     backgroundColor: '#fff', // White background for the table
     borderRadius: 10, // Rounded corners for the table
-    overflow: 'hidden', // Ensure rounded corners
+    overflow: 'hidden', // Ensure rounded
   },
   tableHeader: {
     flexDirection: 'row',
@@ -251,4 +281,9 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
+  yesCell: {
+    color: 'green', // Make "yes" text green
+  },
 });
+
+export default SubmissionsScreen;

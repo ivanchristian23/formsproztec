@@ -81,7 +81,7 @@ const Forms = ({ navigation, route }) => {
       // Alert user that all fields are required and no special characters are allowed
       Alert.alert(
         "Invalid Input",
-        "Please fill out all fields with valid data and Consent to data usage",
+        "Please fill out all fields with valid data and consent ",
         [{ text: "OK", onPress: () => console.log("OK Pressed") }]
       );
     } else {
@@ -155,6 +155,27 @@ const Forms = ({ navigation, route }) => {
       male: "Male",
       female: "Female",
       others: "Others",
+      terms: "By checking this box, I consent to the collection and utilization of data for analytical purposes.",
+      newsletter: "I agree to receive the newsletter",
+    },
+    italian: {
+      welcome: "Benvenuto",
+      firstName: "Nome",
+      lastName: "Cognome",
+      email: "Email",
+      phone: "Telefono",
+      submit: "Invia",
+      thankYou: "Grazie per la tua risposta",
+      goBack: "Indietro",
+      nationality: "Nazionalità",
+      selectGender: "Seleziona Genere",
+      selectNationality: "Seleziona Nazionalità",
+      gender: "Genere",
+      male: "Maschio",
+      female: "Femmina",
+      others: "Altro",
+      terms: "Spuntando questa casella, acconsento alla raccolta e all'utilizzo dei dati per scopi analitici.",
+      newsletter: "Accetto di ricevere la newsletter"
     },
     arabic: {
       welcome: "مرحبا",
@@ -172,6 +193,8 @@ const Forms = ({ navigation, route }) => {
       male: "ذكر",
       female: "أنثى",
       others: "آخرون",
+      terms: "بالتحقق من هذا المربع، أوافق على جمع واستخدام البيانات لأغراض تحليلية.",
+      newsletter: "أوافق على تلقي النشرة الإخبارية",
     },
     spanish: {
       welcome: "Hola",
@@ -189,10 +212,11 @@ const Forms = ({ navigation, route }) => {
       male: "Masculino",
       female: "Femenino",
       others: "Otros",
+      terms: "Al marcar esta casilla, consiento la recopilación y utilización de datos con fines analíticos.",
+      newsletter: "Acepto recibir el boletín informativo",
     },
     french: {
-      welcome: "Hola",
-
+      welcome: "Bonjour",
       firstName: "Prénom",
       lastName: "Nom de famille",
       email: "Email",
@@ -207,10 +231,11 @@ const Forms = ({ navigation, route }) => {
       male: "Masculin",
       female: "Féminin",
       others: "Autre",
+      terms: "En cochant cette case, je consens à la collecte et à l'utilisation des données à des fins analytiques",
+      newsletter: "Je souhaite recevoir la newsletter",
     },
     german: {
       welcome: "Hallo",
-
       firstName: "Vorname",
       lastName: "Nachname",
       email: "Email",
@@ -225,14 +250,15 @@ const Forms = ({ navigation, route }) => {
       male: "Männlich",
       female: "Weiblich",
       others: "Andere",
+      terms: "Durch Ankreuzen dieses Kästchens willige ich in die Erhebung und Nutzung von Daten zu Analysezwecken ein.",
+      newsletter: "Ich möchte den Newsletter erhalten",
     },
     chinese: {
       welcome: "你好",
-
       firstName: "名字",
       lastName: "姓氏",
       email: "电子邮件",
-      phone: "电话:",
+      phone: "电话",
       submit: "提交",
       thankYou: "感谢您的回复",
       goBack: "返回",
@@ -243,10 +269,11 @@ const Forms = ({ navigation, route }) => {
       male: "男性",
       female: "女性",
       others: "其他",
+      terms: "勾选此框表示我同意收集和利用数据用于分析目的。",
+      newsletter: "我同意接收新闻通讯",
     },
     portuguese: {
       welcome: "Olá",
-
       firstName: "Nome",
       lastName: "Sobrenome",
       email: "Email",
@@ -261,28 +288,30 @@ const Forms = ({ navigation, route }) => {
       male: "Masculino",
       female: "Feminino",
       others: "Outros",
+      terms: "Ao marcar esta caixa, concordo com a coleta e utilização de dados para fins analíticos.",
+      newsletter: "Concordo em receber o boletim informativo",
     },
     russian: {
       welcome: "Привет",
-
       firstName: "Имя",
       lastName: "Фамилия",
-      email: "Эл. почта",
+      email: "Электронная почта",
       phone: "Телефон",
       submit: "Отправить",
       thankYou: "Спасибо за ваш ответ",
-      goBack: "Вернуться",
+      goBack: "Назад",
       nationality: "Национальность",
-      selectNationality: "Выберите национальность",
+      selectNationality: "Выбрать национальность",
       gender: "Пол",
-      selectGender: "Выберите пол",
-      male: "Мужской",
-      female: "Женский",
-      others: "Другой",
+      selectGender: "Выбрать пол",
+      male: "Мужчина",
+      female: "Женщина",
+      others: "Другие",
+      terms: "Отметив этот флажок, я соглашаюсь на сбор и использование данных в аналитических целях.",
+      newsletter: "Я согласен получать новостную рассылку",
     },
     japanese: {
       welcome: "こんにちは",
-
       firstName: "名",
       lastName: "姓",
       email: "メール",
@@ -297,24 +326,10 @@ const Forms = ({ navigation, route }) => {
       male: "男性",
       female: "女性",
       others: "その他",
-    },
-    italian: {
-      welcome: "Ciao",
-
-      firstName: "Nome",
-      lastName: "Cognome",
-      email: "Email",
-      phone: "Telefono",
-      submit: "Invia",
-      thankYou: "Grazie per la tua risposta",
-      goBack: "Torna indietro",
-      nationality: "Nazionalità",
-      selectNationality: "Seleziona la nazionalità",
-      gender: "Genere",
-      selectGender: "Seleziona il genere",
-      male: "Maschile",
-      female: "Femminile",
-      others: "Altro",
+      terms: "このボックスにチェックを入れることで、データの収集と分析目的での利用に同意します。",
+      newsletter: "ニュースレターを購読することに同意します",
+    
+    
     },
   };
 
@@ -526,8 +541,9 @@ const Forms = ({ navigation, route }) => {
     return moment(date).format("dddd, Do MMMM YYYY");
   };
 
-  const date = formatDate(moment().subtract(1, 'month').date(10).toISOString(),);
-
+   const date = formatDate(new Date());
+  
+ 
   return (
     <KeyboardAvoidingView
       style={styles.container}
@@ -676,7 +692,7 @@ const Forms = ({ navigation, route }) => {
                   onValueChange={(newValue) => setTermsAccepted(newValue)}
                 />
                 <Text style={styles.label}>
-                By checking this box, you consent to the collection and utilization of usage data for analytical purposes.
+                {currentLabels.terms}
                 </Text>
               </View>
               <View style={styles.checkbox}>
@@ -687,7 +703,7 @@ const Forms = ({ navigation, route }) => {
                   }
                 />
                 <Text style={styles.label}>
-                  I agree to receive the newsletter
+                  {currentLabels.newsletter}
                 </Text>
               </View>
             </View>
@@ -867,3 +883,4 @@ const styles = StyleSheet.create({
 });
 
 export default Forms;
+
