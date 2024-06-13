@@ -187,7 +187,7 @@ const SubmissionsScreen = ({ route }) => {
     // Only schedule the alert if there are entries from last month
     if (lastMonthEntries.length > 0) {
       // Calculate time until end of month in milliseconds
-      const timeUntilEndOfMonth = endOfMonth.diff(endOfMonth);
+      const timeUntilEndOfMonth = endOfMonth.diff(now);
   
       // Schedule a timeout to remind at the end of the month
       setTimeout(() => {

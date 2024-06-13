@@ -80,7 +80,7 @@ const Forms = ({ navigation, route }) => {
       // Alert user that all fields are required and no special characters are allowed
       Alert.alert(
         "Invalid Input",
-        "Please fill out all fields with valid data and consent ",
+        "Please fill out all required fields with valid data and consent ",
         [{ text: "OK", onPress: () => console.log("OK Pressed") }]
       );
     } else {

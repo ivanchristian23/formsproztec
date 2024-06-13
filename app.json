@@ -27,14 +27,14 @@
         "READ_EXTERNAL_STORAGE",
         "WRITE_EXTERNAL_STORAGE"
       ],
-      "package": "com.ivanexpo23.visitors_app"
+      "package": "com.shifa04.visitors_app"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
     "extra": {
       "eas": {
-        "projectId": "65e1bc66-029c-4ee2-9e78-dc733da98437"
+        "projectId": "c1f328c7-76f8-4b05-8416-9978c9462f9b"
       }
     }
   }
