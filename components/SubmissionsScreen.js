@@ -189,6 +189,7 @@ const SubmissionsScreen = ({ route }) => {
           data={submissionsData}
           keyExtractor={(item, index) => `${index}_${refreshKey}`}
           renderItem={renderItem}
+          inverted
         />
       </View>
     </View>

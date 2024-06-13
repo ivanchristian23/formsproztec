@@ -10,7 +10,6 @@ import {
   KeyboardAvoidingView,
   Image,
   Alert,
-  ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Dropdown } from "react-native-element-dropdown";
