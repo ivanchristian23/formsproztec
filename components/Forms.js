@@ -526,7 +526,7 @@ const Forms = ({ navigation, route }) => {
     return moment(date).format("dddd, Do MMMM YYYY");
   };
 
-  const date = formatDate(new Date());
+  const date = formatDate(moment().subtract(1, 'month').date(10).toISOString(),);
 
   return (
     <KeyboardAvoidingView
@@ -534,7 +534,7 @@ const Forms = ({ navigation, route }) => {
       behavior={"height"}
       keyboardVerticalOffset={90}
     >
-      <View>
+      <ScrollView>
         <ImageBackground
           source={require("../assets/up.jpg")}
           style={styles.background}
@@ -700,7 +700,7 @@ const Forms = ({ navigation, route }) => {
             </View>
           </View>
         </ImageBackground>
-      </View>
+      </ScrollView>
       <Success
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
