@@ -10,7 +10,6 @@ import {
   KeyboardAvoidingView,
   Image,
   Alert,
-  ScrollView,
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Dropdown } from "react-native-element-dropdown";
@@ -676,7 +675,7 @@ const Forms = ({ navigation, route }) => {
                   onValueChange={(newValue) => setTermsAccepted(newValue)}
                 />
                 <Text style={styles.label}>
-                By checking this box, you consent to the collection and utilization of usage data for analytical purposes.
+                By checking this box, I consent to the collection and utilization of usage data for analytical purposes.
                 </Text>
               </View>
               <View style={styles.checkbox}>

@@ -73,7 +73,6 @@ const SubmissionsScreen = ({ route }) => {
       Alert.alert('No Entry Found', 'There is no entry for last month.');
     }
   };
-
   const exportToCSV = async () => {
     if (!submissionsData || submissionsData.length === 0) {
       Alert.alert("Error", "No submissions available");
@@ -190,6 +189,7 @@ const SubmissionsScreen = ({ route }) => {
           data={submissionsData}
           keyExtractor={(item, index) => `${index}_${refreshKey}`}
           renderItem={renderItem}
+          inverted
         />
       </View>
     </View>
