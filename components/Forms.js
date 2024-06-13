@@ -534,7 +534,7 @@ const Forms = ({ navigation, route }) => {
       behavior={"height"}
       keyboardVerticalOffset={90}
     >
-      <ScrollView>
+      <View>
         <ImageBackground
           source={require("../assets/up.jpg")}
           style={styles.background}
@@ -700,7 +700,7 @@ const Forms = ({ navigation, route }) => {
             </View>
           </View>
         </ImageBackground>
-      </ScrollView>
+      </View>
       <Success
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
