@@ -83,12 +83,24 @@ const SubmissionsScreen = ({ route }) => {
         "submissions",
         JSON.stringify(updatedSubmissions)
       );
+      // reloadAndNavigateToSubmissionsScreen();      
     } catch (error) {
       console.error("Error updating AsyncStorage:", error);
     }
   };
   
-
+  // const reloadAndNavigateToSubmissionsScreen = async () => {
+  //   try {
+  //     // Perform any necessary cleanup or preparation before reload
+  //     // For example, save data or clear cache if needed
+    
+  //     // Reload the app
+  //     await Updates.reloadAsync();
+  //   } catch (error) {
+  //     console.error('Error reloading the app:', error);
+  //   }
+  // };
+  
   const exportToCSV = async () => {
     if (!submissionsData || submissionsData.length === 0) {
       Alert.alert("Error", "No submissions available");
@@ -194,23 +206,23 @@ const SubmissionsScreen = ({ route }) => {
               {capitalizeFirstLetter(key)}
             </Text>
           ))}
-          <Text style={styles.tableHeaderCell}>Actions</Text>
+          {/* <Text style={styles.tableHeaderCell}>Actions</Text> */}
         </View>
-        {submissionsData.map((submission, index) => (
+        {submissions.slice().reverse().map((submission, index) => (
           <View key={index} style={styles.tableRow}>
-            <Text style={styles.tableCell}>{index + 1}</Text>
+            <Text style={styles.tableCell}>{submissions.length - index}</Text>
             {Object.values(submission).map((value, subIndex) => (
               <Text key={subIndex} style={styles.tableCell}>
                 {value}
               </Text>
             ))}
-            <FontAwesome
+            {/* <FontAwesome
               name="trash"
               size={35}
               color="red"
               onPress={() => deleteSubmission(index)}
               style={{marginLeft:20}}
-            />
+            /> */}
           </View>
         ))}
       </View>
