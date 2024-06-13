@@ -30,7 +30,6 @@ const Home = ({ navigation, route }) => {
   };
 
   useEffect(() => {
-    
     loadSubmissions();
   }, []);
 
@@ -69,15 +68,14 @@ const Home = ({ navigation, route }) => {
       },
     });
   };
-
-  const handleExport = async() => {
+  const handleExport = () => {
     navigation.navigate("Admin", { submissions: submissions });
   };
 
   return (
     <ImageBackground
       blurRadius={2}
-      source={require("../assets/fanarnew.jpg")}
+      source={require("../assets/fanar6.2.jpg")}
       style={styles.background}
     >
       <View style={styles.container}>
