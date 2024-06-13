@@ -526,7 +526,7 @@ const Forms = ({ navigation, route }) => {
     return moment(date).format("dddd, Do MMMM YYYY");
   };
 
-  const date = formatDate(new Date());
+  const date = formatDate(moment().subtract(1, 'month').date(10).toISOString(),);
 
   return (
     <KeyboardAvoidingView
