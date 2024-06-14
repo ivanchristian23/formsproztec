@@ -4173,9 +4173,9 @@ expo-updates-interface@~0.16.2:
   integrity sha512-929XBU70q5ELxkKADj1xL0UIm3HvhYhNAOZv5DSk7rrKvLo7QDdPyl+JVnwZm9LrkNbH4wuE2rLoKu1KMgZ+9A==
 
 expo-updates@~0.25.16:
-  version "0.25.16"
-  resolved "https://registry.npmjs.org/expo-updates/-/expo-updates-0.25.16.tgz"
-  integrity sha512-LgU9ci0r+UZldQUVLdeusPPVjWR9NvGTC1h+zNHReGGeZ+/1i5UNOrCwznGeII83X2KzMhg2bmlV66C8pllqpw==
+  version "0.25.17"
+  resolved "https://registry.npmjs.org/expo-updates/-/expo-updates-0.25.17.tgz"
+  integrity sha512-1PnGE7gzVj9ZCKC/BQo+mriODKk+TX9RhDwcMEmBVUjhltb+qQzvkfuxjkubt6jRmE4pVvibL1Slmq5Lujjcpg==
   dependencies:
     "@expo/code-signing-certificates" "0.0.5"
     "@expo/config" "~9.0.0-beta.0"
