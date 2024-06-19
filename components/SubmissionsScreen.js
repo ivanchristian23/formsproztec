@@ -48,6 +48,14 @@ const SubmissionsScreen = ({ route }) => {
     }
   };
 
+  const sortSubmissionsByDate = (data) => {
+    return data.sort((a, b) => {
+      const dateA = moment(a.date, 'dddd, Do MMMM YYYY');
+      const dateB = moment(b.date, 'dddd, Do MMMM YYYY');
+      return dateB.diff(dateA); // Use diff() method for comparison
+    });
+  };
+
   const deleteLastMonthSubmissions = async () => {
     const currentDate = moment();
     const lastMonth = currentDate.subtract(1, 'month').month();
@@ -62,8 +70,9 @@ const SubmissionsScreen = ({ route }) => {
       try {
         // Update AsyncStorage with the filtered data
         await AsyncStorage.setItem('submissions', JSON.stringify(updatedData));
-        setSubmissionsData(updatedData);
-        setSubmissionCount(updatedData.length);
+        const sortedData = sortSubmissionsByDate(updatedData); // Sort the updated data by date in descending order
+        setSubmissionsData(sortedData);
+        setSubmissionCount(sortedData.length);
         setRefreshKey((prevKey) => prevKey + 1); // Force re-render
         await Updates.reloadAsync();
       } catch (error) {
@@ -74,6 +83,7 @@ const SubmissionsScreen = ({ route }) => {
       Alert.alert('No Entry Found', 'There is no entry for last month.');
     }
   };
+
   const exportToCSV = async () => {
     if (!submissionsData || submissionsData.length === 0) {
       Alert.alert("Error", "No submissions available");
@@ -159,7 +169,7 @@ const SubmissionsScreen = ({ route }) => {
 
   const renderItem = ({ item, index }) => (
     <View key={`${index}_${refreshKey}`} style={styles.tableRow}>
-      <Text style={styles.tableCell}>{index + 1}</Text>
+      <Text style={styles.tableCell}>{submissionsData.length - index}</Text>
       {Object.values(item).map((value, subIndex) => (
         <Text
           key={subIndex}
@@ -219,7 +229,7 @@ const SubmissionsScreen = ({ route }) => {
           data={submissionsData}
           keyExtractor={(item, index) => `${index}_${refreshKey}`}
           renderItem={renderItem}
-          inverted
+          contentContainerStyle={{ paddingBottom: 20 }} // Add padding to the bottom
         />
       </View>
     </View>
@@ -252,7 +262,6 @@ const styles = StyleSheet.create({
   table: {
     flex: 1,
     width: screenWidth * 0.9,
-    marginBottom: 30,
     backgroundColor: '#fff', // White background for the table
     borderRadius: 10, // Rounded corners for the table
     overflow: 'hidden', // Ensure rounded

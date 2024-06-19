@@ -540,9 +540,8 @@ const Forms = ({ navigation, route }) => {
     return moment(date).format("dddd, Do MMMM YYYY");
   };
 
-   const date = formatDate(new Date());
-  
- 
+  const date = formatDate(new Date());
+
   return (
     <KeyboardAvoidingView
       style={styles.container}
