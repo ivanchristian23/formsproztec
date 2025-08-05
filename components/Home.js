@@ -118,11 +118,12 @@ const Home = ({ navigation, route }) => {
         </View>
         <View style={styles.exportButtonContainer}>
           <Foundation
-            name="page-export-csv"
-            size={50}
+            name="torso-business"
+            size={90}
             onPress={handleExport}
             color="white"
           />
+          <Text style={styles.admintext}>Admin</Text>
         </View>
       </View>
     </ImageBackground>
@@ -150,8 +151,8 @@ const styles = StyleSheet.create({
   },
   exportButtonContainer: {
     position: "absolute",
-    right: 30,
-    bottom: 20,
+    right: 40,
+    bottom: 15,
   },
   welcomeText: {
     fontSize: 45,
@@ -188,6 +189,10 @@ const styles = StyleSheet.create({
     height: screenWidth * 0.4,
     resizeMode: "contain",
   },
+  admintext:{
+    fontSize:15,
+    fontWeight:'800'
+  }
 });
 
 const pickerSelectStyles = StyleSheet.create({

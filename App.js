@@ -8,6 +8,7 @@ import { LogBox } from 'react-native'; // Import LogBox
 import Admin from './components/Admin';
 import SubmissionsScreen from './components/SubmissionsScreen';
 import ThankYouScreen from './components/ThankYouScreen';
+import DashboardScreen from './components/Dashboard';
 LogBox.ignoreLogs([
   'Warning: ...', // Replace this with the specific warning message you want to ignore
   /Possible Unhandled Promise Rejection/, // Use a regex to match patterns
@@ -36,6 +37,7 @@ export default function App() {
         <Stack.Screen name='Admin' component={Admin} options={{ headerTitleAlign:'center'}}/>
         <Stack.Screen name="SubmissionsScreen" component={SubmissionsScreen} options={{ title: 'Submissions', headerTitleAlign:'center'}}/>
         <Stack.Screen name='ThankYouScreen' component={ThankYouScreen} options={{headerShown: false }}/>
+        <Stack.Screen name="Dashboard" component={DashboardScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

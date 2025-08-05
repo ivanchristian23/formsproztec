@@ -13,7 +13,7 @@ import {
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Dropdown } from "react-native-element-dropdown";
-import Success from "./Success"; // Import Success component
+// import Success from "./Success"; // Import Success component
 import moment from "moment";
 import CheckBox from "expo-checkbox";
 
@@ -38,7 +38,13 @@ const Forms = ({ navigation, route }) => {
   const [lastNameError, setLastNameError] = useState(""); // Error message for last name
   const [termsAccepted, setTermsAccepted] = useState(false); // State variable for terms acceptance
   const [newsletterSubscribed, setNewsletterSubscribed] = useState(false); // State variable for newsletter subscription
+  const [residencyStatus, setResidencyStatus] = useState("");
+  const [residencyPlaceholderColor, setResidencyPlaceholderColor] = useState("#888");
 
+  const handleResidencyChange = (itemValue) => {
+  setResidencyStatus(itemValue);
+  setResidencyPlaceholderColor(itemValue === "" ? "#888" : "black");
+  };
   const validateSpecialCharacters = (text) => {
     const blacklistRe = /[!@#$%^&*(),.?":{}<>0-9]/;
     return !blacklistRe.test(text);
@@ -86,7 +92,7 @@ const Forms = ({ navigation, route }) => {
     } else {
       // Prepare the new submission object
       const newSubmission = {
-        date: date,
+        date: CsvDate,
         firstName,
         lastName,
         email,
@@ -94,6 +100,7 @@ const Forms = ({ navigation, route }) => {
         gender: gender,
         nationality,
         newsletterSubscribed: newsletterSubscribed == true ? "Yes": "No" , // Include newsletter subscription in the submission
+        residencyStatus,
       };
       console.log(newSubmission);
 
@@ -156,6 +163,11 @@ const Forms = ({ navigation, route }) => {
       others: "Others",
       terms: "By checking this box, I consent to the collection and utilization of data for analytical purposes.",
       newsletter: "I agree to receive the newsletter",
+      residency: "Residency Status",
+      selectResidency: "Select Residency Status",
+      tourist: "Tourist",
+      resident: "Resident",
+
     },
     italian: {
       welcome: "Benvenuto",
@@ -174,7 +186,12 @@ const Forms = ({ navigation, route }) => {
       female: "Femmina",
       others: "Altro",
       terms: "Spuntando questa casella, acconsento alla raccolta e all'utilizzo dei dati per scopi analitici.",
-      newsletter: "Accetto di ricevere la newsletter"
+      newsletter: "Accetto di ricevere la newsletter",
+      residency: "Stato di residenza",
+      selectResidency: "Seleziona lo stato di residenza",
+      tourist: "Turista",
+      resident: "Residente",
+      
     },
     arabic: {
       welcome: "مرحبا",
@@ -194,6 +211,10 @@ const Forms = ({ navigation, route }) => {
       others: "آخرون",
       terms: "بالتحقق من هذا المربع، أوافق على جمع واستخدام البيانات لأغراض تحليلية.",
       newsletter: "أوافق على تلقي النشرة الإخبارية",
+      residency: "حالة الإقامة",
+      selectResidency: "اختر حالة الإقامة",
+      tourist: "سائح",
+      resident: "مقيم", 
     },
     spanish: {
       welcome: "Hola",
@@ -213,6 +234,10 @@ const Forms = ({ navigation, route }) => {
       others: "Otros",
       terms: "Al marcar esta casilla, consiento la recopilación y utilización de datos con fines analíticos.",
       newsletter: "Acepto recibir el boletín informativo",
+      residency: "Estado de residencia",
+      selectResidency: "Seleccionar estado de residencia",
+      tourist: "Turista",
+      resident: "Residente",
     },
     french: {
       welcome: "Bonjour",
@@ -232,6 +257,10 @@ const Forms = ({ navigation, route }) => {
       others: "Autre",
       terms: "En cochant cette case, je consens à la collecte et à l'utilisation des données à des fins analytiques",
       newsletter: "Je souhaite recevoir la newsletter",
+      residency: "Statut de résidence",
+      selectResidency: "Sélectionner le statut de résidence",
+      tourist: "Touriste",
+      resident: "Résident",
     },
     german: {
       welcome: "Hallo",
@@ -251,6 +280,10 @@ const Forms = ({ navigation, route }) => {
       others: "Andere",
       terms: "Durch Ankreuzen dieses Kästchens willige ich in die Erhebung und Nutzung von Daten zu Analysezwecken ein.",
       newsletter: "Ich möchte den Newsletter erhalten",
+      residency: "Aufenthaltsstatus",
+      selectResidency: "Aufenthaltsstatus auswählen",
+      tourist: "Tourist",
+      resident: "Einwohner",
     },
     chinese: {
       welcome: "你好",
@@ -270,6 +303,10 @@ const Forms = ({ navigation, route }) => {
       others: "其他",
       terms: "勾选此框表示我同意收集和利用数据用于分析目的。",
       newsletter: "我同意接收新闻通讯",
+      residency: "居留身份",
+      selectResidency: "选择居留身份",
+      tourist: "游客",
+      resident: "居民",
     },
     portuguese: {
       welcome: "Olá",
@@ -289,6 +326,10 @@ const Forms = ({ navigation, route }) => {
       others: "Outros",
       terms: "Ao marcar esta caixa, concordo com a coleta e utilização de dados para fins analíticos.",
       newsletter: "Concordo em receber o boletim informativo",
+      residency: "Status de residência",
+      selectResidency: "Selecionar status de residência",
+      tourist: "Turista",
+      resident: "Residente",
     },
     russian: {
       welcome: "Привет",
@@ -308,6 +349,10 @@ const Forms = ({ navigation, route }) => {
       others: "Другие",
       terms: "Отметив этот флажок, я соглашаюсь на сбор и использование данных в аналитических целях.",
       newsletter: "Я согласен получать новостную рассылку",
+      residency: "Статус проживания",
+      selectResidency: "Выберите статус проживания",
+      tourist: "Турист",
+      resident: "Резидент",
     },
     japanese: {
       welcome: "こんにちは",
@@ -327,8 +372,10 @@ const Forms = ({ navigation, route }) => {
       others: "その他",
       terms: "このボックスにチェックを入れることで、データの収集と分析目的での利用に同意します。",
       newsletter: "ニュースレターを購読することに同意します",
-    
-    
+      residency: "居住ステータス",
+      selectResidency: "居住ステータスを選択",
+      tourist: "旅行者",
+      resident: "居住者",
     },
   };
 
@@ -539,8 +586,14 @@ const Forms = ({ navigation, route }) => {
   const formatDate = (date) => {
     return moment(date).format("dddd, Do MMMM YYYY");
   };
+  const csvFormatDate = (date) => {
+    return moment(date).format("Do MMMM YYYY");
+  };
 
   const date = formatDate(new Date());
+  const CsvDate = csvFormatDate(new Date());
+  // console.log(CsvDate);
+    
 
   return (
     <KeyboardAvoidingView
@@ -683,6 +736,18 @@ const Forms = ({ navigation, route }) => {
                 />
               </Picker>
             </View>
+            <Text style={styles.label}>{currentLabels.residency}</Text>
+            <View style={styles.gender}>
+              <Picker
+                selectedValue={residencyStatus}
+                onValueChange={handleResidencyChange}
+                style={{ color: residencyPlaceholderColor }}
+              >
+                <Picker.Item label={currentLabels.selectResidency} value="" />
+                <Picker.Item label={currentLabels.tourist} value={currentLabels.tourist} />
+                <Picker.Item label={currentLabels.resident} value={currentLabels.resident} />
+              </Picker>
+            </View>
             <View style={styles.checkboxContainer}>
               <View style={styles.checkbox}>
                 <CheckBox
@@ -715,10 +780,10 @@ const Forms = ({ navigation, route }) => {
           </View>
         </ImageBackground>
       </View>
-      <Success
+      {/* <Success
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
-      />
+      /> */}
     </KeyboardAvoidingView>
   );
 };

@@ -14,6 +14,8 @@ import * as MediaLibrary from 'expo-media-library';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import moment from 'moment';
 import * as Updates from 'expo-updates'; // Import Updates module
+import { useNavigation } from '@react-navigation/native';
+
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -22,6 +24,7 @@ const SubmissionsScreen = ({ route }) => {
   const [submissionsData, setSubmissionsData] = useState(submissions.reverse());
   const [submissionCount, setSubmissionCount] = useState(submissionsData.length);
   const [refreshKey, setRefreshKey] = useState(0); // State to force re-render
+  const navigation = useNavigation();
 
   useEffect(() => {
     fetchDataFromStorage(); // Fetch initial data from AsyncStorage
@@ -31,6 +34,15 @@ const SubmissionsScreen = ({ route }) => {
   useEffect(() => {
     setSubmissionCount(submissionsData.length); // Update submission count whenever submissionsData changes
   }, [submissionsData]); // Dependency on submissionsData to trigger update
+
+  // const resetAsyncStorage = async () => {
+  //   try {
+  //     await AsyncStorage.removeItem('submissions');
+  //     console.log('Submissions has been cleared.');
+  //   } catch (error) {
+  //     console.error('Failed to clear AsyncStorage:', error);
+  //   }
+  // };
 
   const fetchDataFromStorage = async () => {
     try {
@@ -122,7 +134,7 @@ const SubmissionsScreen = ({ route }) => {
     }
 
     const options = {
-      recipients: ["abdullabin2024@gmail.com"],
+      recipients: ["abdullabin2025@gmail.com"],
       subject: "Submissions CSV",
       body: "Please find the submissions attached as a CSV file.",
       attachments: [fileUri],
@@ -214,6 +226,12 @@ const SubmissionsScreen = ({ route }) => {
       <View style={styles.buttonContainer}>
         <Button title="Send CSV via Email" onPress={sendCSV} />
         <Button title="Delete Last Month's Submissions" onPress={deleteLastMonthSubmissions} />
+        <Button
+          title="Go to Dashboard"
+          onPress={() => navigation.navigate('Dashboard', { submissions: submissionsData })}
+        />
+
+        {/* <Button title="Reset Storage" onPress={resetAsyncStorage} /> */}
       </View>
       <Text/>
       <View style={styles.table}>
@@ -277,7 +295,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     padding: 5, // Increased padding for better touch targets
     textAlign: 'center',
-    fontSize: 13, // Larger font size for better readability
+    fontSize: 11, // Larger font size for better readability
   },
   tableRow: {
     flexDirection: 'row',
@@ -286,7 +304,7 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 5, // Increased padding for better touch targets
     textAlign: 'center',
-    fontSize: 16, // Larger font size for better readability
+    fontSize: 13, // Larger font size for better readability
     borderBottomWidth: 1,
     borderBottomColor: '#eee',
   },
