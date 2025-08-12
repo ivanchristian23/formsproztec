@@ -10,6 +10,7 @@ import {
   KeyboardAvoidingView,
   Image,
   Alert,
+  ScrollView
 } from "react-native";
 import { Picker } from "@react-native-picker/picker";
 import { Dropdown } from "react-native-element-dropdown";
@@ -25,6 +26,10 @@ const Forms = ({ navigation, route }) => {
   // const [date, setDate] = useState(new Date());
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
+  const [kindOfVisiting, setKindOfVisiting] = useState("");
+  const [purposeOfVisiting, setPurposeOfVisiting] = useState("");
+  const [favouriteLanguage, setFavouriteLanguage] = useState("");
+  const [remarks, setRemarks] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
   const [gender, setGender] = useState("");
@@ -42,8 +47,8 @@ const Forms = ({ navigation, route }) => {
   const [residencyPlaceholderColor, setResidencyPlaceholderColor] = useState("#888");
 
   const handleResidencyChange = (itemValue) => {
-  setResidencyStatus(itemValue);
-  setResidencyPlaceholderColor(itemValue === "" ? "#888" : "black");
+    setResidencyStatus(itemValue);
+    setResidencyPlaceholderColor(itemValue === "" ? "#888" : "black");
   };
   const validateSpecialCharacters = (text) => {
     const blacklistRe = /[!@#$%^&*(),.?":{}<>0-9]/;
@@ -99,8 +104,12 @@ const Forms = ({ navigation, route }) => {
         phone: phone === "" ? "" : "+" + phone,
         gender: gender,
         nationality,
-        newsletterSubscribed: newsletterSubscribed == true ? "Yes": "No" , // Include newsletter subscription in the submission
         residencyStatus,
+        purposeOfVisiting,
+        favouriteLanguage,
+        kindOfVisiting,
+        remarks,
+        newsletterSubscribed: newsletterSubscribed == true ? "Yes" : "No", // Include newsletter subscription in the submission
       };
       console.log(newSubmission);
 
@@ -114,6 +123,11 @@ const Forms = ({ navigation, route }) => {
       // setModalVisible(true); // Show success modal
       setTermsAccepted(false); // Reset terms acceptance
       setNewsletterSubscribed(false); // Reset newsletter subscription
+      setKindOfVisiting("");
+      setPurposeOfVisiting("");
+      setFavouriteLanguage("");
+      setRemarks("");
+      setResidencyStatus("")
 
       // Call the callback function if it exists
       if (addSubmission) {
@@ -167,7 +181,22 @@ const Forms = ({ navigation, route }) => {
       selectResidency: "Select Residency Status",
       tourist: "Tourist",
       resident: "Resident",
-
+      kindOfVisiting: "Visitor Type",
+      selectKindOfVisiting: "Select Visitor Type",
+      purposeOfVisiting: "Purpose of Visiting",
+      selectPurposeOfVisiting: "Select Purpose of Visiting",
+      favouriteLanguage: "Favourite Language",
+      selectFavouriteLanguage: "Select Favourite Language",
+      remarks: "Remarks",
+      individual: "Individual",
+      TouristSchool: "Tourist School",
+      vip: "VIP",
+      TouristGroup: "Tourist Group",
+      TouristCorporate:"Tourist Corporate",
+      conversion: "Conversion",
+      explore: "Explore",
+      learn: "Learn",
+      other: "Other",
     },
     italian: {
       welcome: "Benvenuto",
@@ -191,7 +220,22 @@ const Forms = ({ navigation, route }) => {
       selectResidency: "Seleziona lo stato di residenza",
       tourist: "Turista",
       resident: "Residente",
-      
+      kindOfVisiting: "Tipo di visita",
+      selectKindOfVisiting: "Seleziona il tipo di visita",
+      purposeOfVisiting: "Scopo della visita",
+      selectPurposeOfVisiting: "Seleziona lo scopo della visita",
+      favouriteLanguage: "Lingua preferita",
+      selectFavouriteLanguage: "Seleziona la lingua preferita",
+      remarks: "Osservazioni",
+      individual: "Individuale",
+      groupSchool: "Gruppi (Scuola)",
+      vip: "VIP",
+      touristGroup: "Gruppo turistico",
+      conversion: "Conversion",
+      experience: "Esperienza",
+      learn: "Imparare",
+      other: "Altro",
+      conversion: "conversione", explore: "esplorare", TouristGroup: "Turista Gruppo", TouristSchool: "Turista Scuola", TouristCorporate: "Turista Aziendale"
     },
     arabic: {
       welcome: "مرحبا",
@@ -214,7 +258,25 @@ const Forms = ({ navigation, route }) => {
       residency: "حالة الإقامة",
       selectResidency: "اختر حالة الإقامة",
       tourist: "سائح",
-      resident: "مقيم", 
+      resident: "مقيم",
+      kindOfVisiting: "نوع الزيارة",
+      selectKindOfVisiting: "اختر نوع الزيارة",
+      purposeOfVisiting: "غرض الزيارة",
+      selectPurposeOfVisiting: "اختر غرض الزيارة",
+      favouriteLanguage: "اللغة المفضلة",
+      selectFavouriteLanguage: "اختر اللغة المفضلة",
+      remarks: "ملاحظات",
+      individual: "فردي",
+      groupSchool: "مجموعات (مدرسة)",
+      vip: "هام (VIP)",
+      touristGroup: "مجموعة سياحية",
+      learn: "تعلم",
+      other: "أخرى",
+      conversion: "تحويل", 
+      explore: "استكشاف", 
+      TouristGroup: "سائح مجموعة", 
+      TouristSchool: "سائح مدرسة", 
+      TouristCorporate: "سائح شركة",
     },
     spanish: {
       welcome: "Hola",
@@ -238,6 +300,20 @@ const Forms = ({ navigation, route }) => {
       selectResidency: "Seleccionar estado de residencia",
       tourist: "Turista",
       resident: "Residente",
+      kindOfVisiting: "Tipo de visita",
+      selectKindOfVisiting: "Seleccionar tipo de visita",
+      purposeOfVisiting: "Propósito de la visita",
+      selectPurposeOfVisiting: "Seleccionar propósito de la visita",
+      favouriteLanguage: "Idioma favorito",
+      selectFavouriteLanguage: "Seleccionar idioma favorito",
+      remarks: "Observaciones",
+      individual: "Individual",
+      groupSchool: "Grupos (Escuela)",
+      vip: "VIP",
+      touristGroup: "Grupo turístico",
+      learn: "Aprender",
+      other: "Otro",
+      conversion: "conversión", explore: "explorar", TouristGroup: "Turista Grupo", TouristSchool: "Turista Escuela", TouristCorporate: "Turista Corporativo"
     },
     french: {
       welcome: "Bonjour",
@@ -261,6 +337,24 @@ const Forms = ({ navigation, route }) => {
       selectResidency: "Sélectionner le statut de résidence",
       tourist: "Touriste",
       resident: "Résident",
+      kindOfVisiting: "Type de visite",
+      selectKindOfVisiting: "Sélectionner le type de visite",
+      purposeOfVisiting: "But de la visite",
+      selectPurposeOfVisiting: "Sélectionner le but de la visite",
+      favouriteLanguage: "Langue préférée",
+      selectFavouriteLanguage: "Sélectionner la langue préférée",
+      remarks: "Remarques",
+      individual: "Individuel",
+      groupSchool: "Groupes (École)",
+      vip: "VIP",
+      touristGroup: "Groupe touristique",
+      learn: "Apprendre",
+      other: "Autre",
+      conversion: "conversion",
+      explore: "explorer",
+      TouristGroup: "Touriste Groupe",
+      TouristSchool: "Touriste École",
+      TouristCorporate: "Touriste Entreprise"
     },
     german: {
       welcome: "Hallo",
@@ -284,6 +378,24 @@ const Forms = ({ navigation, route }) => {
       selectResidency: "Aufenthaltsstatus auswählen",
       tourist: "Tourist",
       resident: "Einwohner",
+      kindOfVisiting: "Art des Besuchs",
+      selectKindOfVisiting: "Art des Besuchs auswählen",
+      purposeOfVisiting: "Zweck des Besuchs",
+      selectPurposeOfVisiting: "Zweck des Besuchs auswählen",
+      favouriteLanguage: "Lieblingssprache",
+      selectFavouriteLanguage: "Lieblingssprache auswählen",
+      remarks: "Bemerkungen",
+      individual: "Einzelperson",
+      groupSchool: "Gruppen (Schule)",
+      vip: "VIP",
+      touristGroup: "Touristengruppe",
+      learn: "Lernen",
+      other: "Andere",
+      conversion: "Konvertierung",
+      explore: "erkunden",
+      TouristGroup: "Tourist Gruppe",
+      TouristSchool: "Tourist Schule",
+      TouristCorporate: "Tourist Unternehmen"
     },
     chinese: {
       welcome: "你好",
@@ -307,6 +419,22 @@ const Forms = ({ navigation, route }) => {
       selectResidency: "选择居留身份",
       tourist: "游客",
       resident: "居民",
+      kindOfVisiting: "来访类型",
+      selectKindOfVisiting: "选择来访类型",
+      purposeOfVisiting: "来访目的",
+      selectPurposeOfVisiting: "选择来访目的",
+      favouriteLanguage: "最喜欢的语言",
+      selectFavouriteLanguage: "选择最喜欢的语言",
+      remarks: "备注",
+      individual: "个人",
+      groupSchool: "团体（学校）",
+      vip: "贵宾 (VIP)",
+      touristGroup: "旅游团",
+      learn: "学习",
+      other: "其他",
+      conversion: "转换", explore: "探索", TouristGroup: "游客 团体", TouristSchool: "游客 学校", TouristCorporate: "游客 企业"
+
+
     },
     portuguese: {
       welcome: "Olá",
@@ -330,6 +458,24 @@ const Forms = ({ navigation, route }) => {
       selectResidency: "Selecionar status de residência",
       tourist: "Turista",
       resident: "Residente",
+      kindOfVisiting: "Tipo de visita",
+      selectKindOfVisiting: "Selecionar tipo de visita",
+      purposeOfVisiting: "Finalidade da visita",
+      selectPurposeOfVisiting: "Selecionar finalidade da visita",
+      favouriteLanguage: "Idioma favorito",
+      selectFavouriteLanguage: "Selecionar idioma favorito",
+      remarks: "Observações",
+      individual: "Individual",
+      groupSchool: "Grupos (Escola)",
+      vip: "VIP",
+      touristGroup: "Grupo turístico",
+      learn: "Aprender",
+      other: "Outro",
+      conversion: "conversão", explore: "explorar",
+      TouristGroup: "Turista Grupo",
+      TouristSchool: "Turista Escola",
+      TouristCorporate: "Turista Empresarial"
+
     },
     russian: {
       welcome: "Привет",
@@ -353,6 +499,20 @@ const Forms = ({ navigation, route }) => {
       selectResidency: "Выберите статус проживания",
       tourist: "Турист",
       resident: "Резидент",
+      kindOfVisiting: "Тип визита",
+      selectKindOfVisiting: "Выбрать тип визита",
+      purposeOfVisiting: "Цель визита",
+      selectPurposeOfVisiting: "Выбрать цель визита",
+      favouriteLanguage: "Любимый язык",
+      selectFavouriteLanguage: "Выбрать любимый язык",
+      remarks: "Примечания",
+      individual: "Индивидуальный",
+      vip: "VIP",
+      learn: "Учиться",
+      other: "Другое",
+      conversion: "конверсия", explore: "исследовать", TouristGroup: "Турист Группа", TouristSchool: "Турист Школа", TouristCorporate: "Турист Корпоративный"
+
+
     },
     japanese: {
       welcome: "こんにちは",
@@ -376,6 +536,19 @@ const Forms = ({ navigation, route }) => {
       selectResidency: "居住ステータスを選択",
       tourist: "旅行者",
       resident: "居住者",
+      kindOfVisiting: "訪問の種類",
+      selectKindOfVisiting: "訪問の種類を選択",
+      purposeOfVisiting: "訪問の目的",
+      selectPurposeOfVisiting: "訪問の目的を選択",
+      favouriteLanguage: "好きな言語",
+      selectFavouriteLanguage: "好きな言語を選択",
+      remarks: "備考",
+      individual: "個人",
+      vip: "VIP",
+      learn: "学ぶ",
+      other: "その他",
+      onversion: "変換", explore: "探検", TouristGroup: "観光客 グループ", TouristSchool: "観光客 学校", TouristCorporate: "観光客 企業"
+
     },
   };
 
@@ -593,9 +766,10 @@ const Forms = ({ navigation, route }) => {
   const date = formatDate(new Date());
   const CsvDate = csvFormatDate(new Date());
   // console.log(CsvDate);
-    
+
 
   return (
+
     <KeyboardAvoidingView
       style={styles.container}
       behavior={"height"}
@@ -609,182 +783,244 @@ const Forms = ({ navigation, route }) => {
             resizeMode: "cover",
           }}
         >
-          <View style={styles.date}>
-            <Text style={styles.dates}>{date}</Text>
-          </View>
-          <View style={styles.head}>
-            <Text style={styles.heading}>{currentLabels.welcome}</Text>
-          </View>
-          <View style={styles.textboxes}>
-            <Text style={styles.label}>{"* " + currentLabels.firstName}</Text>
-            <TextInput
-              style={[
-                styles.input,
-                { borderColor: firstNameBorderColor }, // Apply border color based on validation
-              ]}
-              value={firstName}
-              onChangeText={(text) => {
-                setFirstName(text);
-                if (text === "") {
-                  setFirstNameError("");
-                  setFirstNameBorderColor("#ccc");
-                } else if (validateSpecialCharacters(text)) {
-                  setFirstNameError("");
-                  setFirstNameBorderColor("#ccc");
-                } else {
-                  setFirstNameError("No special characters allowed");
-                  setFirstNameBorderColor("red");
-                }
-              }}
-              placeholder={currentLabels.firstName}
-            />
-            {firstNameError ? (
-              <Text style={styles.errorText}>{firstNameError}</Text>
-            ) : null}
-            <Text style={styles.label}>{"* " + currentLabels.lastName}</Text>
-            <TextInput
-              style={[
-                styles.input,
-                { borderColor: lastNameBorderColor }, // Apply border color based on validation
-              ]}
-              value={lastName}
-              onChangeText={(text) => {
-                setLastName(text);
-                if (text === "") {
-                  setLastNameError("");
-                  setLastNameBorderColor("#ccc");
-                } else if (validateSpecialCharacters(text)) {
-                  setLastNameError("");
-                  setLastNameBorderColor("#ccc");
-                } else {
-                  setLastNameError("No special characters allowed");
-                  setLastNameBorderColor("red");
-                }
-              }}
-              placeholder={currentLabels.lastName}
-            />
-            {lastNameError ? (
-              <Text style={styles.errorText}>{lastNameError}</Text>
-            ) : null}
-            <Text style={styles.label}>{"* " + currentLabels.nationality}</Text>
-            <Dropdown
-              data={nationalities}
-              placeholder={currentLabels.selectNationality}
-              value={nationality}
-              labelField="label"
-              valueField="value"
-              style={[
-                styles.input,
-                {
-                  width: "100%",
-                  height: screenHeight * 0.043,
-                  justifyContent: "center",
-                },
-              ]}
-              search
-              selectedTextStyle={{ fontSize: 16 }}
-              searchPlaceholder="Search..."
-              placeholderStyle={{ color: "#888" }}
-              onChange={(item) => {
-                handleNationalityChange(item.value);
-              }}
-            />
-            <Text style={styles.label}>* {currentLabels.email}</Text>
-            <TextInput
-              style={styles.input}
-              value={email}
-              autoCapitalize="none"
-              onChangeText={setEmail}
-              placeholder={currentLabels.email}
-              keyboardType="email-address"
-            />
-
-            {!validateEmail(email) && email.trim() !== "" && (
-              <Text style={styles.errorText}>Invalid email address</Text>
-            )}
-            <Text style={styles.label}>{currentLabels.phone}</Text>
-            <View style={styles.phoneContainer}>
-              <Text style={styles.phonePrefix}>+</Text>
+          <ScrollView
+            contentContainerStyle={{ paddingBottom: 40 }}
+            keyboardShouldPersistTaps="handled"
+          >
+            <View style={styles.date}>
+              <Text style={styles.dates}>{date}</Text>
+            </View>
+            <View style={styles.head}>
+              <Text style={styles.heading}>{currentLabels.welcome}</Text>
+            </View>
+            <View style={styles.textboxes}>
+              <Text style={styles.label}>{"* " + currentLabels.firstName}</Text>
               <TextInput
-                style={styles.phoneInput}
-                value={phone}
-                onChangeText={setPhone}
-                placeholder={currentLabels.phone}
-                keyboardType="phone-pad"
-                maxLength={15} // Including the "+" sign
-              />
-            </View>
-            <Text style={styles.label}>{currentLabels.gender}</Text>
-            <View style={styles.gender}>
-              <Picker
-                selectedValue={gender}
-                onValueChange={handleGenderChange}
-                style={{ color: placeholderColor }}
-              >
-                <Picker.Item label={currentLabels.selectGender} value="" />
-                <Picker.Item
-                  label={currentLabels.male}
-                  value={currentLabels.male}
-                />
-                <Picker.Item
-                  label={currentLabels.female}
-                  value={currentLabels.female}
-                />
-                <Picker.Item
-                  label={currentLabels.others}
-                  value={currentLabels.others}
-                />
-              </Picker>
-            </View>
-            <Text style={styles.label}>{currentLabels.residency}</Text>
-            <View style={styles.gender}>
-              <Picker
-                selectedValue={residencyStatus}
-                onValueChange={handleResidencyChange}
-                style={{ color: residencyPlaceholderColor }}
-              >
-                <Picker.Item label={currentLabels.selectResidency} value="" />
-                <Picker.Item label={currentLabels.tourist} value={currentLabels.tourist} />
-                <Picker.Item label={currentLabels.resident} value={currentLabels.resident} />
-              </Picker>
-            </View>
-            <View style={styles.checkboxContainer}>
-              <View style={styles.checkbox}>
-                <CheckBox
-                  value={termsAccepted}
-                  onValueChange={(newValue) => setTermsAccepted(newValue)}
-                />
-                <Text style={styles.label}>
-                {currentLabels.terms}
-                </Text>
-              </View>
-              <View style={styles.checkbox}>
-                <CheckBox
-                  value={newsletterSubscribed}
-                  onValueChange={(newValue) =>
-                    setNewsletterSubscribed(newValue)
+                style={[
+                  styles.input,
+                  { borderColor: firstNameBorderColor }, // Apply border color based on validation
+                ]}
+                value={firstName}
+                onChangeText={(text) => {
+                  setFirstName(text);
+                  if (text === "") {
+                    setFirstNameError("");
+                    setFirstNameBorderColor("#ccc");
+                  } else if (validateSpecialCharacters(text)) {
+                    setFirstNameError("");
+                    setFirstNameBorderColor("#ccc");
+                  } else {
+                    setFirstNameError("No special characters allowed");
+                    setFirstNameBorderColor("red");
                   }
+                }}
+                placeholder={currentLabels.firstName}
+              />
+              {firstNameError ? (
+                <Text style={styles.errorText}>{firstNameError}</Text>
+              ) : null}
+              <Text style={styles.label}>{"* " + currentLabels.lastName}</Text>
+              <TextInput
+                style={[
+                  styles.input,
+                  { borderColor: lastNameBorderColor }, // Apply border color based on validation
+                ]}
+                value={lastName}
+                onChangeText={(text) => {
+                  setLastName(text);
+                  if (text === "") {
+                    setLastNameError("");
+                    setLastNameBorderColor("#ccc");
+                  } else if (validateSpecialCharacters(text)) {
+                    setLastNameError("");
+                    setLastNameBorderColor("#ccc");
+                  } else {
+                    setLastNameError("No special characters allowed");
+                    setLastNameBorderColor("red");
+                  }
+                }}
+                placeholder={currentLabels.lastName}
+              />
+              {lastNameError ? (
+                <Text style={styles.errorText}>{lastNameError}</Text>
+              ) : null}
+              <Text style={styles.label}>{"* " + currentLabels.nationality}</Text>
+              <Dropdown
+                data={nationalities}
+                placeholder={currentLabels.selectNationality}
+                value={nationality}
+                labelField="label"
+                valueField="value"
+                style={[
+                  styles.input,
+                  {
+                    width: "100%",
+                    height: screenHeight * 0.043,
+                    justifyContent: "center",
+                  },
+                ]}
+                search
+                selectedTextStyle={{ fontSize: 16 }}
+                searchPlaceholder="Search..."
+                placeholderStyle={{ color: "#888" }}
+                onChange={(item) => {
+                  handleNationalityChange(item.value);
+                }}
+              />
+              <Text style={styles.label}>* {currentLabels.email}</Text>
+              <TextInput
+                style={styles.input}
+                value={email}
+                autoCapitalize="none"
+                onChangeText={setEmail}
+                placeholder={currentLabels.email}
+                keyboardType="email-address"
+              />
+
+              {!validateEmail(email) && email.trim() !== "" && (
+                <Text style={styles.errorText}>Invalid email address</Text>
+              )}
+              <Text style={styles.label}>{currentLabels.phone}</Text>
+              <View style={styles.phoneContainer}>
+                <Text style={styles.phonePrefix}>+</Text>
+                <TextInput
+                  style={styles.phoneInput}
+                  value={phone}
+                  onChangeText={setPhone}
+                  placeholder={currentLabels.phone}
+                  keyboardType="phone-pad"
+                  maxLength={15} // Including the "+" sign
                 />
-                <Text style={styles.label}>
-                  {currentLabels.newsletter}
-                </Text>
+              </View>
+              <Text style={styles.label}>{currentLabels.gender}</Text>
+              <View style={styles.gender}>
+                <Picker
+                  selectedValue={gender}
+                  onValueChange={handleGenderChange}
+                  style={{ color: placeholderColor }}
+                >
+                  <Picker.Item label={currentLabels.selectGender} value="" />
+                  <Picker.Item
+                    label={currentLabels.male}
+                    value="Male"
+                  />
+                  <Picker.Item
+                    label={currentLabels.female}
+                    value="Female"
+                  />
+                  {/* <Picker.Item
+                    label={currentLabels.others}
+                    value="Others"
+                  /> */}
+                </Picker>
+              </View>
+
+              <Text style={styles.label}>{currentLabels.purposeOfVisiting}</Text>
+              <View style={styles.gender}>
+                <Picker selectedValue={purposeOfVisiting} onValueChange={setPurposeOfVisiting}
+                  style={{ color: placeholderColor }}>
+                  <Picker.Item label={currentLabels.selectPurposeOfVisiting} value="" />
+                  <Picker.Item label={currentLabels.conversion} value="Conversion" />
+                  <Picker.Item label={currentLabels.explore} value="Explore" />
+                  <Picker.Item label={currentLabels.learn} value="Learn" />
+                  <Picker.Item label={currentLabels.other} value="Other" />
+                </Picker>
+              </View>
+
+              <Text style={styles.label}>{currentLabels.favouriteLanguage}</Text>
+              <View style={styles.gender}>
+                <Picker selectedValue={favouriteLanguage} onValueChange={setFavouriteLanguage}
+                  style={{ color: placeholderColor }}>
+                  <Picker.Item label={currentLabels.selectFavouriteLanguage} value="" />
+                  <Picker.Item label="Arabic" value="Arabic" />
+                  <Picker.Item label="Chinese" value="Chinese" />
+                  <Picker.Item label="English" value="English" />
+                  <Picker.Item label="French" value="French" />
+                  <Picker.Item label="German" value="German" />
+                  <Picker.Item label="Italian" value="Italian" />
+                  <Picker.Item label="Japanese" value="Japanese" />
+                  <Picker.Item label="Portuguese" value="Portuguese" />
+                  <Picker.Item label="Russian" value="Russian" />
+                  <Picker.Item label="Spanish" value="Spanish" />
+                  <Picker.Item label="Other" value="Other" />
+                </Picker>
+              </View>
+
+              <Text style={styles.label}>{currentLabels.residency}</Text>
+              <View style={styles.gender}>
+                <Picker
+                  selectedValue={residencyStatus}
+                  onValueChange={handleResidencyChange}
+                  style={{ color: residencyPlaceholderColor }}
+                >
+                  <Picker.Item label={currentLabels.selectResidency} value="" />
+                  <Picker.Item label={currentLabels.tourist} value={currentLabels.tourist} />
+                  <Picker.Item label={currentLabels.resident} value={currentLabels.resident} />
+                </Picker>
+              </View>
+              <Text style={styles.label}>{currentLabels.kindOfVisiting}</Text>
+              <View style={styles.gender}>
+                <Picker selectedValue={kindOfVisiting} onValueChange={setKindOfVisiting}
+                  style={{ color: placeholderColor }}>
+                  <Picker.Item label={currentLabels.selectKindOfVisiting} value="" />
+                  <Picker.Item label={currentLabels.individual} value="Individual" />
+                  <Picker.Item label={currentLabels.TouristGroup} value="Group (Tourist)" />
+                  <Picker.Item label={currentLabels.TouristSchool} value="Group (School)" />
+                  <Picker.Item label={currentLabels.TouristCorporate} value="Group (Corporate)" />
+                  <Picker.Item label={currentLabels.vip} value="VIP" />
+                </Picker>
+              </View>
+
+
+              <Text style={styles.label}>{currentLabels.remarks}</Text>
+              <TextInput
+                style={[styles.input, { height: 80, textAlignVertical: "top" }]}
+                value={remarks}
+                onChangeText={setRemarks}
+                placeholder={currentLabels.remarks}
+                multiline
+              />
+
+              <View style={styles.checkboxContainer}>
+                <View style={styles.checkbox}>
+                  <CheckBox
+                    value={termsAccepted}
+                    onValueChange={(newValue) => setTermsAccepted(newValue)}
+                  />
+                  <Text style={styles.label}>
+                    {currentLabels.terms}
+                  </Text>
+                </View>
+                <View style={styles.checkbox}>
+                  <CheckBox
+                    value={newsletterSubscribed}
+                    onValueChange={(newValue) =>
+                      setNewsletterSubscribed(newValue)
+                    }
+                  />
+                  <Text style={styles.label}>
+                    {currentLabels.newsletter}
+                  </Text>
+                </View>
+              </View>
+              <View style={styles.buttonContainer}>
+                <Button
+                  title={currentLabels.submit}
+                  onPress={handleSubmit}
+                  style={styles.button}
+                />
               </View>
             </View>
-            <View style={styles.buttonContainer}>
-              <Button
-                title={currentLabels.submit}
-                onPress={handleSubmit}
-                style={styles.button}
-              />
-            </View>
-          </View>
+          </ScrollView>
         </ImageBackground>
       </View>
       {/* <Success
         visible={isModalVisible}
         onClose={() => setModalVisible(false)}
       /> */}
+      {/* </ScrollView> */}
     </KeyboardAvoidingView>
+
   );
 };
 
@@ -825,7 +1061,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#007AFF",
     paddingVertical: 10,
     borderRadius: 5,
-    
+
   },
   buttonText: {
     color: "white",

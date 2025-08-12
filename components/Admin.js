@@ -125,7 +125,7 @@ const Admin = ({ route, navigation }) => {
             onChangeText={setPassword}
           />
           <View style={styles.buttonContainer}>
-            <Button title="Export Submissions To CSV" onPress={handlePasswordSubmit} />
+            <Button title="Login" onPress={handlePasswordSubmit} />
           </View>
           {/* <View style={styles.buttonContainer}>
             <Button title="Save CSV to Downloads" onPress={saveCsvToDownloads} />

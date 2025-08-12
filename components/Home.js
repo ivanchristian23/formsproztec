@@ -108,6 +108,8 @@ const Home = ({ navigation, route }) => {
         />
         <View style={styles.buttonContainer}>
           <Button title="Next" onPress={handleNext} color="" />
+          <Text/>
+          <Button title="Got a Complain? Tell us here." onPress={() => navigation.navigate("ComplaintForm")} />
         </View>
 
         <View style={styles.logoContainer}>
@@ -116,6 +118,7 @@ const Home = ({ navigation, route }) => {
             style={styles.logo1}
           />
         </View>
+        
         <View style={styles.exportButtonContainer}>
           <Foundation
             name="torso-business"

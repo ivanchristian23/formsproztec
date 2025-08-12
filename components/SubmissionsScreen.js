@@ -7,6 +7,7 @@ import {
   Dimensions,
   Alert,
   FlatList,
+  ScrollView
 } from 'react-native';
 import * as FileSystem from 'expo-file-system';
 import * as MailComposer from 'expo-mail-composer';
@@ -62,8 +63,8 @@ const SubmissionsScreen = ({ route }) => {
 
   const sortSubmissionsByDate = (data) => {
     return data.sort((a, b) => {
-      const dateA = moment(a.date, 'dddd, Do MMMM YYYY');
-      const dateB = moment(b.date, 'dddd, Do MMMM YYYY');
+      const dateA = moment(a.date, 'Do MMMM YYYY');
+      const dateB = moment(b.date, 'Do MMMM YYYY');
       return dateB.diff(dateA); // Use diff() method for comparison
     });
   };
@@ -74,7 +75,7 @@ const SubmissionsScreen = ({ route }) => {
     const lastMonthYear = currentDate.year();
 
     const updatedData = submissionsData.filter((entry) => {
-      const entryDate = moment(entry.date, 'dddd, Do MMMM YYYY');
+      const entryDate = moment(entry.date, 'Do MMMM YYYY');
       return !(entryDate.month() === lastMonth && entryDate.year() === lastMonthYear);
     }).reverse(); // Reverse the updated data here
 
@@ -202,7 +203,7 @@ const SubmissionsScreen = ({ route }) => {
   
     // Check if there are submissions from last month
     const lastMonthEntries = submissionsData.filter((entry) => {
-      const entryDate = moment(entry.date, 'dddd, Do MMMM YYYY');
+      const entryDate = moment(entry.date, 'Do MMMM YYYY');
       return entryDate.month() === now.subtract(1, 'month').month() && entryDate.year() === now.year();
     });
   
